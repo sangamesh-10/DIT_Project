@@ -18,3 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/StudentLogin',[loginController::class,"studentLogin"]);
+Route::post('/verify',[loginController::class,"verify"]);
+Route::get('/studentHomePage',function(){
+    return view('studentHomePage');
+});
+

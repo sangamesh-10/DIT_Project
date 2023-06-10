@@ -28,7 +28,7 @@ label{
     </head>
     <body>
         <div class="loginform">
-            <table align="center" >
+            {{-- <table align="center" >
                 <caption style="font-size: 25px;">Login Form</caption>
                 <tr>
                     <td><label for="username" name="username">UserName</label></td>
@@ -42,16 +42,17 @@ label{
                     <td></td>
                     <td><input type="submit" name="submit" value="login"></td>
                 </tr>
-            </table>
+            </table> --}}
 
-            {{-- <form class='form' method="post" action="">
-                <label for="username" name="username">UserName</label>
-                <input type="text" name="username"><br><br>
+            <form class='form' method="post" action="verify">
+                @csrf
+                <label for="student_id" name="username">UserName</label>
+                <input type="text" name="student_id"><br><br>
                 <label for="password" name="password">Password</label>
                 <input type="text" name="password"><br><br>
                 <input type="submit" name="submit" value="login">
 
-            </form> --}}
+            </form>
         </div>
     </body>
 </html>
