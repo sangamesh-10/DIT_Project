@@ -19,6 +19,8 @@ Route::get('/', function () {
 });
 Route::get('/StudentLogin',[loginController::class,"studentLogin"]);
 Route::post('/verify',[loginController::class,"verify"]);
+Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
+Route::view("/changePwd","changePassword_std");
 Route::get('/studentHomePage',function(){
     return view('studentHomePage');
 });
