@@ -7,3 +7,78 @@
     color: white;
     text-align: center;
 }
+.sidenav {
+    height: 100%;
+    width: 0;
+    position:absolute;
+    z-index:auto ;
+    top: 75;
+    left: 0;
+    background-color: rgb(154, 151, 151);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #0e0d0d;
+    display: flex;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #1863dd;
+}
+
+.sidenav .closebtn {
+    position:fixed;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
+}
+.student-info {
+    position: absolute;
+    top: 0;
+    right:0;
+    display: flex;
+    align-items: center;
+    z-index: 999;
+}
+
+.student-info img {
+    position: absolute;
+    top: -150px;
+    right:0px;
+    left:100;
+    width: 200px;
+    height: 147px;
+    border-radius: 5%;
+    margin-right: 5px;
+}
+
+
+.student-info .student-text {
+    font-size: 18px;
+    color: white;
+    width: 400px;
+}
+#student-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
