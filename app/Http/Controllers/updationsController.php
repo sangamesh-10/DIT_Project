@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\students_login;
+use Illuminate\Support\Facades\Session;
+use App\Models\student;
+use Illuminate\Console\View\Components\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,10 +13,10 @@ class updationsController extends Controller
     {
         $username = $req->input('username');
         //$currentPwd = $req->input('currentPwd');
-        $newPwd = $req->input('newPwd');
+        $new_password = $req->input('new_password');
 
         $rules = [
-            'newPwd' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
         ];
 
         $validator = Validator::make($req->all(), $rules);
@@ -23,14 +24,25 @@ class updationsController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         } else {
-            $student = students_login::where('id', $username)->first();
+            $student = student::where('student_id', $username)->first();
 
             if ($student) {
-                $student->password = $newPwd;
+                $student->password = $new_password;
                 $student->save();
 
                 return "Password updated successfully.";
             }
+        }
+    }
+    function otpVerification(Request $req){
+        $user_otp = $req->input('otp');
+        $actual_otp =Session::get('otp');
+        if($user_otp==$actual_otp){
+
+            return view('UpdatePassword');
+        }
+        else{
+            return redirect()->back()->with('error', 'Invalid OTP entered. Please try again.');
         }
     }
 

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Login Page</title>
+    <title>Update Password</title>
     <style>
         body {
             background-color: #f1f1f1;
             font-family: Arial, sans-serif;
         }
 
-        .loginform {
+        .update-password-form {
             width: 300px;
             margin: auto;
             background-color: #ffffff;
@@ -18,13 +18,13 @@
             text-align: center;
         }
 
-        .loginform h2 {
+        .update-password-form h2 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #333333;
         }
 
-        .loginform label {
+        .update-password-form label {
             font-size: 16px;
             font-weight: bold;
             display: block;
@@ -33,8 +33,7 @@
             text-align: left;
         }
 
-        .loginform input[type="text"],
-        .loginform input[type="password"] {
+        .update-password-form input[type="password"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -43,7 +42,7 @@
             margin-bottom: 20px;
         }
 
-        .loginform input[type="submit"] {
+        .update-password-form input[type="submit"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -53,34 +52,19 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .loginform .forgot-password {
-            font-size: 14px;
-            color: #333333;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
-    <div class="loginform">
-        <h2>Login Form</h2>
-        <form class='form' method="post" action="verify">
+    <div class="update-password-form">
+        <h2>Update Password</h2>
+        <form class='form' method="post" action="/updatePwd">
             @csrf
-            {{session()->start()}}
-            <label for="student_id" name="username">Username</label>
-            <input type="text" name="student_id"><br><br>
-            <label for="password" name="password">Password</label>
-            <input type="password" name="password"><br><br>
-            <input type="submit" name="submit" value="Login"><br><br>
+            <label for="new_password" name="new_password">New Password</label>
+            <input type="password" name="new_password">
+            <label for="confirm_password" name="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password">
+            <input type="submit" name="submit" value="Update Password">
         </form>
-        <a class="forgot-password" href="/sendOtp">Forgot Password?</a><br><br>
-        @if (session('error'))
-        <div class="alert alert-danger" style="color:red;">
-            {{ session('error') }}
-            {{session()->forget('error')}}
-
-        </div>
-    @endif
     </div>
 </body>
 </html>
