@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\updationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,10 @@ Route::view("/changePwd","changePassword_std");
 Route::get('/studentHomePage',function(){
     return view('studentHomePage');
 });
+//Route to send otpmail
+Route::get('/sendOtp',[MailController::class,'sendOtp']);
+// Route to verify otp
+Route::post('/verifyOtp',[updationsController::class,'otpVerification']);
+
+
 

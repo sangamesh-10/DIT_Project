@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use App\Models\Student;
 
 class loginController extends Controller
@@ -21,10 +21,10 @@ class loginController extends Controller
 
         if($student){
             if ($student->password == $password) {
-                $request->session()->put("user",$student_id);
+                Session::put("user",$student_id);
                 return redirect('studentHomePage');
             } else {
-                return "Incorrect password.";
+                return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
             }
 
         }

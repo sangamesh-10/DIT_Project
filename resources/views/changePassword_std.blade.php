@@ -34,9 +34,9 @@
             <input type="text" name="username"><br><br>
             <label for="currentPwd" name="currentPwd">Current Password</label>
             <input type="password" name="currentPwd"><br><br>
-            <label for="newPwd" name="newPwd">New Password</label>
-            <input type="password" name="newPwd"><br><br>
-            @error('newPwd')
+            <label for="new_password" name="new_password">New Password</label>
+            <input type="password" name="new_password"><br><br>
+            @error('new_password')
             <span style="color: red;">{{ $message }}</span>
         @enderror
             <input type="submit" name="submit" value="Change">

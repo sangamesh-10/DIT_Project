@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StudentHomepage</title>
-    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
     @include('bootstrap')
+    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
 </head>
 <body>
     <x-header></x-header>
