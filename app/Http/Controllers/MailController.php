@@ -23,7 +23,7 @@ class MailController extends Controller
             'body' => 'this is for testing email using smtp in Laravel',
             'otp' => $otp,
         ];
-        Mail::to('anupamavegesna1331@gmail.com')->send(new MailSender($mailData));
+        Mail::to('machha394@gmail.com')->send(new MailSender($mailData));
         return view('OtpVerification');
     }
 }

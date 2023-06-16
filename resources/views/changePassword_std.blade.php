@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Update Password</title>
+    @include('bootstrap')
     <style>
         .mystyle {
             width:200px;
@@ -26,6 +27,7 @@
 </head>
 
 <body>
+    <x-header></x-header>
     <h3 style="justify-content: center;display:flex">New password should contain atleast one Capital letter,one number and minnimun size 8 chars</h3>
     <div class="mystyle">
         <form class='form' method="post" action="/updatePwd">
@@ -42,6 +44,7 @@
             <input type="submit" name="submit" value="Change">
         </form>
     </div>
+    <x-footer></x-footer>
 </body>
 
 </html>

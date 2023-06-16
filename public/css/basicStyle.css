@@ -61,12 +61,12 @@
 
 .student-info img {
     position: absolute;
-    top: -150px;
-    right:0px;
+    top: -131px;
+    right:-5px;
     left:100;
-    width: 200px;
-    height: 147px;
-    border-radius: 5%;
+    width: 120px;
+    height: 129px;
+    border-radius: 0%;
     margin-right: 5px;
 }
 
@@ -80,5 +80,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    position: fixed;
+    right: 0;
   }
 

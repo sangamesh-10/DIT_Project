@@ -35,9 +35,9 @@
             </ul>
         </div>
         <div class="student-info">
-            <img src="images/effiel.jpg" alt="Student Image">
+            <img src='{{ asset('Student_softCopies/21031F0015/MYPHOTO2022.jpg') }}' alt="Student Image">
             <div class="student-text">
-             <span id="student-name">Welcome,Ms.Vegesna Satya Sridevi Anupama</span>
+             <span id="student-name">Welcome,Sangameshwar Gaddam</span>
             </div>
         </div>
     </nav>
@@ -45,14 +45,18 @@
     <x-footer></x-footer>
 
     <script>
+        let opened= false
         function openNav() {
+        if(!opened){
             document.getElementById("mySidenav").style.width = "250px";
-        }
+            opened=true;
 
-        function closeNav() {
+        }
+        else{
             document.getElementById("mySidenav").style.width = "0";
+            opened=false;
         }
-
+    }
         document.addEventListener("click", function(event) {
             if (!event.target.closest(".sidenav") && !event.target.closest("span[onclick='openNav()']")) {
                 closeNav();

@@ -3,6 +3,7 @@
 
 <head>
     <title>OTP Verification</title>
+    @include('bootstrap')
     <style>
         body {
             background-color: #f1f1f1;
@@ -57,6 +58,7 @@
 </head>
 
 <body>
+    <x-header></x-header>
     <div class="verification-form">
 
 
@@ -73,6 +75,7 @@
             </div>
         @endif
     </div>
+    <x-footer></x-footer>
 </body>
 
 </html>

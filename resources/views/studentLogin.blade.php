@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Student Login Page</title>
+    @include('bootstrap')
     <style>
         body {
             background-color: #f1f1f1;
@@ -62,15 +63,16 @@
     </style>
 </head>
 <body>
+    <x-header></x-header>
     <div class="loginform">
         <h2>Login Form</h2>
         <form class='form' method="post" action="verify">
             @csrf
-            {{session()->start()}}
             <label for="student_id" name="username">Username</label>
             <input type="text" name="student_id"><br><br>
             <label for="password" name="password">Password</label>
             <input type="password" name="password"><br><br>
+            {{session()->start()}}
             <input type="submit" name="submit" value="Login"><br><br>
         </form>
         <a class="forgot-password" href="/sendOtp">Forgot Password?</a><br><br>
@@ -82,5 +84,6 @@
         </div>
     @endif
     </div>
+    <x-footer></x-footer>
 </body>
 </html>
