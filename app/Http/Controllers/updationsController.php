@@ -46,4 +46,19 @@ class updationsController extends Controller
         }
     }
 
+    public function updateContact(Request $request)
+    {
+
+        $request->validate([
+            'mobile' => 'required',
+        ]);
+        return view('UpdatePassword');
+        // $student_id = Session::get('user');
+        // $student = student::find($student_id);
+        // $student->phone_num = $request->input('mobile');
+        // $student->save();
+
+        // return redirect()->back()->with('success', 'Mobile number updated successfully!');
+    }
+
 }

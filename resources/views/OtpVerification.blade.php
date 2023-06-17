@@ -4,6 +4,8 @@
 <head>
     <title>OTP Verification</title>
     @include('bootstrap')
+    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
+
     <style>
         body {
             background-color: #f1f1f1;
