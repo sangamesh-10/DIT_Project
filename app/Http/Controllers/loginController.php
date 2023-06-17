@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\Student;
+use App\Models\students_login;
+use App\Models\faculty_login;
 use App\Models\Std_softcopie;
 
 class loginController extends Controller
 {
     function studentLogin(){
         return view("studentLogin");
+    }
+    function facultyLogin(){
+        return view("facultyLogin");
     }
 
     public function verify(Request $request)
@@ -18,7 +22,7 @@ class loginController extends Controller
         $password = $request->input('password');
 
         // Fetch the student details by student_id from the model
-        $student = Student::where('student_id', $student_id)->first();
+        $student = Students_login::where('student_id', $student_id)->first();
         $softCopies = Std_softcopie::where('roll_num', $student_id)->first();
         $img=$softCopies->photo;
         if($student){
@@ -35,6 +39,27 @@ class loginController extends Controller
             return "student not found";
         }
     }
+    public function verifyFacultyLogin(Request $req)
+{
+    $faculty_id = $req->input('faculty_id');
+    $password = $req->input('password');
+
+    $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
+    //return $faculty;
+    //return faculty_login::all();
+
+    if ($faculty) {
+        if ($faculty->password == $password) {
+            Session::put("faculty_user", $faculty_id);
+            return redirect('facultyHomePage');
+        } else {
+            return redirect()->back()->with('error', 'Invalid password entered. Please try again.');
+        }
+    } else {
+        return redirect()->back()->with('error', 'User not found. Please check the credentials and try again.');
+    }
+}
+
 
 
 }
