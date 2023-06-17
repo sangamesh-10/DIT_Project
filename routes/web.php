@@ -38,6 +38,6 @@ Route::get('/sendOtp',[MailController::class,'sendOtp']);
 Route::post('/verifyOtp',[updationsController::class,'otpVerification']);
 // Route::post('updateContact',[updationsController::class,'updateContact']);
 
-Route::put('updateContact', [updationsController::class, 'updateContact'])->name('updateContact');
-
+Route::put('/changeContact', [updationsController::class, 'updateContact'])->name('updateContact');
+Route::view('/updateContact','updateContact');
 
