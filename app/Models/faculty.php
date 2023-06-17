@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class student extends Model
+
+class faculty extends Model
 {
-    protected $table = "students_logins";
+    public $table="faculty";
     use HasFactory;
     public $timestamps=false;
 }
