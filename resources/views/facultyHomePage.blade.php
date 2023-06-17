@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>StudentHomepage</title>
+    <title>FacultyHomepage</title>
     @include('bootstrap')
     <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
 </head>
@@ -16,11 +16,13 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="#">Profile</a>
-        <a href="changePwd">Change Password</a>
-        <a href="updateContact">Update MobileNumber</a>
-        <a href="#">Internal Marks</a>
-        <a href="#">Enrolled subjects</a>
-        <a href="#">Attendance</a>
+        <a href="#">Change Password</a>
+        <a href="#">Update MobileNumber</a>
+        <a href="#"> Add Internal Marks</a>
+        <a href="#">Enrolled students</a>
+        <a href="#">Mark Attendance</a>
+        <a href="#">Raise Complaint</a>
+        <a href="#">Send Notification</a>
         <a href="#">Raise Complaint</a>
         <a href="#">Log Out</a>
     </div>
@@ -35,9 +37,8 @@
             </ul>
         </div>
         <div class="student-info">
-            <img src='{{ asset('Student_softCopies/21031F0015/MYPHOTO2022.jpg') }}' alt="Student Image">
             <div class="student-text">
-             <span id="student-name">Welcome,Sangameshwar Gaddam</span>
+             <span id="student-name">Welcome Mr.G.Narsimham</span>
             </div>
         </div>
     </nav>
