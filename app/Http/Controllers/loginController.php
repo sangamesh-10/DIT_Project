@@ -29,7 +29,7 @@ class loginController extends Controller
             if ($student->password == $password) {
                 Session::put("user",$student_id);
 
-                return view('studentHomePage', compact('student','softCopies'));
+                return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);
             } else {
                 return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
             }
@@ -39,6 +39,14 @@ class loginController extends Controller
             return "student not found";
         }
     }
+    public function studentHomePage(Request $request)
+{
+    $student = $request->route('student');
+    $softCopies = $request->route('softCopies');
+
+    return view('studentHomePage', compact('student', 'softCopies'));
+}
+
     public function verifyFacultyLogin(Request $req)
 {
     $faculty_id = $req->input('faculty_id');
