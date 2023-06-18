@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\stdRegController;
 use App\Http\Controllers\facultyRegController;
+use App\Http\Controllers\profilecontroller;
 
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\updationsController;
@@ -26,6 +27,7 @@ Route::view("/StudentRegistration","studentRegistration");
 Route::post("stdRegistration",[stdRegController::class,"stdRegistration"]);
 Route::view("/facultyRegistration","facultyRegistration");
 Route::post("facultyReg",[facultyRegController::class,"facultyReg"]);
+Route::get("userprofile",[profilecontroller::class,"profile"]);
 Route::get('/StudentLogin',[loginController::class,"studentLogin"]);
 Route::post('/verify',[loginController::class,"verify"]);
 Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
