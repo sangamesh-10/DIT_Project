@@ -17,5 +17,10 @@
 
         <button type="submit">Update Mobile Number</button>
     </form>
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 </body>
 </html>
