@@ -51,11 +51,13 @@ Route::view('/otpVerification',"OtpVerification");
 Route::view('/otpVerificationFaculty',"OtpVerification_Faculty");
 // Route::post('updateContact',[updationsController::class,'updateContact']);
 
+Route::put('/changeContact', [updationsController::class, 'updateContact'])->name('updateContact');
+Route::view('/updateContact','updateContact');
 //Route to FacultyHomepage
 Route::get('/facultyHomePage',function(){
     return view('facultyHomePage');
 });
 
-Route::put('updateContact', [updationsController::class, 'updateContact'])->name('updateContact');
+
 
 
