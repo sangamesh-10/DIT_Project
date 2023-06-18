@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Login Page</title>
+    <title>Faculty Login Page</title>
     @include('bootstrap')
-    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
-
     <style>
         body {
             background-color: #f1f1f1;
@@ -68,16 +66,16 @@
     <x-header></x-header>
     <div class="loginform">
         <h2>Login Form</h2>
-        <form class='form' method="post" action="verify">
+        <form class='form' method="post" action="verifyFaculty">
             @csrf
-            <label for="student_id" name="username">Username</label>
-            <input type="text" name="student_id"><br><br>
+            <label for="faculty_id" name="username">Username</label>
+            <input type="text" name="faculty_id"><br><br>
             <label for="password" name="password">Password</label>
             <input type="password" name="password"><br><br>
             {{session()->start()}}
             <input type="submit" name="submit" value="Login"><br><br>
         </form>
-        <a class="forgot-password" href="/sendOtp">Forgot Password?</a><br><br>
+        <a class="forgot-password" href="/sendOtpFaculty">Forgot Password?</a><br><br>
         @if (session('error'))
         <div class="alert alert-danger" style="color:red;">
             {{ session('error') }}
