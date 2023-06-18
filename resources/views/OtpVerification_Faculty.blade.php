@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Student Login Page</title>
+    <title>Reset Password</title>
     @include('bootstrap')
     <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
 
@@ -11,7 +12,7 @@
             font-family: Arial, sans-serif;
         }
 
-        .loginform {
+        .verification-form {
             width: 300px;
             margin: auto;
             background-color: #ffffff;
@@ -21,13 +22,13 @@
             text-align: center;
         }
 
-        .loginform h2 {
+        .verification-form h2 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #333333;
         }
 
-        .loginform label {
+        .verification-form label {
             font-size: 16px;
             font-weight: bold;
             display: block;
@@ -36,8 +37,7 @@
             text-align: left;
         }
 
-        .loginform input[type="text"],
-        .loginform input[type="password"] {
+        .verification-form input[type="text"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -46,7 +46,7 @@
             margin-bottom: 20px;
         }
 
-        .loginform input[type="submit"] {
+        .verification-form input[type="submit"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -56,41 +56,28 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .loginform .forgot-password {
-            font-size: 14px;
-            color: #333333;
-            margin-top: 10px;
-        }
     </style>
 </head>
+
 <body>
     <x-header></x-header>
-    <div class="loginform">
-        @if ($message = session('success'))
-            <div class="alert alert-success">
-                {{ $message }}
+    <div class="verification-form">
+
+
+        <h2>Reset Password</h2>
+        <form class='form' method="post" action="/sendOtpFaculty">
+            @csrf
+            <label for="faculty_id">Faculty ID</label>
+            <input type="text" name="faculty_id"><br>
+            <input type="submit" name="send_otp" value="Send OTP"><br>
+        </form>
+        @if (session('error'))
+            <div class="alert alert-danger" style="color:red;">
+                {{ session('error') }}
             </div>
         @endif
-        <h2>Login Form</h2>
-        <form class='form' method="post" action="verify">
-            @csrf
-            {{session()->start()}}
-            <label for="student_id" name="username">Username</label>
-            <input type="text" name="student_id" ><br><br>
-            <label for="password" name="password">Password</label>
-            <input type="password" name="password"><br><br>
-            <input type="submit" name="submit" value="Login"><br><br>
-        </form>
-        <a class="forgot-password" href="/otpVerification">Forgot Password?</a><br><br>
-        @if (session('error'))
-        <div class="alert alert-danger" style="color:red;">
-            {{ session('error') }}
-            {{session()->forget('error')}}
-
-        </div>
-    @endif
     </div>
     <x-footer></x-footer>
 </body>
+
 </html>
