@@ -12,9 +12,10 @@ use Illuminate\Http\Request;
 
 class MailController extends Controller
 {
-    public function sendOtp(){
+    public function sendOtp(Request $req){
 
-    $student_id=Session::get('faculty_user');
+    $student_id=$req->input("roll_num");
+    //return $student_id;
     $student=Student::where("roll_num",$student_id)->first();
     $email=$student->email;
 
@@ -23,6 +24,7 @@ class MailController extends Controller
 
     // Store the OTP in the session for later verification
     Session::put('otp', $otp);
+    Session::put('user',$student_id);
 
         $mailData = [
             'subject' => 'OTP Verification',
@@ -31,19 +33,19 @@ class MailController extends Controller
             'otp' => $otp,
         ];
         Mail::to($email)->send(new MailSender($mailData));
-        return view('OtpVerification');
+        return view('OtpVerification_2');
     }
-    public function sendOtpFaculty(){
+    public function sendOtpFaculty(Request $req){
 
-        $faculty_id=Session::get('faculty_user');
+        $faculty_id=$req->input("faculty_id");
         $faculty=Faculty::where("faculty_id",$faculty_id)->first();
         $email=$faculty->email;
-
         // Generate a random OTP
         $otp = mt_rand(100000, 999999);
 
         // Store the OTP in the session for later verification
         Session::put('otp', $otp);
+        Session::put('user',$faculty_id);
 
             $mailData = [
                 'subject' => 'OTP Verification',
@@ -52,6 +54,6 @@ class MailController extends Controller
                 'otp' => $otp,
             ];
             Mail::to($email)->send(new MailSender($mailData));
-            return view('OtpVerification');
+            return view('OtpVerification_Faculty_2');
         }
 }
