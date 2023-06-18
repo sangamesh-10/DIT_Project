@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use App\Models\Student;
+use App\Models\Std_softcopie;
 
 class loginController extends Controller
 {
@@ -18,13 +19,15 @@ class loginController extends Controller
 
         // Fetch the student details by student_id from the model
         $student = Student::where('student_id', $student_id)->first();
-
+        $softCopies = Std_softcopie::where('roll_num', $student_id)->first();
+        $img=$softCopies->photo;
         if($student){
             if ($student->password == $password) {
-                $request->session()->put("user",$student_id);
-                return redirect('studentHomePage');
+                Session::put("user",$student_id);
+
+                return view('studentHomePage', compact('student','softCopies'));
             } else {
-                return "Incorrect password.";
+                return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
             }
 
         }
