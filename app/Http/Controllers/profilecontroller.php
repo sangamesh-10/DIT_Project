@@ -8,13 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class profilecontroller extends Controller
 {
-    function profile(Request $req)
+    function profile()
     {
 
-        $student = student::where('roll_num', '21031F0015')->first();
-        if($student)
-        {
-            return $student;
-        }
+        $data= student::where('roll_num','21031F0015')->first();
+        return view('profile',['students'=>$data]);
+
     }
 }
