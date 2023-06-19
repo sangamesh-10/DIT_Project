@@ -28,7 +28,9 @@ Route::post("stdRegistration",[stdRegController::class,"stdRegistration"]);
 
 Route::view("/facultyRegistration","facultyRegistration");
 Route::post("facultyReg",[facultyRegController::class,"facultyReg"]);
-Route::get("userprofile",[profilecontroller::class,"profile"]);
+
+Route::get("profile",[profilecontroller::class,"studentProfile"]);
+Route::get("facultyprofile",[profilecontroller::class,"facultyProfile"]);
 
 Route::get('/StudentLogin',[loginController::class,"studentLogin"])->name('studentLogin');
 Route::get('/FacultyLogin',[loginController::class,"facultyLogin"])->name('facultyLogin');
