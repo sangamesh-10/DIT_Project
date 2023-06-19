@@ -10,16 +10,16 @@
 
     <style>
         .mystyle {
-            width:400px;
+            width:500px;
             margin: auto;
             background-color: rgb(65, 213, 174);
             padding: 20px;
             align-items:center;
             border-radius: 20px;
-            display: flex;
+            /* display: flex;
             justify-content: center;
-            align-items: center;
-            height: 350px;
+            align-items: center; */
+            height: 450px;
             position:inherit;
             left: 40%;
             top:15%;
@@ -42,9 +42,14 @@
             @error('new_password')
             <span style="color: red;">{{ $message }}</span>
         @enderror
-            <input type="submit" name="submit" value="Change">
+            <input type="submit" name="submit" value="Change"><br>
 
         </form>
+        @if (session('error'))
+        <div class="alert alert-danger" style="color:red;">
+            {{ session('error') }}
+        </div>
+    @endif
     </div>
     {{-- <x-footer></x-footer> --}}
 </body>

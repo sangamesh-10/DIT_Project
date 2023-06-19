@@ -24,7 +24,7 @@
         <a href="#">Raise Complaint</a>
         <a href="#">Send Notification</a>
         <a href="#">Raise Complaint</a>
-        <a href="#">Log Out</a>
+        <a href="logout">Log Out</a>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
