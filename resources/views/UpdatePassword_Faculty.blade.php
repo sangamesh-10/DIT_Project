@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Reset Password</title>
+    <title>Update Password</title>
     @include('bootstrap')
-    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
-
     <style>
         body {
             background-color: #f1f1f1;
             font-family: Arial, sans-serif;
         }
 
-        .verification-form {
+        .update-password-form {
             width: 300px;
             margin: auto;
             background-color: #ffffff;
@@ -22,13 +19,13 @@
             text-align: center;
         }
 
-        .verification-form h2 {
+        .update-password-form h2 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #333333;
         }
 
-        .verification-form label {
+        .update-password-form label {
             font-size: 16px;
             font-weight: bold;
             display: block;
@@ -37,7 +34,7 @@
             text-align: left;
         }
 
-        .verification-form input[type="text"] {
+        .update-password-form input[type="password"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -46,7 +43,7 @@
             margin-bottom: 20px;
         }
 
-        .verification-form input[type="submit"] {
+        .update-password-form input[type="submit"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -58,26 +55,19 @@
         }
     </style>
 </head>
-
 <body>
     <x-header></x-header>
-    <div class="verification-form">
-
-
-        <h2>Reset Password</h2>
-        <form class='form' method="post" action="/sendOtp">
+    <div class="update-password-form">
+        <h2>Update Password</h2>
+        <form class='form' method="post" action="/updatePwdFaculty">
             @csrf
-            <label for="roll_num">Roll Number</label>
-            <input type="text" name="roll_num"><br>
-            <input type="submit" name="send_otp" value="Send OTP"><br>
+            <label for="new_password" name="new_password">New Password</label>
+            <input type="password" name="new_password">
+            <label for="confirm_password" name="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password">
+            <input type="submit" name="submit" value="Update Password">
         </form>
-        @if (session('error'))
-            <div class="alert alert-danger" style="color:red;">
-                {{ session('error') }}
-            </div>
-        @endif
     </div>
     <x-footer></x-footer>
 </body>
-
 </html>
