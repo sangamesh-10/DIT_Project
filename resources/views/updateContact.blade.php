@@ -1,4 +1,4 @@
-@include('studentHomePage')
+{{-- @include('studentHomePage') --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>

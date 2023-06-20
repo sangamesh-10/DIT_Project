@@ -41,7 +41,10 @@ Route::post('/verifyFaculty',[loginController::class,"verifyFacultyLogin"]);
 
 Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
 Route::post('/updatePwdFaculty',[updationsController::class,"facultyPassword"]);
-Route::view("/changePwd","changePassword_std");
+// Route::view('/chPassFaculty','UpdatePassword_Faculty');
+Route::get('/chPassFaculty',function(){
+    return view("UpdatePassword_Faculty");
+});
 
 Route::get('studentHomePage', [loginController::class,"studentHomePage"])->name('studentHomePage');
 
