@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+@include('studentHomePage')
 <html>
 
 <head>

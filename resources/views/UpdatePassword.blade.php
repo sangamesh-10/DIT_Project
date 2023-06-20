@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+@include('studentHomePage')
 <html>
 <head>
     <title>Update Password</title>
     @include('bootstrap')
+    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
+
     <style>
         body {
             background-color: #f1f1f1;
@@ -56,7 +59,7 @@
     </style>
 </head>
 <body>
-    <x-header></x-header>
+    {{-- <x-header></x-header> --}}
     <div class="update-password-form">
         <h2>Update Password</h2>
         <form class='form' method="post" action="/updatePwd">
@@ -68,6 +71,6 @@
             <input type="submit" name="submit" value="Update Password">
         </form>
     </div>
-    <x-footer></x-footer>
+    {{-- <x-footer></x-footer> --}}
 </body>
 </html>
