@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\students_login;
 use App\Models\faculty_login;
 use App\Models\Std_softcopie;
+use App\Models\student;
 
 class loginController extends Controller
 {
@@ -22,11 +23,12 @@ class loginController extends Controller
         $password = $request->input('password');
 
         // Fetch the student details by student_id from the model
-        $student = Students_login::where('student_id', $student_id)->first();
+        $studentLogin = Students_login::where('student_id', $student_id)->first();
+        $student = student::where('roll_num', $student_id)->first();
         $softCopies = Std_softcopie::where('roll_num', $student_id)->first();
         $img=$softCopies->photo;
-        if($student){
-            if ($student->password == $password) {
+        if($studentLogin){
+            if ($studentLogin->password == $password) {
                 Session::put("user",$student_id);
 
                 return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);

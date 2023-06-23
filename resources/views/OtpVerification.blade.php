@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@include('studentHomePage')
+{{-- @include('studentHomePage') --}}
 <html>
 
 <head>
@@ -61,7 +61,7 @@
 </head>
 
 <body>
-    {{-- <x-header></x-header> --}}
+    <x-header></x-header>
     <div class="verification-form">
 
 
@@ -78,7 +78,7 @@
             </div>
         @endif
     </div>
-    {{-- <x-footer></x-footer> --}}
+    <x-footer></x-footer>
 </body>
 
 </html>
