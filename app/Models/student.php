@@ -10,4 +10,5 @@ class student extends Model
     use HasFactory;
     public $timestamps=false;
     protected $primaryKey = 'roll_num';
+    protected $keyType = 'string';
 }
