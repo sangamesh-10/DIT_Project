@@ -35,10 +35,11 @@
             </ul>
         </div>
         <div class="student-info">
-            <img src='{{ asset('Student_softCopies/21031F0015/MYPHOTO2022.jpg') }}' alt="Student Image">
+            <img src='{{ asset('$softCopies->photo') }}' alt="Student Image">
             <div class="student-text">
              <span id="student-name">Welcome,Sangameshwar Gaddam</span>
             </div>
+            <h1>{{$student->name}}</h1>
         </div>
     </nav>
 

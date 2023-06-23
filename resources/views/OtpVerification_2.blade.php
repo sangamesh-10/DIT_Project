@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-@include('studentHomePage')
+{{-- @include('studentHomePage') --}}
 <html>
 
 <head>
