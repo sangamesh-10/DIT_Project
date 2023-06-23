@@ -30,8 +30,8 @@ class loginController extends Controller
         if($studentLogin){
             if ($studentLogin->password == $password) {
                 Session::put("user",$student_id);
-                return $student;
-                // return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);
+                //return $student;
+                return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);
             } else {
                 return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
             }
