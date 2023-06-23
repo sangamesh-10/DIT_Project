@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\student;
-use Validator;
+// use Validator;
 
 class stdRegController extends Controller
 {
@@ -40,7 +40,7 @@ class stdRegController extends Controller
             //         "email"=>"/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
             //         "phone_num"=>" /^\d{10}$/"];
             // $validator=Validator::make($req->all(),$rules);
-            $validator = Validator::make($request->all(), [
+            $validator = Validator::make($req->all(), [
                 'rno' => 'required|regex:/^\d{5}[A-Z]\d{4}$/',
                 'name' => 'required|string|regex:/^[A-Za-z\s]+$/|max:255',
                 'email' => 'required|email|max:255',

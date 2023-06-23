@@ -39,7 +39,7 @@
             <div class="student-text">
              <span id="student-name">Welcome,Sangameshwar Gaddam</span>
             </div>
-            <h1>{{$student->name}}</h1>
+            <h1>{{}}</h1>
         </div>
     </nav>
 
