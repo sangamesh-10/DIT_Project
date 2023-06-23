@@ -12,8 +12,8 @@
         .login-image {
             display: inline-block;
             margin: 5px;
-            width: 400px;
-            height: 400px;
+            width: 300px;
+            height: 300px;
             background-color: #f2f2f2;
             background-image: url('path/to/login-image.jpg'); /* Replace with your image path */
             background-size: cover;
@@ -56,7 +56,7 @@
 
 <body>
     <x-header></x-header>
-
+    <div class="wrapper">
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
@@ -83,7 +83,7 @@
             <p class="logincaption"><a href="FacultyLogin" >FacultyLogin</a></p>
         </div>
     </div>
-
+</div>
     <x-footer></x-footer>
 </body>
 
