@@ -26,11 +26,12 @@ class loginController extends Controller
         $studentLogin = Students_login::where('student_id', $student_id)->first();
         $student = student::where('roll_num', $student_id)->first();
         $softCopies = Std_softcopie::where('roll_num', $student_id)->first();
-        // $img=$softCopies->photo;
+        $img=$softCopies->photo;
         if($studentLogin){
             if ($studentLogin->password == $password) {
                 Session::put("user",$student_id);
-                return $student;
+
+                return $softCopies;
                 // return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);
             } else {
                 return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
