@@ -9,6 +9,7 @@ class faculty_login extends Model
 {
     protected $table = 'faculty_logins';
     protected $primaryKey='faculty_id';
+    protected $keyType='string';
     public $timestamps=false;
 
     use HasFactory;
