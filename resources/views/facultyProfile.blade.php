@@ -59,6 +59,10 @@
             <th>E-mail</th>
             <td>{{$faculty['email']}}</td>
         </tr>
+        <tr>
+            <th>Designation</th>
+            <td>{{$faculty['designation']}}</td>
+        </tr>
     </table>
 </div>
 <x-footer></x-footer>

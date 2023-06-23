@@ -16,7 +16,7 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="profile">Profile</a>
-        <a href="changePwd">Change Password</a>
+        <a href="updatePassword">Change Password</a>
         <a href="updateContact">Update MobileNumber</a>
         <a href="#">Internal Marks</a>
         <a href="#">Enrolled subjects</a>

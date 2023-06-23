@@ -38,7 +38,7 @@ Route::get('/FacultyLogin',[loginController::class,"facultyLogin"])->name('facul
 
 Route::post('/verify',[loginController::class,"verify"]);
 Route::post('/verifyFaculty',[loginController::class,"verifyFacultyLogin"]);
-
+Route::view('updatePassword','UpdatePassword');
 Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
 Route::post('/updatePwdFaculty',[updationsController::class,"facultyPassword"]);
 Route::view("/changePwd","changePassword_std");

@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class students_login extends Model
 {
     use HasFactory;
+    protected $primaryKey='student_id';
+    public $timestamps=false;
 }
