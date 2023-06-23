@@ -62,7 +62,9 @@ Route::view('/otpVerificationFaculty',"OtpVerification_Faculty");
 // Route::post('updateContact',[updationsController::class,'updateContact']);
 
 Route::put('/changeContact', [updationsController::class, 'updateContact'])->name('updateContact');
+Route::put('/changeContactFaculty', [updationsController::class, 'updateContactFaculty'])->name('updateContactFaculty');
 Route::view('/updateContact','updateContact');
+Route::view('/updateContactFaculty','updateContactFaculty');
 //Route to FacultyHomepage
 Route::get('/facultyHomePage',function(){
     return view('facultyHomePage');

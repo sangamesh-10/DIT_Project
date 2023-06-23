@@ -17,7 +17,7 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="facultyprofile">Profile</a>
         <a href="chPassFaculty">Change Password</a>
-        <a href="updateContact">Update MobileNumber</a>
+        <a href="updateContactFaculty">Update MobileNumber</a>
         <a href="#"> Add Internal Marks</a>
         <a href="#">Enrolled students</a>
         <a href="#">Mark Attendance</a>
