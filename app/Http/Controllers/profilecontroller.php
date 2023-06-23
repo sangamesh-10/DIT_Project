@@ -21,7 +21,8 @@ class profilecontroller extends Controller
     function facultyProfile()
     {
 
-        $data= faculty::where('faculty_id','S001')->first();
+        $faculty_id=Session::get("faculty_user");
+        $data= faculty::where('faculty_id',$faculty_id)->first();
         return view('facultyProfile',['faculty'=>$data]);
     }
 }
