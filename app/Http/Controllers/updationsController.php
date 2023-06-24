@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Session;
 use App\Models\faculty_login;
 use App\Models\students_login;
 use App\Models\student;
+use App\Models\faculty;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -25,16 +27,16 @@ class updationsController extends Controller
 
         if ($validator->fails() || $new_password != $confirm_password) {
             return redirect()->back()->with('error', 'Password format is not valid . Please try again.');
-        }
-        else
-        {
+        } else {
             $student = students_login::where('student_id', $student_id)->first();
 
             if ($student) {
                 $student->password = $new_password;
                 $student->save();
 
-                return redirect()->route('studentLogin')->with('success', 'Password updated successfully. Please login with your new password.');;;
+                return redirect()->route('studentLogin')->with('success', 'Password updated successfully. Please login with your new password.');
+                ;
+                ;
             }
         }
     }
@@ -52,9 +54,7 @@ class updationsController extends Controller
 
         if ($validator->fails() || $new_password != $confirm_password) {
             return redirect()->back()->with('error', 'Password format is not valid . Please try again.');
-        }
-        else
-        {
+        } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
             if ($faculty) {
@@ -65,25 +65,25 @@ class updationsController extends Controller
             }
         }
     }
-    function otpVerification(Request $req){
+    function otpVerification(Request $req)
+    {
         $user_otp = $req->input('otp');
-        $actual_otp =Session::get('otp');
-        if($user_otp==$actual_otp){
+        $actual_otp = Session::get('otp');
+        if ($user_otp == $actual_otp) {
 
             return view('UpdatePassword');
-        }
-        else{
+        } else {
             return redirect()->back()->with('error', 'Invalid OTP entered. Please try again.');
         }
     }
-    function otpVerificationFaculty( Request $req){
+    function otpVerificationFaculty(Request $req)
+    {
         $user_otp = $req->input('otp');
-        $actual_otp =Session::get('otp');
-        if($user_otp==$actual_otp){
+        $actual_otp = Session::get('otp');
+        if ($user_otp == $actual_otp) {
 
             return view('UpdatePassword_Faculty');
-        }
-        else{
+        } else {
             return redirect()->back()->with('error', 'Invalid OTP entered. Please try again.');
         }
     }
@@ -98,14 +98,33 @@ class updationsController extends Controller
         $student_id = Session::get('user');
         $newPhoneNumber = $request->input('mobile');
 
-$student = Student::where('roll_num', $student_id)->first();
+        $student = Student::where('roll_num', $student_id)->first();
 
-if ($student) {
-    $student->phone_num = $newPhoneNumber;
-    $student->save();
-}
+        if ($student) {
+            $student->phone_num = $newPhoneNumber;
+            $student->save();
+        }
 
         return redirect()->back()->with('success', 'Mobile number updated successfully!');
     }
+    public function updateContactFaculty(Request $request)
+    {
 
+        $request->validate([
+            'mobile' => 'required',
+        ]);
+
+        $faculty_id = Session::get('faculty_user');
+        //return $faculty_id;
+        $newPhoneNumber = $request->input('mobile');
+
+        $faculty = faculty::where('faculty_id', $faculty_id)->first();
+
+        if ($faculty) {
+            $faculty->phone_num = $newPhoneNumber;
+            $faculty->save();
+        }
+
+        return redirect()->back()->with('success', 'Mobile number updated successfully!');
+    }
 }
