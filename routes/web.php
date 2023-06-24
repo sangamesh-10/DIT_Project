@@ -48,6 +48,7 @@ Route::get('/chPassFaculty',function(){
 });
 
 Route::get('studentHomePage', [loginController::class,"studentHomePage"])->name('studentHomePage');
+Route::get('facultyHomePage', [loginController::class,"facultyHomePage"])->name('facultyHomePage');
 
 //Route to send otpmail
 Route::post('/sendOtp',[MailController::class,'sendOtp']);
@@ -65,10 +66,6 @@ Route::put('/changeContact', [updationsController::class, 'updateContact'])->nam
 Route::put('/changeContactFaculty', [updationsController::class, 'updateContactFaculty'])->name('updateContactFaculty');
 Route::view('/updateContact','updateContact');
 Route::view('/updateContactFaculty','updateContactFaculty');
-//Route to FacultyHomepage
-Route::get('/facultyHomePage',function(){
-    return view('facultyHomePage');
-});
 
 //logout route
 Route::get('/logout',[loginController::class,'logout']);

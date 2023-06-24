@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+@php
+ $faculty = Session::get('faculty') ;
+ @endphp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,7 +40,7 @@
         </div>
         <div class="student-info">
             <div class="student-text">
-             <span id="student-name">Welcome Mr.G.Narsimham</span>
+             <span id="student-name">Welcome ,{{$faculty->name}}</span>
             </div>
         </div>
     </nav>

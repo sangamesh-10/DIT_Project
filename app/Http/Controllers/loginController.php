@@ -7,6 +7,7 @@ use App\Models\students_login;
 use App\Models\faculty_login;
 use App\Models\Std_softcopie;
 use App\Models\student;
+use App\Models\faculty;
 
 class loginController extends Controller
 {
@@ -44,12 +45,7 @@ class loginController extends Controller
     }
     public function studentHomePage(Request $request)
 {
-    $student = Session::get('student');
-    $softCopies = Session::get('softCopies');
-    if (!$student || !$softCopies) {
-        return "Error: Empty objects received.";
-    }
-    return view('studentHomePage', compact('student','softCopies'));
+    return view('studentHomePage');
 
 }
 
@@ -58,13 +54,15 @@ class loginController extends Controller
     $faculty_id = $req->input('faculty_id');
     $password = $req->input('password');
 
-    $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
-    //return $faculty;
+    $faculty_log = faculty_login::where('faculty_id', $faculty_id)->first();
+    $faculty=faculty::where('faculty_id',$faculty_id)->first();
+    //return $faculty_log;
     //return faculty_login::all();
 
-    if ($faculty) {
-        if ($faculty->password == $password) {
+    if ($faculty_log) {
+        if ($faculty_log->password == $password) {
             Session::put("faculty_user", $faculty_id);
+            Session::put("faculty", $faculty);
             return redirect('facultyHomePage');
         } else {
             return redirect()->back()->with('error', 'Invalid password entered. Please try again.');
@@ -72,6 +70,11 @@ class loginController extends Controller
     } else {
         return redirect()->back()->with('error', 'User not found. Please check the credentials and try again.');
     }
+}
+public function facultyHomePage(Request $request)
+{
+    return view('facultyHomePage');
+
 }
 
 public function logout(Request $req){
