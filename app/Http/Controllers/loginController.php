@@ -46,14 +46,11 @@ class loginController extends Controller
 {
     $student = Session::get('student');
     $softCopies = Session::get('softCopies');
-    // return Session::get('user');
-    // dd($student,$softCopies);
-
     if (!$student || !$softCopies) {
         return "Error: Empty objects received.";
     }
-
     return view('studentHomePage', compact('student','softCopies'));
+
 }
 
     public function verifyFacultyLogin(Request $req)

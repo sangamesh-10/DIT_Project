@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+@php
+    $student = Session::get('student');
+    $softCopies = Session::get('softCopies');
+
+@endphp
 
 <head>
     <meta charset="UTF-8">

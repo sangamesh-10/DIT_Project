@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+@include('facultyHomePage')
 <html lang="en">
 <head>
     <meta charset="UTF-8">

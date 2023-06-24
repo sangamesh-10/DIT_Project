@@ -35,8 +35,6 @@ class updationsController extends Controller
                 $student->save();
 
                 return redirect()->route('studentLogin')->with('success', 'Password updated successfully. Please login with your new password.');
-                ;
-                ;
             }
         }
     }
