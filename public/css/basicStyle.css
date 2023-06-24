@@ -79,6 +79,7 @@
     font-size: 18px;
     color: white;
     width: 400px;
+    right:0;
 }
 #student-name {
     white-space: nowrap;
@@ -92,4 +93,51 @@
     min-height: 100%;
     position: relative;
     padding-bottom: 50px; /* Height of the footer */
+  }
+
+  /* formStyle.css */
+
+.form-container {
+    width: 300px;
+    margin: auto;
+    background-color: #c2f4db;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .form-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+  }
+
+  .form-container label {
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    color: #333333;
+    text-align: left;
+  }
+
+  .form-container input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .form-container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #645e58;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }

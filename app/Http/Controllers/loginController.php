@@ -26,12 +26,13 @@ class loginController extends Controller
         $studentLogin = Students_login::where('student_id', $student_id)->first();
         $student = student::where('roll_num', $student_id)->first();
         $softCopies = Std_softcopie::where('roll_num', $student_id)->first();
-        // $img=$softCopies->photo;
+        $img=$softCopies->photo;
         if($studentLogin){
             if ($studentLogin->password == $password) {
                 Session::put("user",$student_id);
-                //return $student;
-                return redirect()->route('studentHomePage', ['student' => $student, 'softCopies' => $softCopies]);
+                Session::put("student", $student);
+                Session::put("softCopies", $softCopies);
+                return redirect()->route('studentHomePage');
             } else {
                 return redirect()->back()->with('error', 'Invalid Password entered. Please try again.');
             }
@@ -43,10 +44,13 @@ class loginController extends Controller
     }
     public function studentHomePage(Request $request)
 {
-    $student = $request->route('student');
-    $softCopies = $request->route('softCopies');
-    // return Session::get('user');
-    return view('studentHomePage', compact('student', 'softCopies'));
+    $student = Session::get('student');
+    $softCopies = Session::get('softCopies');
+    if (!$student || !$softCopies) {
+        return "Error: Empty objects received.";
+    }
+    return view('studentHomePage', compact('student','softCopies'));
+
 }
 
     public function verifyFacultyLogin(Request $req)
