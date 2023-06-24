@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+@include('facultyHomePage')
+
 <html>
 <head>
     <title>Update Password</title>
@@ -56,7 +58,7 @@
     </style>
 </head>
 <body>
-    <x-header></x-header>
+    {{-- <x-header></x-header> --}}
     <h3 style="justify-content: center;display:flex">New password should contain atleast one Capital letter,one number and minimum size 8 chars</h3>
 
     <div class="update-password-form">
@@ -78,6 +80,6 @@
     </div>
 @endif
     </div>
-    <x-footer></x-footer>
+    {{-- <x-footer></x-footer> --}}
 </body>
 </html>

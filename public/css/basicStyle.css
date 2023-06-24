@@ -79,6 +79,7 @@
     font-size: 18px;
     color: white;
     width: 400px;
+    right:0;
 }
 #student-name {
     white-space: nowrap;

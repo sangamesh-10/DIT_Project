@@ -35,14 +35,13 @@
             </ul>
         </div>
         <div class="student-info">
-            <img src='{{ asset('$softCopies->photo') }}' alt="Student Image">
+            <img src='{{$softCopies->photo}}' alt="Student Image">
             <div class="student-text">
-             <span id="student-name">Welcome,Sangameshwar Gaddam</span>
+             <span id="student-name">Welcome, {{$student->name}}</span>
             </div>
 
         </div>
     </nav>
-
     <x-footer></x-footer>
 
     <script>

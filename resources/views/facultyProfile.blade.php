@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+@include('facultyHomePage')
 <html>
 <head>
     @include('bootstrap')
@@ -43,7 +44,7 @@
 </style>
 </head>
 <body>
-    <x-header></x-header>
+    {{-- <x-header></x-header> --}}
 <div class="container">
     <h1 class="title">Faculty Details</h1>
     <table>
@@ -65,6 +66,6 @@
         </tr>
     </table>
 </div>
-<x-footer></x-footer>
+{{-- <x-footer></x-footer> --}}
 </body>
 
