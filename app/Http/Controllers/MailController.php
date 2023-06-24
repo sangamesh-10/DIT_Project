@@ -33,7 +33,7 @@ class MailController extends Controller
             'otp' => $otp,
         ];
         Mail::to($email)->send(new MailSender($mailData));
-        return view('OtpVerification_2');
+        return redirect()->route('otpVerification_2');
     }
     public function sendOtpFaculty(Request $req){
 

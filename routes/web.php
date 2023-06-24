@@ -22,7 +22,8 @@ use App\Http\Controllers\updationsController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
+Route::view('/profile','profile');
 Route::view("/StudentRegistration","studentRegistration");
 Route::post("stdRegistration",[stdRegController::class,"stdRegistration"]);
 
@@ -40,7 +41,10 @@ Route::post('/verifyFaculty',[loginController::class,"verifyFacultyLogin"]);
 
 Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
 Route::post('/updatePwdFaculty',[updationsController::class,"facultyPassword"]);
-Route::view("/changePwd","changePassword_std");
+// Route::view('/chPassFaculty','UpdatePassword_Faculty');
+Route::get('/chPassFaculty',function(){
+    return view("UpdatePassword_Faculty");
+});
 
 Route::get('studentHomePage', [loginController::class,"studentHomePage"])->name('studentHomePage');
 
@@ -52,6 +56,7 @@ Route::post('/sendOtpFaculty',[MailController::class,'sendOtpFaculty']);
 Route::post('/verifyOtp',[updationsController::class,'otpVerification']);
 Route::post('/verifyOtpFaculty',[updationsController::class,'otpVerificationFaculty']);
 Route::view('/otpVerification',"OtpVerification");
+Route::view('/otpVerification_2',"OtpVerification_2")->name("otpVerification_2");
 Route::view('/otpVerificationFaculty',"OtpVerification_Faculty");
 // Route::post('updateContact',[updationsController::class,'updateContact']);
 
@@ -62,6 +67,8 @@ Route::get('/facultyHomePage',function(){
     return view('facultyHomePage');
 });
 
+//logout route
+Route::get('/logout',[loginController::class,'logout']);
 
 
 

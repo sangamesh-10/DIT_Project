@@ -68,7 +68,10 @@ class loginController extends Controller
     }
 }
 
-
+public function logout(Request $req){
+    Session::flush();
+    return redirect()->route('welcome');
+}
 
 
 }

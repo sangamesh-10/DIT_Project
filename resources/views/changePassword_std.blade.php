@@ -7,19 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Update Password</title>
+    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
 
     <style>
         .mystyle {
-            width:400px;
+            width:500px;
             margin: auto;
             background-color: rgb(65, 213, 174);
             padding: 20px;
             align-items:center;
             border-radius: 20px;
-            display: flex;
+            /* display: flex;
             justify-content: center;
-            align-items: center;
-            height: 350px;
+            align-items: center; */
+            height: 450px;
             position:inherit;
             left: 40%;
             top:15%;
@@ -33,8 +34,6 @@
     <div class="mystyle">
         <form class='form' method="post" action="/updatePwd">
             @csrf
-            <label for="username" name="username">Username : </label>
-            <input type="text" name="username"><br>
             <label for="currentPwd" name="currentPwd">Current Password : </label>
             <input type="password" name="currentPwd"><br>
             <label for="new_password" name="new_password">New Password : </label>
@@ -42,9 +41,14 @@
             @error('new_password')
             <span style="color: red;">{{ $message }}</span>
         @enderror
-            <input type="submit" name="submit" value="Change">
+            <input type="submit" name="submit" value="Change"><br>
 
         </form>
+        @if (session('error'))
+        <div class="alert alert-danger" style="color:red;">
+            {{ session('error') }}
+        </div>
+    @endif
     </div>
     {{-- <x-footer></x-footer> --}}
 </body>

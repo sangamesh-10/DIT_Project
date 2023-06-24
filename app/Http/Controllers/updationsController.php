@@ -96,9 +96,14 @@ class updationsController extends Controller
         ]);
 
         $student_id = Session::get('user');
-        $student = student::find($student_id);
-        $student->phone_num = $request->input('mobile');
-        $student->save();
+        $newPhoneNumber = $request->input('mobile');
+
+$student = Student::where('roll_num', $student_id)->first();
+
+if ($student) {
+    $student->phone_num = $newPhoneNumber;
+    $student->save();
+}
 
         return redirect()->back()->with('success', 'Mobile number updated successfully!');
     }

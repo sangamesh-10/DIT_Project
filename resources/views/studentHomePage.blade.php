@@ -15,14 +15,14 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Profile</a>
+        <a href="profile">Profile</a>
         <a href="changePwd">Change Password</a>
         <a href="updateContact">Update MobileNumber</a>
         <a href="#">Internal Marks</a>
         <a href="#">Enrolled subjects</a>
         <a href="#">Attendance</a>
         <a href="#">Raise Complaint</a>
-        <a href="#">Log Out</a>
+        <a href="logout">Log Out</a>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -57,11 +57,9 @@
             opened=false;
         }
     }
-        document.addEventListener("click", function(event) {
-            if (!event.target.closest(".sidenav") && !event.target.closest("span[onclick='openNav()']")) {
-                closeNav();
-            }
-        });
+        // document.addEventListener("click", function(event) {
+        //     openNav()
+        // });
     </script>
 </body>
 
