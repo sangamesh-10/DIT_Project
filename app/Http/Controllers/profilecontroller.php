@@ -13,7 +13,7 @@ class profilecontroller extends Controller
     {
 
         $data= student::where('roll_num','21031F0015')->first();
-        return view('studentProfile',['students'=>$data]);
+        return view('profile',['students'=>$data]);
     }
     function facultyProfile()
     {
