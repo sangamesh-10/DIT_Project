@@ -10,7 +10,6 @@
 
 </head>
 <body>
-    <div class="wrapper">
     <div class="form-container">
     <form action="changeContact" method="post">
         @csrf
@@ -27,6 +26,5 @@
         {{ session('success') }}
     </div>
 @endif
-</div>
 </body>
 </html>

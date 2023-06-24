@@ -85,8 +85,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    position: fixed;
     right: 0;
+    position: absolute;
   }
 
   .wrapper {

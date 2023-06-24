@@ -10,7 +10,6 @@
 
 </head>
 <body>
-    <div class="wrapper">
     <div class="form-container">
 
     <form action="changeContactFaculty" method="post">
@@ -27,7 +26,6 @@
         {{ session('success') }}
     </div>
 @endif
-</div>
 </div>
 </body>
 </html>

@@ -9,7 +9,6 @@
 
 <body>
     <x-header></x-header>
-    <div class="wrapper">
     <div class="form-container">
 
 
@@ -27,7 +26,6 @@
             </div>
         @endif
     </div>
-</div>
     <x-footer></x-footer>
 </body>
 

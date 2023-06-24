@@ -10,7 +10,6 @@
 </head>
 <body>
     {{-- <x-header></x-header> --}}
-    <div class="wrapper">
     <div class="form-container">
         <h2>Update Password</h2>
         <p class="password-requirements"> * new password should contain at least one capital letter, one number, and be a minimum of 8 characters.</p>
@@ -31,6 +30,5 @@
     </div>
 @endif
     </div>
-</div>
 </body>
 </html>

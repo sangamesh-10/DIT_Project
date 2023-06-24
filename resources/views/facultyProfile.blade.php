@@ -45,7 +45,6 @@
 </head>
 <body>
     {{-- <x-header></x-header> --}}
-    <div class="wrapper">
 <div class="container">
     <h1 class="title">Faculty Details</h1>
     <table>
@@ -66,7 +65,6 @@
             <td>{{$faculty['designation']}}</td>
         </tr>
     </table>
-</div>
 </div>
 {{-- <x-footer></x-footer> --}}
 </body>

@@ -44,7 +44,6 @@
 </style>
 </head>
 <body>
-    <div class="wrapper">
     {{-- <x-header></x-header> --}}
 <div class="container">
     <h1 class="title">Student Details</h1>
@@ -80,7 +79,6 @@
     </table>
 </div>
 {{-- <x-footer></x-footer> --}}
-</div>
 </body>
 </html>
 

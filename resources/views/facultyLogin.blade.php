@@ -9,7 +9,6 @@
 
 <body>
     <x-header></x-header>
-    <div class="wrapper">
     <div class="form-container">
         @if ($message = session('success'))
             <div class="alert alert-success">
@@ -37,7 +36,6 @@
             </div>
         @endif
     </div>
-</div>
     <x-footer></x-footer>
 </body>
 
