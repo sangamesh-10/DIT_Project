@@ -10,12 +10,15 @@
 
 </head>
 <body>
+    <div class="wrapper">
+    <div class="form-container">
+
     <form action="changeContactFaculty" method="post">
         @csrf
         @method('PUT')
 
         <label for="mobile">New Mobile Number:</label>
-        <input type="text" name="mobile" id="mobile">
+        <input type="text" name="mobile" id="mobile"><br>
 
         <button type="submit">Update Mobile Number</button>
     </form>
@@ -24,5 +27,7 @@
         {{ session('success') }}
     </div>
 @endif
+</div>
+</div>
 </body>
 </html>
