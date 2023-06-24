@@ -44,6 +44,7 @@
 </style>
 </head>
 <body>
+    <div class="wrapper">
     {{-- <x-header></x-header> --}}
 <div class="container">
     <h1 class="title">Student Details</h1>
@@ -79,20 +80,7 @@
     </table>
 </div>
 {{-- <x-footer></x-footer> --}}
+</div>
 </body>
-
-{{-- <table border='5'>
-    <tr>
-        <td>Roll Number</td>
-        <td>{{$students['roll_num']}}</td>
-    </tr>
-    <tr>
-        <td>Name</td>
-        <td>{{$students['name']}}</td>
-    </tr>
-    <tr>
-        <td>E-mail</td>
-        <td>{{$students['email']}}</td>
-    </tr>
-</table> --}}
+</html>
 

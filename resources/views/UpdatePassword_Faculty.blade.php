@@ -10,10 +10,10 @@
 </head>
 <body>
     {{-- <x-header></x-header> --}}
-    <h3 style="justify-content: center;display:flex">New password should contain atleast one Capital letter,one number and minimum size 8 chars</h3>
-
+    <div class="wrapper">
     <div class="form-container">
         <h2>Update Password</h2>
+        <p class="password-requirements"> * new password should contain at least one capital letter, one number, and be a minimum of 8 characters.</p>
         <form class='form' method="post" action="/updatePwdFaculty">
             @csrf
             <label for="new_password" name="new_password">New Password</label>
@@ -31,6 +31,6 @@
     </div>
 @endif
     </div>
-    {{-- <x-footer></x-footer> --}}
+</div>
 </body>
 </html>

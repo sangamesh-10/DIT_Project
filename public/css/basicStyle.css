@@ -8,7 +8,7 @@
     background-color: rgb(8, 8, 8);
     color: white;
     text-align: center;
-    /* z-index: -9999; */
+    z-index: 9999;
     /* margin-bottom: 2px; */
 }
 .sidenav {
@@ -141,3 +141,20 @@
     border-radius: 5px;
     cursor: pointer;
   }
+  .form-container .forgot-password {
+    font-size: 14px;
+    color: #333333;
+    margin-top: 10px;
+}
+
+    .form-container .password-requirements {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: small;
+        color: red;
+    }
+
+body {
+    background-color: #f1f1f1;
+    font-family: Arial, sans-serif;
+}

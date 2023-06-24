@@ -14,7 +14,7 @@
 
 <body>
     <x-header></x-header>
-
+    <div class="wrapper">
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="facultyprofile">Profile</a>
@@ -44,7 +44,7 @@
             </div>
         </div>
     </nav>
-
+</div>
     <x-footer></x-footer>
 
     <script>
