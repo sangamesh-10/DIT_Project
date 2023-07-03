@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\SemesterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SubjectsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/addSubject',[SubjectsController::class,'add']);
+Route::get('/getSubjects',[SubjectsController::class,'get']);
+
+Route::put('/updateSemester',[SemesterController::class,'update']);
+Route::delete('/removeSemester',[SemesterController::class,'delete']);
