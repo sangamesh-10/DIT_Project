@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class re_register extends Model
+class noticeboard extends Model
 {
     use HasFactory;
-    protected $primaryKey=['roll_num','subject_code'];
-    protected $keyType =[ 'string','string',];
+    public $table="noticeboard";
+    protected $primaryKey=['notice_id','description','date'];
+    protected $keyType =[ 'string','string','date'];
     public $timestamps=false;
     public function getIncrementing()
     {

@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class re_register extends Model
+class daily_attendance extends Model
 {
     use HasFactory;
-    protected $primaryKey=['roll_num','subject_code'];
-    protected $keyType =[ 'string','string',];
+    public $table='daily_attendance';
+    protected $primaryKey=['roll_num','subject_code','date'];
+    protected $keyType =[ 'string','string','date'];
     public $timestamps=false;
     public function getIncrementing()
     {
