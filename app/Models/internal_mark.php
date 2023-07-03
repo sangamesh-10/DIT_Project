@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class re_register extends Model
+class internal_mark extends Model
 {
     use HasFactory;
     protected $primaryKey=['roll_num','subject_code'];
