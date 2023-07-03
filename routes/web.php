@@ -23,11 +23,23 @@ use App\Http\Controllers\updationsController;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+
+//views
 Route::view('/profile','profile');
 Route::view("/StudentRegistration","studentRegistration");
+Route::view("/facultyRegistration","facultyRegistration");
+Route::view('updatePassword','UpdatePassword');
+Route::view('updatePasswordFaculty','UpdatePassword_Faculty');
+Route::view('/otpVerification',"OtpVerification");
+Route::view('/otpVerification_2',"OtpVerification_2")->name("otpVerification_2");
+Route::view('/otpVerificationFaculty',"OtpVerification_Faculty");
+Route::view('/updateContact','updateContact');
+Route::view('/updateContactFaculty','updateContactFaculty');
+
+
+
 Route::post("stdRegistration",[stdRegController::class,"stdRegistration"]);
 
-Route::view("/facultyRegistration","facultyRegistration");
 Route::post("facultyReg",[facultyRegController::class,"facultyReg"]);
 
 Route::get("profile",[profilecontroller::class,"studentProfile"]);
@@ -38,8 +50,6 @@ Route::get('/FacultyLogin',[loginController::class,"facultyLogin"])->name('facul
 
 Route::post('/verify',[loginController::class,"verify"]);
 Route::post('/verifyFaculty',[loginController::class,"verifyFacultyLogin"]);
-Route::view('updatePassword','UpdatePassword');
-Route::view('updatePasswordFaculty','UpdatePassword_Faculty');
 Route::post('/updatePwd',[updationsController::class,"stdPassword"]);
 Route::post('/updatePwdFaculty',[updationsController::class,"facultyPassword"]);
 // Route::view('/chPassFaculty','UpdatePassword_Faculty');
@@ -57,15 +67,10 @@ Route::post('/sendOtpFaculty',[MailController::class,'sendOtpFaculty']);
 // Route to verify otp
 Route::post('/verifyOtp',[updationsController::class,'otpVerification']);
 Route::post('/verifyOtpFaculty',[updationsController::class,'otpVerificationFaculty']);
-Route::view('/otpVerification',"OtpVerification");
-Route::view('/otpVerification_2',"OtpVerification_2")->name("otpVerification_2");
-Route::view('/otpVerificationFaculty',"OtpVerification_Faculty");
 // Route::post('updateContact',[updationsController::class,'updateContact']);
 
 Route::put('/changeContact', [updationsController::class, 'updateContact'])->name('updateContact');
 Route::put('/changeContactFaculty', [updationsController::class, 'updateContactFaculty'])->name('updateContactFaculty');
-Route::view('/updateContact','updateContact');
-Route::view('/updateContactFaculty','updateContactFaculty');
 
 //logout route
 Route::get('/logout',[loginController::class,'logout']);

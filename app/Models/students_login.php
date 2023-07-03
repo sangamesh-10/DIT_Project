@@ -9,5 +9,10 @@ class students_login extends Model
 {
     use HasFactory;
     protected $primaryKey='student_id';
+    protected $keyType = 'string';
     public $timestamps=false;
+    public function getIncrementing()
+    {
+        return false;
+    }
 }
