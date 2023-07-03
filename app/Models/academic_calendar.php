@@ -5,16 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class re_register extends Model
+class academic_calendar extends Model
 {
     use HasFactory;
-    protected $primaryKey=['roll_num','subject_code'];
-    protected $keyType =[ 'string','string',];
-    public $timestamps=false;
+    public $table = 'academic_calendar';
+    protected $primaryKey = ['branch', 'semester', 'description'];
+    protected $keyType = ['string', 'integer', 'string'];
+
+    public $timestamps = false;
     public function getIncrementing()
     {
         return false;
     }
+    protected $fillable=['from_date','to_date'];
     public function getKeyName()
     {
         return $this->primaryKey;
@@ -26,5 +29,9 @@ class re_register extends Model
             $query->where($keyName,"=",$this->getAttribute($keyName));
         }
         return $query;
+
     }
+
+
+
 }
