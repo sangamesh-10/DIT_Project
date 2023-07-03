@@ -33,5 +33,4 @@ class academic_calendar extends Model
     }
 
 
-
 }
