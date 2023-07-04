@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\enrolled_student;
+use App\Models\re_register;
 
 class SemesterController extends Controller
 {
@@ -56,6 +57,30 @@ class SemesterController extends Controller
 
         $object->delete();
 
+        return response()->json(['result' => 'Record deleted']);
+    }
+    public function addReRegister(Request $req)
+    {
+        $object=new re_register;
+        $object->roll_num=$req->input('rollNumber');
+        $object->subject_code=$req->input('subjectCode');
+        $object->save();
+        return response()->json($object);
+    }
+    public function getReRegister()
+    {
+        $object=re_register::all();
+        return response()->json($object);
+    }
+    public function deleteReRegister(Request $req)
+    {
+        $roll_num =$req->input('rollNumber');
+        $subject_code=$req->input('subjectCode');
+
+        $object=re_register::where('roll_num',$roll_num)->where('subject_code',$subject_code)->first();        if (!$object) {
+            return response()->json(['result' => 'Record not found'], 404);
+        }
+        $object->delete();
         return response()->json(['result' => 'Record deleted']);
     }
 }
