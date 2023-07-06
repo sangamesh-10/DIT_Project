@@ -45,11 +45,11 @@ return [
             'provider' => 'users',
             'hash'=>false
         ],
-        // 'admin' => [
-        //     'driver' => 'jwt',
-        //     'provider' => 'admin',
-        //     'hash'=>false
-        // ],
+        'admin' => [
+            'driver' => 'jwt',
+            'provider' => 'admins',
+            'hash'=>false
+        ],
     ],
 
     /*
@@ -70,7 +70,7 @@ return [
     */
 
     'providers' => [
-        'admin' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin_login::class,
         ],

@@ -12,15 +12,15 @@ class AdminController extends Controller
         $this->middleware('auth:admin', ['except' => ['login']]);
     }
     public function login()
-{
-    $credentials = request(['admin_id', 'password']);
+    {
+        $credentials = request(['admin_id', 'password']);
 
-    if (!$token = auth()->guard('admin')->attempt($credentials)) {
-        return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = auth('admin')->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
     }
-
-    return $this->respondWithToken($token);
-}
 
     protected function respondWithToken($token)
     {
