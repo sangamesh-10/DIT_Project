@@ -43,7 +43,12 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
-            'hash'=>false
+
+        ],
+        'faculty-api' => [
+            'driver' => 'jwt',
+            'provider' => 'faculty',
+
         ],
     ],
 
@@ -70,10 +75,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'faculty' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\faculty_login::class,
+        ],
     ],
 
     /*

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\SubjectsController;
+use App\Http\Controllers\FacultyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,18 @@ Route::get('/getSubjects',[SubjectsController::class,'get']);
 
 Route::put('/updateSemester',[SemesterController::class,'update']);
 Route::delete('/removeSemester',[SemesterController::class,'delete']);
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+    Route::post('facultyEntry',[FacultyController::class,'facultyEntry']);
+    Route::post('facultyLogin',[FacultyController::class,'login']);
+    Route::post('facultyLogout', [FacultyController::class,'logout']);
+    Route::post('refresh', [FacultyController::class,'refresh']);
+    Route::post('me', [FacultyController::class,'me']);
+
+});
