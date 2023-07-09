@@ -50,6 +50,10 @@ return [
             'provider' => 'faculty',
 
         ],
+        'admin-api' => [
+            'driver' => 'jwt',
+            'provider' => 'admin',
+        ],
     ],
 
     /*
@@ -78,6 +82,11 @@ return [
         'faculty' => [
             'driver' => 'eloquent',
             'model' => App\Models\faculty_login::class,
+        ],
+
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\admin_login::class,
         ],
     ],
 
