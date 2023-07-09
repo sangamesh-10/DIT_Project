@@ -43,12 +43,16 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
-            'hash'=>false
+
         ],
-        'admin' => [
+        'faculty-api' => [
             'driver' => 'jwt',
-            'provider' => 'admins',
-            'hash'=>false
+            'provider' => 'faculty',
+
+        ],
+        'admin-api' => [
+            'driver' => 'jwt',
+            'provider' => 'admin',
         ],
     ],
 
@@ -70,15 +74,20 @@ return [
     */
 
     'providers' => [
-        'admins' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        'faculty' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\faculty_login::class,
+        ],
+
+        'admin' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin_login::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

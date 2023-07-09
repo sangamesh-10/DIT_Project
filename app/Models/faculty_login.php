@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class faculty_login extends Model implements JWTSubject
+class faculty_login extends Authenticatable implements JWTSubject
 {
     use HasFactory,HasApiTokens;
     // Rest omitted for brevity
@@ -40,6 +40,9 @@ class faculty_login extends Model implements JWTSubject
     {
         return false;
     }
-
+    protected $fillable = [
+        'faculty_id',
+        'password',
+    ];
 
 }

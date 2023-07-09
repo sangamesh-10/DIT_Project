@@ -5,8 +5,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class admin_login extends Model implements JWTSubject
+class admin_login extends Authenticatable implements JWTSubject
 {
     use HasFactory,HasApiTokens;
 
@@ -38,4 +39,8 @@ class admin_login extends Model implements JWTSubject
     {
         return false;
     }
+    protected $fillable = [
+        'admin_id',
+        'password',
+    ];
 }
