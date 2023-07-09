@@ -35,12 +35,12 @@ Route::delete('/removeSemester',[SemesterController::class,'delete']);
 
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => 'auth:faculty-api',
     'prefix' => 'auth'
 
 ], function ($router) {
     Route::post('facultyEntry',[FacultyController::class,'facultyEntry']);
-    Route::post('facultyLogin',[FacultyController::class,'login']);
+    Route::post('facultyLogin',[FacultyController::class,'login'])->name("login");
     Route::post('facultyLogout', [FacultyController::class,'logout']);
     Route::post('refresh', [FacultyController::class,'refresh']);
     Route::post('me', [FacultyController::class,'me']);
