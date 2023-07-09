@@ -16,7 +16,7 @@ class FacultyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','facultyEntry']]);
+        $this->middleware('auth:faculty-api', ['except' => ['login','facultyEntry']]);
     }
     public function facultyEntry(Request $req) {
         $faculty = faculty_login::create([
@@ -57,7 +57,7 @@ class FacultyController extends Controller
 
     public function me()
     {
-        return response()->json(auth()->guard('faculty')->user());
+        return response()->json(auth()->guard('faculty-api')->user());
     }
 
 
