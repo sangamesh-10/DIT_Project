@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\subject;
 use App\Models\assign_faculty;
+use App\Models\faculty;
 
 class SubjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:faculty-api');
+    }
     public function add(Request $req)
     {
         $object = new subject;
@@ -61,5 +66,11 @@ class SubjectsController extends Controller
         $object->faculty_id=$req->input("facultyID");
         $object->save();
         return response()->json(['message'=>'record updated']);
+     }
+
+     public function facultySubjects(Request $req){
+        $faculty_id = $req->query('faculty_id');
+        $subjects = assign_faculty::where('faculty_id',$faculty_id)->pluck('subject_code');
+        return response()->json($subjects);
      }
 }

@@ -47,6 +47,9 @@ Route::group([
     Route::post('facultyLogout', [FacultyController::class,'logout']);
     Route::post('refresh', [FacultyController::class,'refresh']);
     Route::post('me', [FacultyController::class,'me']);
+    Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects']);
+    Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
+    Route::post('markAttendance',[FacultyController::class,'markAttendance']);
 
 });
 
