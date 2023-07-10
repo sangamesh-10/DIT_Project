@@ -41,8 +41,9 @@ Route::group([
     'prefix' => 'auth'
 
 ], function ($router) {
-    Route::post('facultyEntry',[FacultyController::class,'facultyEntry']);
-    Route::post('facultyLogin',[FacultyController::class,'login'])->name("login");
+    Route::post('facultyEntry',[FacultyController::class,'facultyEntry'])->withoutMiddleware('auth:faculty-api');
+    Route::post('facultyLogin', [FacultyController::class, 'login'])->name('faculty.login')
+    ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
     Route::post('refresh', [FacultyController::class,'refresh']);
     Route::post('me', [FacultyController::class,'me']);
@@ -53,8 +54,8 @@ Route::group([
     'middleware' => 'auth:admin-api',
     'prefix' => 'auth'
 ], function ($router){
-    Route::post('adminEntry',[AdminController::class,'adminEntry']);
-    Route::post('adminLogin',[AdminController::class,'login'])->name('login');
+    Route::post('adminEntry',[AdminController::class,'adminEntry'])->withoutMiddleware('auth:admin-api');
+    Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');
    //Route::match(['get', 'post'], 'adminLogin', [AdminController::class, 'login'])->name('login');
     Route::post('adminLogout',[AdminController::class,'logout']);
     Route::get('adminMe',[AdminController::class,'me']);
