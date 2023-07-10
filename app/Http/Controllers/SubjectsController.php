@@ -12,6 +12,7 @@ class SubjectsController extends Controller
     public function __construct()
     {
         $this->middleware('auth:faculty-api');
+        $this->middleware('auth:admin-api');
     }
     public function add(Request $req)
     {

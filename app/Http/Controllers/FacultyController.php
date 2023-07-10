@@ -25,18 +25,6 @@ class FacultyController extends Controller
     {
         $this->middleware('auth:faculty-api');
     }
-    public function facultyEntry(Request $req)
-    {
-        $faculty = faculty_login::create([
-            'faculty_id' => $req->input('faculty_id'),
-            'password' => Hash::make($req->input('password'))
-        ]);
-        if ($faculty) {
-            return response()->json([$faculty, 'status' => true]);
-        } else {
-            return response()->json(['status' => false]);
-        }
-    }
     public function login(Request $req)
     {
         $credentials = $req->only('faculty_id', 'password');

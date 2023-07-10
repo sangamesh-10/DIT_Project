@@ -8,6 +8,10 @@ use App\Models\re_register;
 
 class SemesterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin-api');
+    }
     public function add(Request $req)
     {
         $object = new enrolled_student;
@@ -28,7 +32,7 @@ class SemesterController extends Controller
         $code = $req->input('code');
 
         $object = enrolled_student::where('year', $year)->where('code', $code)->first();
-        // return response()->json($object);
+        //return response()->json($object);
 
         if (!$object) {
             return response()->json(['result' => 'Record not found'], 404);

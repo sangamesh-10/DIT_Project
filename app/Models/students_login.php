@@ -5,8 +5,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class students_login extends Model implements JWTSubject
+
+class students_login extends Authenticatable implements JWTSubject
 {
     use HasFactory,HasApiTokens;
 

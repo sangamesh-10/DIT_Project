@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\SubjectsController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\NoticeBoardController;
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\StudentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,15 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('addCalendar',[AcademicCalendarController::class,'add']);
-Route::get('getCalendar',[AcademicCalendarController::class,'get']);
-Route::put('updateCalendar',[AcademicCalendarController::class,'update']);
-
-Route::post('/addSubject',[SubjectsController::class,'add']);
-Route::get('/getSubjects',[SubjectsController::class,'get']);
-
-Route::put('/updateSemester',[SemesterController::class,'update']);
-Route::delete('/removeSemester',[SemesterController::class,'delete']);
 
 
 Route::group([
@@ -41,11 +34,9 @@ Route::group([
     'prefix' => 'auth'
 
 ], function ($router) {
-    Route::post('facultyEntry',[FacultyController::class,'facultyEntry'])->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogin', [FacultyController::class, 'login'])->name('faculty.login')
     ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
-    Route::post('refresh', [FacultyController::class,'refresh']);
     Route::post('me', [FacultyController::class,'me']);
     Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects']);
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
@@ -58,30 +49,59 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router){
     Route::post('adminEntry',[AdminController::class,'adminEntry'])->withoutMiddleware('auth:admin-api');
-    Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');
-   //Route::match(['get', 'post'], 'adminLogin', [AdminController::class, 'login'])->name('login');
-    Route::post('adminLogout',[AdminController::class,'logout']);
+    Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');    Route::post('adminLogout',[AdminController::class,'logout']);
     Route::get('adminMe',[AdminController::class,'me']);
+
+    Route::post('addSubjects',[SubjectsController::class,'add']);
+    Route::get('/getSubjects',[SubjectsController::class,'get']);
+
+    Route::post('/addSemester',[SemesterController::class,'add']);
+    Route::get('/getSemester',[SemesterController::class,'get']);
+    Route::put('/updateSemester',[SemesterController::class,'update']);
+    Route::delete('/removeSemester',[SemesterController::class,'delete']);
+
+    Route::post("/addReRegister",[SemesterController::class,'addReRegister']);
+    Route::get("/getReRegister",[SemesterController::class,'getReRegister']);
+    Route::delete("/deleteReRegister",[SemesterController::class,'deleteReRegister']);
+
+    Route::post('/assignFaculty',[SubjectsController::class,'assignFaculty']);
+    Route::get('/getAssignedFaculty',[SubjectsController::class,'getAssignedFaculty']);
+    Route::delete('/deleteAssignment',[SubjectsController::class,'deleteAssignment']);
+    Route::put('/updateAssignment',[SubjectsController::class,'updateAssignment']);
+
+    Route::post("/addStdLogin",[AuthenticationController::class,'addStdLogin']);
+    Route::put("/updateStdLogin",[AuthenticationController::class,'updateStdLogin']);
+    Route::delete("/deleteStdLogin",[AuthenticationController::class,'deleteStdLogin']);
+
+    Route::post("/addFacLogin",[AuthenticationController::class,'addFacLogin']);
+    Route::put("/updateFacLogin",[AuthenticationController::class,'updateFacLogin']);
+    Route::delete("/deleteFacLogin",[AuthenticationController::class,'deleteFacLogin']);
+
+    Route::post('addCalendar',[AcademicCalendarController::class,'add']);
+    Route::get('getCalendar',[AcademicCalendarController::class,'get']);
+    Route::put('updateCalendar',[AcademicCalendarController::class,'update']);
+
+    Route::post('addNotice',[NoticeBoardController::class,'add']);
+    Route::get('getNotice',[NoticeBoardController::class,'get']);
+    Route::put('updateNotice',[NoticeBoardController::class,'update']);
+    Route::delete('deleteNotice',[NoticeBoardController::class,'delete']);
 });
 
-Route::post("/addReRegister",[SemesterController::class,'addReRegister']);
-Route::get("/getReRegister",[SemesterController::class,'getReRegister']);
-Route::delete("/deleteReRegister",[SemesterController::class,'deleteReRegister']);
 
-Route::post('/assignFaculty',[SubjectsController::class,'assignFaculty']);
-Route::get('/getAssignedFaculty',[SubjectsController::class,'getAssignedFaculty']);
-Route::delete('/deleteAssignment',[SubjectsController::class,'deleteAssignment']);
-Route::put('/updateAssignment',[SubjectsController::class,'updateAssignment']);
+// Route::post("/addAdminLogin",[AuthenticationController::class,'addAdminLogin']);
+// Route::put("/updateAdminLogin",[AuthenticationController::class,'updateAdminLogin']);
+// Route::delete("/deleteAdminLogin",[AuthenticationController::class,'deleteAdminLogin']);
 
-Route::post("/addStdLogin",[AuthenticationController::class,'addStdLogin']);
-Route::put("/updateStdLogin",[AuthenticationController::class,'updateStdLogin']);
-Route::delete("/deleteStdLogin",[AuthenticationController::class,'deleteStdLogin']);
-Route::post("/addFacLogin",[AuthenticationController::class,'addFacLogin']);
-Route::put("/updateFacLogin",[AuthenticationController::class,'updateFacLogin']);
-Route::delete("/deleteFacLogin",[AuthenticationController::class,'deleteFacLogin']);
-Route::post("/addAdminLogin",[AuthenticationController::class,'addAdminLogin']);
-Route::put("/updateAdminLogin",[AuthenticationController::class,'updateAdminLogin']);
-Route::delete("/deleteAdminLogin",[AuthenticationController::class,'deleteAdminLogin']);
+Route::group([
 
+    'middleware' => 'auth:student-api',
+    'prefix' => 'auth'
 
+], function ($router) {
+    Route::post('studentLogin', [StudentController::class, 'login'])->name('student.login')
+    ->withoutMiddleware('auth:student-api');
+    Route::post('studentLogout', [StudentController::class,'logout']);
+    Route::get('studentMe', [StudentController::class,'me']);
+
+});
 
