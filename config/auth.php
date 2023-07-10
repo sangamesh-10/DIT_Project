@@ -54,6 +54,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'admin',
         ],
+        'student-api' => [
+            'driver' => 'jwt',
+            'provider' => 'student',
+        ],
     ],
 
     /*
@@ -87,6 +91,10 @@ return [
         'admin' => [
             'driver' => 'eloquent',
             'model' => App\Models\admin_login::class,
+        ],
+        'student' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\students_login::class,
         ],
     ],
 

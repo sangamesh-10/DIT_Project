@@ -7,6 +7,10 @@ use App\Models\academic_calendar;
 
 class AcademicCalendarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin-api');
+    }
     function add(Request $req)
     {
         $object = new academic_calendar;

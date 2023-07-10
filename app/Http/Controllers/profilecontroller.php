@@ -15,8 +15,8 @@ class profilecontroller extends Controller
     {
         $student_id=Session::get('user');
         $data= student::where('roll_num',$student_id)->first();
-        $education=sample_sem_assignment::where('roll_num',$student_id)->first();
-        return view('profile',['students'=>$data,'education'=>$education]);
+    //     $education=sample_sem_assignment::where('roll_num',$student_id)->first();
+    //     return view('profile',['students'=>$data,'education'=>$education]);
     }
     function facultyProfile()
     {

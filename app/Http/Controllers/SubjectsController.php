@@ -8,6 +8,10 @@ use App\Models\assign_faculty;
 
 class SubjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin-api');
+    }
     public function add(Request $req)
     {
         $object = new subject;

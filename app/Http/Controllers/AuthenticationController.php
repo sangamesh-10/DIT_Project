@@ -6,14 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\students_login;
 use App\Models\faculty_login;
 use App\Models\admin_login;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthenticationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin-api');
+    }
     public function addStdLogin(Request $req)
     {
         $object=new students_login;
         $object->student_id=$req->input("rollNumber");
-        $object->password=$req->input("password");
+        $object->password=Hash::make($req->input("password"));
         $object->save();
         return response()->json($object);
     }
@@ -25,7 +31,7 @@ class AuthenticationController extends Controller
         {
             return response()->json(['message'=>'Record not found'],404);
         }
-        $object->password=$req->input("password");
+        $object->password= Hash::make($req->input("password"));
         $object->save();
         return response()->json(['message'=>'Record updated']);
     }
@@ -44,7 +50,7 @@ class AuthenticationController extends Controller
     {
         $object=new faculty_login;
         $object->faculty_id=$req->input("facultyID");
-        $object->password=$req->input("password");
+        $object->password=Hash::make($req->input("password"));
         $object->save();
         return response()->json($object);
     }
@@ -56,7 +62,7 @@ class AuthenticationController extends Controller
         {
             return response()->json(['message'=>'Record not found'],404);
         }
-        $object->password=$req->input("password");
+        $object->password=Hash::make($req->input("password"));
         $object->save();
         return response()->json(['message'=>'Record updated']);
     }
@@ -75,7 +81,7 @@ class AuthenticationController extends Controller
     {
         $object=new admin_login;
         $object->admin_id=$req->input("adminID");
-        $object->password=$req->input("password");
+        $object->password=Hash::make($req->input("password"));
         $object->save();
         return response()->json($object);
     }

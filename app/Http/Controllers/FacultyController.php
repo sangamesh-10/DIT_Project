@@ -1,34 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
 use App\Models\faculty_login;
-use Exception;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class FacultyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:faculty-api', ['except' => ['login','facultyEntry']]);
-    }
-    public function facultyEntry(Request $req) {
-        $faculty = faculty_login::create([
-            'faculty_id'=>$req->input('faculty_id'),
-            'password'=>Hash::make($req->input('password'))
-        ]);
-        if($faculty){
-            return response()->json([$faculty,'status'=>true]);
-        }
-        else{
-            return response()->json(['status'=>false]);
-        }
+        $this->middleware('auth:faculty-api');
     }
     public function login(Request $req)
     {

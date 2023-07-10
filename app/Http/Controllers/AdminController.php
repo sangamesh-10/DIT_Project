@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
- use App\Models\admin_login;
+use App\Models\admin_login;
+use Carbon\Carbon;
+
 
 
 class AdminController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:admin-api', ['except' => ['login','adminEntry']]);
+        $this->middleware('auth:admin-api');
     }
     public function adminEntry(Request $req) {
         $admin = admin_login::create([
@@ -40,10 +42,12 @@ class AdminController extends Controller
 
     protected function respondWithToken($token)
     {
+        $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => $expiration->timestamp,
         ]);
     }
     public function me()
