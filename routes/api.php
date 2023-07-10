@@ -54,7 +54,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router){
     Route::post('adminEntry',[AdminController::class,'adminEntry']);
-    Route::post('adminLogin',[AdminController::class,'login'])->name('login');
+    //Route::post('adminLogin',[AdminController::class,'login'])->name('login');
    //Route::match(['get', 'post'], 'adminLogin', [AdminController::class, 'login'])->name('login');
     Route::post('adminLogout',[AdminController::class,'logout']);
     Route::get('adminMe',[AdminController::class,'me']);
