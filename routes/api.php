@@ -38,9 +38,10 @@ Route::group([
     ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
     Route::post('me', [FacultyController::class,'me']);
-    Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects']);
+    Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects'])->withoutMiddleware('auth:admin-api');
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
+    Route::post('addInternalMarks',[FacultyController::class,'addInternalMarks']);
 
 });
 
@@ -102,6 +103,7 @@ Route::group([
     ->withoutMiddleware('auth:student-api');
     Route::post('studentLogout', [StudentController::class,'logout']);
     Route::get('studentMe', [StudentController::class,'me']);
+    Route::get('getStudentNotifications',[StudentController::class,'getNotifications']);
 
 });
 
