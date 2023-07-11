@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use App\Models\re_register;
 use App\Models\student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\raise_complaint;
 
 class FacultyController extends Controller
 {
@@ -123,6 +125,21 @@ class FacultyController extends Controller
                 return response()->json(['error' => 'Invalid student data'], 400);
             }
         }
+        public function raiseComplaint(Request $req)
+    {
+        $user = auth()->guard('faculty-api')->user();
+        $object = new raise_complaint;
+        $object->from_id= $user->faculty_id;
+        $object->description=$req->input("description");
+        $object->date=date('Y-m-d');
+        $result=$object->save();
+        if($result){
+        return response()->json($object);
+        }
+        else{
+            return response()->json(['message'=>'could not save data']);
+        }
+    }
 
         public function addInternalMarks(Request $req){
             $user = auth()->user()->faculty_id;

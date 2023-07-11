@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\notifications;
+use App\Models\raise_complaint;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
@@ -57,5 +58,20 @@ class StudentController extends Controller
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+    public function raiseComplaint(Request $req)
+    {
+        $user = auth()->guard('student-api')->user();
+        $object = new raise_complaint;
+        $object->from_id= $user->student_id;
+        $object->description=$req->input("description");
+        $object->date=date('Y-m-d');
+        $result=$object->save();
+        if($result){
+        return response()->json($object);
+        }
+        else{
+            return response()->json(['message'=>'could not save data']);
+        }
     }
 }
