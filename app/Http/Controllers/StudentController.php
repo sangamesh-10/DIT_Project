@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\notifications;
 use App\Models\raise_complaint;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -44,7 +45,14 @@ class StudentController extends Controller
         $object=Student::where("roll_num",$loginId)->first();
         return response()->json($object);
     }
+    public function getNotifications()
+    {
+        $user = auth()->user()->student_id;
+        $notifications =  notifications::where('receiver_id',$user)->orderBy('created_at', 'desc')->get();
 
+        // Return the notifications as JSON response
+        return response()->json(['notifications' => $notifications]);
+    }
     public function logout()
     {
         auth()->logout();
