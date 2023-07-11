@@ -38,9 +38,12 @@ Route::group([
     ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
     Route::post('me', [FacultyController::class,'me']);
-    Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects']);
+    Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects'])->withoutMiddleware('auth:admin-api');
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
+
+    Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
+
 
 });
 
@@ -49,11 +52,12 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router){
     Route::post('adminEntry',[AdminController::class,'adminEntry'])->withoutMiddleware('auth:admin-api');
-    Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');    Route::post('adminLogout',[AdminController::class,'logout']);
+    Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');
+    Route::post('adminLogout',[AdminController::class,'logout']);
     Route::get('adminMe',[AdminController::class,'me']);
 
-    Route::post('addSubjects',[SubjectsController::class,'add']);
-    Route::get('/getSubjects',[SubjectsController::class,'get']);
+    Route::post('addSubjects',[SubjectsController::class,'add'])->withoutMiddleware('auth:faculty-api');
+    Route::get('/getSubjects',[SubjectsController::class,'get'])->withoutMiddleware('auth:faculty-api');
 
     Route::post('/addSemester',[SemesterController::class,'add']);
     Route::get('/getSemester',[SemesterController::class,'get']);
@@ -64,10 +68,10 @@ Route::group([
     Route::get("/getReRegister",[SemesterController::class,'getReRegister']);
     Route::delete("/deleteReRegister",[SemesterController::class,'deleteReRegister']);
 
-    Route::post('/assignFaculty',[SubjectsController::class,'assignFaculty']);
-    Route::get('/getAssignedFaculty',[SubjectsController::class,'getAssignedFaculty']);
-    Route::delete('/deleteAssignment',[SubjectsController::class,'deleteAssignment']);
-    Route::put('/updateAssignment',[SubjectsController::class,'updateAssignment']);
+    Route::post('/assignFaculty',[SubjectsController::class,'assignFaculty'])->withoutMiddleware('auth:faculty-api');
+    Route::get('/getAssignedFaculty',[SubjectsController::class,'getAssignedFaculty'])->withoutMiddleware('auth:faculty-api');
+    Route::delete('/deleteAssignment',[SubjectsController::class,'deleteAssignment'])->withoutMiddleware('auth:faculty-api');
+    Route::put('/updateAssignment',[SubjectsController::class,'updateAssignment'])->withoutMiddleware('auth:faculty-api');
 
     Route::post("/addStdLogin",[AuthenticationController::class,'addStdLogin']);
     Route::put("/updateStdLogin",[AuthenticationController::class,'updateStdLogin']);
@@ -85,6 +89,9 @@ Route::group([
     Route::get('getNotice',[NoticeBoardController::class,'get']);
     Route::put('updateNotice',[NoticeBoardController::class,'update']);
     Route::delete('deleteNotice',[NoticeBoardController::class,'delete']);
+
+    Route::get('getComplaints',[AdminController::class,'getComplaints']);
+    Route::delete('deleteComplaint',[AdminController::class,'deleteComplaint']);
 });
 
 
@@ -102,6 +109,8 @@ Route::group([
     ->withoutMiddleware('auth:student-api');
     Route::post('studentLogout', [StudentController::class,'logout']);
     Route::get('studentMe', [StudentController::class,'me']);
+
+    Route::post('raiseComplaintStudent',[StudentController::class,'raiseComplaint']);
 
 });
 
