@@ -16,6 +16,12 @@ use App\Models\student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\raise_complaint;
+use Illuminate\Support\Facades\Validator;
+use App\Models\faculty_login;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailSender;
+use Illuminate\Support\Facades\Cache;
+
 
 class FacultyController extends Controller
 {
@@ -76,6 +82,10 @@ class FacultyController extends Controller
         );
         $rollCode = $rollNumCodes[$subject_code];
         $sem = (int)substr($req->query('subject_code'), 2, 1);
+        $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+        $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
+        $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
+        $sem = (int) substr($req->query('subject_code'), 2, 1);
         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
@@ -232,5 +242,84 @@ class FacultyController extends Controller
 
         // Return the notifications as JSON response
         return response()->json(['notifications' => $notifications]);
+    }
+   public function updateContact(Request $request)
+    {
+
+        $request->validate([
+            'mobile' => 'required',
+        ]);
+
+        $faculty_id = auth()->user()->faculty_id;
+        //return $faculty_id;
+        $newPhoneNumber = $request->input('mobile');
+
+        $faculty = faculty::where('faculty_id', $faculty_id)->first();
+
+        if ($faculty) {
+            $faculty->phone_num = $newPhoneNumber;
+            $faculty->save();
+        }
+
+        return response()->json(['success'=> 'Contact modified']);
+    }
+    function updatePassword(Request $req)
+    {
+        $faculty_id = auth()->user()->faculty_id;
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+        ];
+
+        $validator = Validator::make($req->all(), $rules);
+
+        if ($validator->fails() || $new_password != $confirm_password) {
+            return response()->json(['error'=> $validator->errors()]);
+        } else {
+            $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
+
+            if ($faculty) {
+                $faculty->password = Hash::make($new_password);
+                $faculty->save();
+
+                return response()->json(['success'=> 'password modified']);
+            }
+        }
+    }
+    public function sendOtp(Request $req)
+    {
+        $faculty_id = $req->input("faculty_id");
+        $faculty_id= faculty::where("faculty_id", $faculty_id)->first();
+        $email = $faculty_id->email;
+
+        // Generate a random OTP
+        $otp = mt_rand(100000, 999999);
+
+        Cache::put('otp', $otp, 60);
+        // Send the OTP to the client via email
+        $mailData = [
+            'subject' => 'OTP Verification',
+            'title' => 'Mail from Laravel Project',
+            'body' => 'Your OTP for verification is: ',
+            'otp' => $otp,
+        ];
+        Mail::to($email)->send(new MailSender($mailData));
+
+        return response()->json(["Success"=>"OTP SENT"]);
+    }
+
+    public function otpVerification(Request $req)
+    {
+        $user_otp = $req->input('otp');
+        $actual_otp = Cache::get('otp');
+
+        if ($actual_otp && $user_otp == $actual_otp) {
+
+            return response()->json("verified otp");
+        } else {
+            return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
+        }
     }
 }

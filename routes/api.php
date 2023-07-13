@@ -48,6 +48,12 @@ Route::group([
 
     Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
 
+    Route::put('updatePwdFaculty',[FacultyController::class,'updatePassword']);
+    Route::put('updateContactFaculty',[FacultyController::class,'updateContact']);
+
+    Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"]);
+    Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"]);
+
 
 });
 
@@ -96,6 +102,12 @@ Route::group([
 
     Route::get('getComplaints',[AdminController::class,'getComplaints']);
     Route::delete('deleteComplaint',[AdminController::class,'deleteComplaint']);
+
+    Route::post("facultyRegistration",[AdminController::class,'facultyReg']);
+    Route::get("facultyDetails",[AdminController::class,'getFaculty']);
+
+    Route::post("studentRegistration",[AdminController::class,'studentReg']);
+    Route::get("studentsDetails",[AdminController::class,'getStudents']);
 });
 
 
@@ -117,6 +129,12 @@ Route::group([
     Route::put('studentMarkAsRead',[StudentController::class,'markAsRead']);
 
     Route::post('raiseComplaintStudent',[StudentController::class,'raiseComplaint']);
+
+    Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
+    Route::put('updateContactStd',[StudentController::class,'updateContact']);
+
+    Route::post('sendOTPStd',[StudentController::class,"sendOtp"]);
+    Route::post('otpVerifyStd',[StudentController::class,"otpVerification"]);
 
 });
 
