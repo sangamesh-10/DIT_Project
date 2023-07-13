@@ -61,17 +61,41 @@ class StudentController extends Controller
     }
     public function raiseComplaint(Request $req)
     {
-        $user = auth()->guard('student-api')->user();
+        $user = auth()->guard('student-api')->user()->student_id;
         $object = new raise_complaint;
-        $object->from_id= $user->student_id;
+        $object->from_id= $user;
         $object->description=$req->input("description");
         $object->date=date('Y-m-d');
         $result=$object->save();
         if($result){
+            notifications::create([
+                'sender_id'=>$user,
+                'receiver_id'=>'S101',
+                'message'=>'I had raised a complaint,please Respond',
+            ]);
         return response()->json($object);
         }
         else{
             return response()->json(['message'=>'could not save data']);
+        }
+    }
+    public function markAsRead(Request $req)
+    {
+        $notification = notifications::where('id',$req->input('id'))->first();
+        if($notification){
+
+            // Ensure the notification belongs to the current user
+            if ($notification->receiver_id !== auth()->user()->student_id) {
+                abort(403); // Return a forbidden response if the user tries to mark someone else's notification as read
+            }
+            $notification->update(['is_read' => true]);
+
+            // Redirect back to the notifications index or any other appropriate page
+            return response()->json(['message'=>'Marked as read successfully']);
+        }
+        else{
+            return response()->json(['message'=>'Notification Not Found']);
+
         }
     }
 }

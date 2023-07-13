@@ -42,6 +42,9 @@ Route::group([
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
     Route::post('addInternalMarks',[FacultyController::class,'addInternalMarks']);
+    Route::put('facultyMarkAsRead',[FacultyController::class,'markAsRead']);
+    Route::get('getFacultyNotifications',[FacultyController::class,'getNotifications']);
+
 
     Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
 
@@ -111,6 +114,7 @@ Route::group([
     Route::post('studentLogout', [StudentController::class,'logout']);
     Route::get('studentMe', [StudentController::class,'me']);
     Route::get('getStudentNotifications',[StudentController::class,'getNotifications']);
+    Route::put('studentMarkAsRead',[StudentController::class,'markAsRead']);
 
     Route::post('raiseComplaintStudent',[StudentController::class,'raiseComplaint']);
 
