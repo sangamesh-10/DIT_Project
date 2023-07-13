@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\admin_login;
 use Carbon\Carbon;
 use App\Models\raise_complaint;
+use App\Models\faculty;
+use App\Models\student;
 
 
 
@@ -79,5 +81,64 @@ class AdminController extends Controller
             return response()->json(["message" => "record deleted"]);
         }
     }
+    public function facultyReg(Request $req)
+    {
+    $object = new faculty;
+    $object->faculty_id=$req->faculty_id;
+    $object->name=$req->name;
+    $object->email=$req->email;
+    $object->alt_email=$req->altEmail;
+    $object->phone_num=$req->phoneNo;
+    $object->aadhar_num=$req->aadharNo;
+    $object->designation=$req->designation;
+    $object->experience=$req->experience;
+    $result=$object->save();
+    if($result)
+    {
+        return response()->json($object);
+    }
+    else
+    {
+        return['result'=>'operation failed'];
+    }
 
+}
+public function getFaculty()
+{
+    $object=faculty::all();
+    return response()->json($object);
+}
+public function studentReg(Request $req)
+{
+    $object=new student;
+        $object->roll_num=$req->rollNumber;
+        $object->name=$req->name;
+        $object->email=$req->email;
+        $object->phone_num=$req->phoneNo;
+        $object->aadhar_num=$req->aadharNo;
+        $object->mother_name=$req->motherName;
+        $object->father_name=$req->fatherName;
+        $object->parent_num=$req->parentPhNo;
+        $object->dob=$req->dob;
+        $object->permanent_addr=$req->permanentAddr;
+        $object->present_addr=$req->presentAddr;
+        $object->blood_group=$req->bloodGroup;
+        $object->caste=$req->caste;
+        $object->religion=$req->religion;
+
+        $result=$object->save();
+        if($result)
+        {
+            return response()->json($object);
+        }
+        else
+        {
+            return response()->json(['result'=>'operation failed']);
+        }
+}
+public function getStudents()
+{
+    $object=student::all();
+    return response()->json($object);
+}
 }
