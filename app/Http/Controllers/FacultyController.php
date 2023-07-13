@@ -81,6 +81,10 @@ class FacultyController extends Controller
             'DS' => 'DB'
         );
         $rollCode = $rollNumCodes[$subject_code];
+        $sem = (int)substr($req->query('subject_code'), 2, 1);
+        $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+        $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
+        $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
         $sem = (int) substr($req->query('subject_code'), 2, 1);
         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
@@ -101,7 +105,7 @@ class FacultyController extends Controller
                 $attendance->roll_num = $studentId;
                 $attendance->subject_code = $subjectCode;
                 $attendance->date = date('Y-m-d');
-                $attendance->status = (int) $status;
+                $attendance->status = (int)$status;
                 $attendance->save();
 
                 $attendanceSatisfied = attendance_satisfied::where('roll_num', $studentId)
@@ -110,7 +114,7 @@ class FacultyController extends Controller
 
                 if ($attendanceSatisfied) {
                     // Update existing row
-                    $attendanceSatisfied->attended += (int) $status;
+                    $attendanceSatisfied->attended += (int)$status;
                     $attendanceSatisfied->total += 1;
                     $attendanceSatisfied->percentage = ($attendanceSatisfied->attended / $attendanceSatisfied->total) * 100;
                     $attendanceSatisfied->save();
@@ -119,7 +123,7 @@ class FacultyController extends Controller
                     $attendanceSatisfied = new attendance_satisfied();
                     $attendanceSatisfied->roll_num = $studentId;
                     $attendanceSatisfied->subject_code = $subjectCode;
-                    $attendanceSatisfied->attended = (int) $status;
+                    $attendanceSatisfied->attended = (int)$status;
                     $attendanceSatisfied->total = 1;
                     $attendanceSatisfied->percentage = ($attendanceSatisfied->attended / $attendanceSatisfied->total) * 100;
                     $attendanceSatisfied->save();
@@ -134,13 +138,18 @@ class FacultyController extends Controller
     }
     public function raiseComplaint(Request $req)
     {
-        $user = auth()->guard('faculty-api')->user();
+        $user = auth()->guard('faculty-api')->user()->faculty_id;
         $object = new raise_complaint;
-        $object->from_id = $user->faculty_id;
+        $object->from_id = $user;
         $object->description = $req->input("description");
         $object->date = date('Y-m-d');
         $result = $object->save();
         if ($result) {
+            notifications::create([
+                'sender_id' => $user,
+                'receiver_id' => 'S101',
+                'message' => 'I had raised a complaint,please Respond',
+            ]);
             return response()->json($object);
         } else {
             return response()->json(['message' => 'could not save data']);
@@ -183,7 +192,6 @@ class FacultyController extends Controller
                 }
 
                 return response()->json(['message' => 'Marks Added successfully']);
-
             } else {
                 if ($today < $semStartDate) {
 
@@ -201,14 +209,41 @@ class FacultyController extends Controller
                 } else {
                     return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
                 }
-
             }
         } else {
             // Handle the case where $students is null or not an array
             return response()->json(['error' => 'Invalid student data'], 400);
         }
     }
-    public function updateContact(Request $request)
+
+    public function markAsRead(Request $req)
+    {
+        $notification = notifications::where('id',$req->input('id'))->first();
+        if($notification){
+
+            // Ensure the notification belongs to the current user
+            if ($notification->receiver_id !== auth()->user()->faculty_id) {
+                abort(403); // Return a forbidden response if the user tries to mark someone else's notification as read
+            }
+            $notification->update(['is_read' => true]);
+
+            // Redirect back to the notifications index or any other appropriate page
+            return response()->json(['message'=>'Marked as read successfully']);
+        }
+        else{
+            return response()->json(['message'=>'Notification Not Found']);
+
+        }
+    }
+    public function getNotifications()
+    {
+        $user = auth()->user()->faculty_id;
+        $notifications =  notifications::where('receiver_id',$user)->orderBy('created_at', 'desc')->get();
+
+        // Return the notifications as JSON response
+        return response()->json(['notifications' => $notifications]);
+    }
+   public function updateContact(Request $request)
     {
 
         $request->validate([
