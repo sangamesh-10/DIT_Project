@@ -11,4 +11,6 @@ class faculty extends Model
     public $table="faculty";
     use HasFactory;
     public $timestamps=false;
+    protected $primaryKey='faculty_id';
+    protected $keyType = 'string';
 }

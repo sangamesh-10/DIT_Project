@@ -60,23 +60,25 @@
             <th>E-mail</th>
             <td>{{$students['email']}}</td>
         </tr>
+        <tr>
+            <th>Branch</th>
+            <td>{{$education['branch']}}</td>
+        </tr>
+        <tr>
+            <th>Specialization</th>
+            <td>{{$education['specialization']}}</td>
+        </tr>
+        <tr>
+            <th>Semester</th>
+            <td>{{$education['semester']}}</td>
+        </tr>
+        <tr>
+            <th>Academic Year</th>
+            <td>{{$education['academic_year']}}</td>
+        </tr>
     </table>
 </div>
 {{-- <x-footer></x-footer> --}}
 </body>
-
-{{-- <table border='5'>
-    <tr>
-        <td>Roll Number</td>
-        <td>{{$students['roll_num']}}</td>
-    </tr>
-    <tr>
-        <td>Name</td>
-        <td>{{$students['name']}}</td>
-    </tr>
-    <tr>
-        <td>E-mail</td>
-        <td>{{$students['email']}}</td>
-    </tr>
-</table> --}}
+</html>
 

@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+@php
+    $student = Session::get('student');
+    $softCopies = Session::get('softCopies');
+
+@endphp
 
 <head>
     <meta charset="UTF-8">
@@ -12,11 +17,10 @@
 
 <body>
     <x-header></x-header>
-
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="profile">Profile</a>
-        <a href="changePwd">Change Password</a>
+        <a href="updatePassword">Change Password</a>
         <a href="updateContact">Update MobileNumber</a>
         <a href="#">Internal Marks</a>
         <a href="#">Enrolled subjects</a>
@@ -35,13 +39,13 @@
             </ul>
         </div>
         <div class="student-info">
-            <img src='{{ asset('Student_softCopies/21031F0015/MYPHOTO2022.jpg') }}' alt="Student Image">
+            <img src='{{$softCopies->photo}}' alt="Student Image">
             <div class="student-text">
-             <span id="student-name">Welcome,Sangameshwar Gaddam</span>
+             <span id="student-name">Welcome, {{$student->name}}</span>
             </div>
+
         </div>
     </nav>
-
     <x-footer></x-footer>
 
     <script>

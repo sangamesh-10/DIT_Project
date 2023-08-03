@@ -43,8 +43,6 @@
             padding: 5px;
             text-align: center;
             cursor: pointer;
-
-
         }
         .logincaption a {
             text-decoration: none;

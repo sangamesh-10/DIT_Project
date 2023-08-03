@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -39,6 +39,24 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+
+        ],
+        'faculty-api' => [
+            'driver' => 'jwt',
+            'provider' => 'faculty',
+
+        ],
+        'admin-api' => [
+            'driver' => 'jwt',
+            'provider' => 'admin',
+        ],
+        'student-api' => [
+            'driver' => 'jwt',
+            'provider' => 'student',
         ],
     ],
 
@@ -65,10 +83,19 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'faculty' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\faculty_login::class,
+        ],
+
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\admin_login::class,
+        ],
+        'student' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\students_login::class,
+        ],
     ],
 
     /*

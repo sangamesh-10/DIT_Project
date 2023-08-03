@@ -1,64 +1,18 @@
 <!DOCTYPE html>
+@include('facultyHomePage')
+
 <html>
 <head>
     <title>Update Password</title>
     @include('bootstrap')
-    <style>
-        body {
-            background-color: #f1f1f1;
-            font-family: Arial, sans-serif;
-        }
+    <link rel="stylesheet" href="{{ asset('css/basicStyle.css') }}">
 
-        .update-password-form {
-            width: 300px;
-            margin: auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .update-password-form h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333333;
-        }
-
-        .update-password-form label {
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            color: #333333;
-            text-align: left;
-        }
-
-        .update-password-form input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .update-password-form input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
-    <x-header></x-header>
-    <div class="update-password-form">
+    {{-- <x-header></x-header> --}}
+    <div class="form-container">
         <h2>Update Password</h2>
+        <p class="password-requirements"> * new password should contain at least one capital letter, one number, and be a minimum of 8 characters.</p>
         <form class='form' method="post" action="/updatePwdFaculty">
             @csrf
             <label for="new_password" name="new_password">New Password</label>
@@ -66,8 +20,15 @@
             <label for="confirm_password" name="confirm_password">Confirm Password</label>
             <input type="password" name="confirm_password">
             <input type="submit" name="submit" value="Update Password">
-        </form>
+        @error('new_password')
+        <span style="color: red;">{{ $message }}</span>
+    @enderror
+    </form>
+    @if (session('error'))
+    <div class="alert alert-danger" style="color:red;">
+        {{ session('error') }}
     </div>
-    <x-footer></x-footer>
+@endif
+    </div>
 </body>
 </html>

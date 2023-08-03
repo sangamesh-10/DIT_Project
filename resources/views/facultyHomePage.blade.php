@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+@php
+ $faculty = Session::get('faculty') ;
+ @endphp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +19,7 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="facultyprofile">Profile</a>
         <a href="chPassFaculty">Change Password</a>
-        <a href="updateContact">Update MobileNumber</a>
+        <a href="updateContactFaculty">Update MobileNumber</a>
         <a href="#"> Add Internal Marks</a>
         <a href="#">Enrolled students</a>
         <a href="#">Mark Attendance</a>
@@ -38,11 +40,10 @@
         </div>
         <div class="student-info">
             <div class="student-text">
-             <span id="student-name">Welcome Mr.G.Narsimham</span>
+             <span id="student-name">Welcome ,{{$faculty->name}}</span>
             </div>
         </div>
     </nav>
-
     <x-footer></x-footer>
 
     <script>
