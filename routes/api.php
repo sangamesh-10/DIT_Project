@@ -9,8 +9,12 @@ use App\Http\Controllers\SubjectsController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\NoticeBoardController;
 
+<<<<<<< HEAD
+
+=======
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\StudentController;
+>>>>>>> b914bfa7c127c74874a6591c3806c0a501a85fca
 /*
 |--------------------------------------------------------------------------
 | API Routes
