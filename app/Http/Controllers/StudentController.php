@@ -35,9 +35,7 @@ class StudentController extends Controller
         //return $this->respondWithToken($token);
         /** @var Students_login $student */
         $student=auth()->guard('student-api')->user();
-        //return $student;
         $token=$student->createToken('main')->plainTextToken;
-        //return $token;
         return response (compact('student','token'));
 
     }
