@@ -32,7 +32,13 @@ class StudentController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        //return $this->respondWithToken($token);
+        /** @var Students_login $student */
+        $student=auth()->guard('student-api')->user();
+        //return $student;
+        $token=$student->createToken('main')->plainTextToken;
+        //return $token;
+        return response (compact('student','token'));
 
     }
     protected function respondWithToken($token)
