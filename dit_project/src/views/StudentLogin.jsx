@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Outlet } from 'react-router-dom'
-import axiosClient from '../axiosClient';
+import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 
 export const StudentLogin = () => {
