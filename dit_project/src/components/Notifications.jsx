@@ -3,8 +3,8 @@ import { useStateContext } from '../contexts/ContextProvider'
 
 const Notifications = () => {
     const {user,token} = useStateContext()
-    if(!token){
-        return
+    if(token){
+        return <Navigate to = '/FacultyLogin' />
     }
   return (
     <div>
