@@ -17,24 +17,43 @@ class NoticeBoardController extends Controller
     }
     public function add(Request $req)
     {
-        $object = new noticeboard;
-        $object->notice_id = $req->input('notice_id');
-        $object->description = $req->input('description');
-        $object->date = $req->input('date');
-        $object->path = $req->input('path');
-        $result = $object->save();
+        $req->validate([
+            'notice_id' => 'required',
+            'description' => 'required',
+            'file' => 'required|mimes:pdf|max:2048', // PDF file, max size 2MB
+        ]);
+        if ($req->hasFile('file')) {
+            $file = $req->file('file');
+            $fileName = $req->description . '.' . $file->getClientOriginalExtension();
+            $filePath = 'noticeBoard/' . $fileName;
+
+            $file->move(public_path('noticeBoard'), $fileName);
+            $object = new noticeboard;
+            $object->notice_id = $req->input('notice_id');
+            $object->description = $req->input('description');
+            $object->date = date('Y-m-d');
+            $object->path = $filePath;
+            $result = $object->save();
+        }
         if($result){
-            NoticeBoardController::sendNotifications($object->notice_id,$object->description);
-            return response()->json(['message'=>'NoticeBoard not Updated']);
+            // NoticeBoardController::sendNotifications($object->notice_id,$object->description);
+            return response()->json(['message'=>'NoticeBoard  Updated']);
         }
         else{
-            return response()->json(['message'=>'NoticeBoard not Updated']);
+            return response()->json(['message'=>'NoticeBoard not Updated'],500);
         }
     }
-    public function get()
+    public function get(Request $req)
     {
-        $ans = noticeboard::all();
-        return response()->json($ans);
+
+         $perPage = $req->query('perPage', 10);
+
+        $notices = noticeboard::paginate($perPage);
+        foreach ($notices as $notice) {
+            $notice->path = asset($notice->path);
+        }
+
+        return response()->json(['data' => $notices]);
     }
     public function update(Request $req)
     {

@@ -7,32 +7,81 @@ import { StudentReg } from "./views/StudentRegistration.jsx";
 import NoticeBoard from "./components/NoticeBoard.jsx";
 import Notifications from "./components/Notifications.jsx";
 import StudentHomePage from "./components/StudentHomePage.jsx";
+import FacultyHomePage from "./components/FacultyHomePage.jsx";
 import DashBoard from "./views/DashBoard.jsx";
+import { AdminLogin } from "./views/AdminLogin.jsx";
+import AdminHomePage from "./components/AdminHomePage.jsx";
+import App from "./App.jsx";
+import UpdateNoticeBoard from "./views/UpdateNoticeBoard.jsx";
 import OtpPage from "./views/OtpVerification.jsx";
 import { UpdatePwd } from "./views/UpdatePwd.jsx";
 
 
 const router = createBrowserRouter([
     {
-        path: "/NoticeBoard",
-        element: <NoticeBoard />
+        path: "/",
+        element: <App />
     },
+
     {
-        path : "/",
+        path : "/student",
         element : <StudentHomePage />,
         children:[
             {
-                path: "/welcome",
+                path: "/student/welcome",
                 element: <Welcome />
             },
 
             {
-                path:"/dashBoard",
+                path:"/student/dashBoard",
                 element: <DashBoard />
             },
             {
-                path:"/updatePwd",
+                path:"/student/updatePwd",
                 element:<UpdatePwd/>
+            }
+        ]
+    },
+    {
+        path : "/faculty",
+        element : <FacultyHomePage />,
+        children:[
+            {
+                path: "/faculty/welcome",
+                element: <Welcome />
+            },
+
+            {
+                path:"/faculty/dashBoard",
+                element: <DashBoard />
+            },
+
+        ]
+    },
+    {
+        path : "/admin",
+        element : <AdminHomePage />,
+        children:[
+            {
+                path: "/admin/welcome",
+                element: <Welcome />
+            },
+
+            {
+                path:"/admin/dashBoard",
+                element: <DashBoard />
+            },
+            {
+                path: '/admin/addNotice',
+                element: <UpdateNoticeBoard />
+            },
+            {
+                path: "/admin/NoticeBoard",
+                element: <NoticeBoard />
+            },
+            {
+                path: 'admin/studentRegistration',
+                element :<StudentReg/>
             }
         ]
     },
@@ -46,13 +95,14 @@ const router = createBrowserRouter([
         element: <FacultyLogin />
     },
     {
+        path: "/AdminLogin",
+        element: <AdminLogin />
+    },
+    {
         path: '*',
         element: <NotFound />
     },
-    {
-        path: '/studentRegistration',
-        element :<StudentReg/>
-    },
+
     {
         path:'/OtpVerification',
         element:<OtpPage/>

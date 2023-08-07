@@ -38,7 +38,7 @@ Route::group([
     Route::post('facultyLogin', [FacultyController::class, 'login'])->name('faculty.login')
     ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
-    Route::post('me', [FacultyController::class,'me']);
+    Route::get('me', [FacultyController::class,'me']);
     Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects'])->withoutMiddleware('auth:admin-api');
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
