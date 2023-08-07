@@ -32,11 +32,7 @@ class StudentController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        //return $this->respondWithToken($token);
-        /** @var Students_login $student */
-        $student=auth()->guard('student-api')->user();
-        $token=$student->createToken('main')->plainTextToken;
-        return response (compact('student','token'));
+        return $this->respondWithToken($token);
 
     }
     protected function respondWithToken($token)
@@ -44,6 +40,7 @@ class StudentController extends Controller
         $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
 
         return response()->json([
+            'user' => auth()->guard('student-api')->user()->student_id,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $expiration->timestamp,

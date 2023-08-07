@@ -5,6 +5,8 @@ import {FacultyLogin} from "./views/FacultyLogin.jsx";
 import { NotFound } from "./views/NotFound.jsx";
 import NoticeBoard from "./components/NoticeBoard.jsx";
 import Notifications from "./components/Notifications.jsx";
+import StudentHomePage from "./components/StudentHomePage.jsx";
+import DashBoard from "./views/DashBoard.jsx";
 
 
 const router = createBrowserRouter([
@@ -14,17 +16,22 @@ const router = createBrowserRouter([
     },
     {
         path : "/",
-        element : <Notifications />,
+        element : <StudentHomePage />,
         children:[
             {
                 path: "/welcome",
                 element: <Welcome />
             },
+
             {
-                path: "/StudentLogin",
-                element: <StudentLogin />
-            },
+                path:"/dashBoard",
+                element: <DashBoard />
+            }
         ]
+    },
+    {
+        path: "/StudentLogin",
+        element: <StudentLogin />
     },
 
     {
