@@ -3,6 +3,7 @@ import {Welcome} from "./views/Welcome.jsx";
 import {StudentLogin} from "./views/StudentLogin.jsx";
 import {FacultyLogin} from "./views/FacultyLogin.jsx";
 import { NotFound } from "./views/NotFound.jsx";
+import { StudentReg } from "./views/StudentRegistration.jsx";
 import NoticeBoard from "./components/NoticeBoard.jsx";
 import Notifications from "./components/Notifications.jsx";
 import StudentHomePage from "./components/StudentHomePage.jsx";
@@ -12,6 +13,8 @@ import { AdminLogin } from "./views/AdminLogin.jsx";
 import AdminHomePage from "./components/AdminHomePage.jsx";
 import App from "./App.jsx";
 import UpdateNoticeBoard from "./views/UpdateNoticeBoard.jsx";
+import OtpPage from "./views/OtpVerification.jsx";
+import { UpdatePwd } from "./views/UpdatePwd.jsx";
 
 
 const router = createBrowserRouter([
@@ -32,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path:"/student/dashBoard",
                 element: <DashBoard />
+            },
+            {
+                path:"/student/updatePwd",
+                element:<UpdatePwd/>
             }
         ]
     },
@@ -47,7 +54,8 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/dashBoard",
                 element: <DashBoard />
-            }
+            },
+
         ]
     },
     {
@@ -71,6 +79,10 @@ const router = createBrowserRouter([
                 path: "/admin/NoticeBoard",
                 element: <NoticeBoard />
             },
+            {
+                path: 'admin/studentRegistration',
+                element :<StudentReg/>
+            }
         ]
     },
     {
@@ -91,5 +103,10 @@ const router = createBrowserRouter([
         element: <NotFound />
     },
 
+    {
+        path:'/OtpVerification',
+        element:<OtpPage/>
+
+    }
 ]);
 export default router;
