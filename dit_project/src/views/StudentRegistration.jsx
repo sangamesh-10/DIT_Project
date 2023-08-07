@@ -1,6 +1,7 @@
 import React,{useRef} from "react";
+import axiosClient from '../axios-client';
 
-const StudentReg=()=>{
+export const StudentReg=()=>{
     const rno=useRef();
     const name=useRef();
     const email=useRef();
@@ -16,7 +17,7 @@ const StudentReg=()=>{
     const caste=useRef();
     const religion=useRef();
 
-    const onSubmit=(e)=>{
+    const onSubmit= async (e)=>{
         e.preventDefault();
         const payload={
             rollNumber :rno.current.value,
@@ -34,8 +35,8 @@ const StudentReg=()=>{
             caste :caste.current.value,
             religion :religion.current.value
         }
-        axios.post('/studentRegistration',payload)
-        .then(console.log("Registered Successfully"))
+        const {data}=await axiosClient.post('/studentRegistration',payload)
+        .then(console.log("Registered Successfully",data))
         .catch(err =>{
             const response =err.response;
             if(response && response.status===422)
@@ -47,7 +48,7 @@ const StudentReg=()=>{
 
     return(
         <div>
-            <h2>Student reistration Form</h2>
+            <h2>Student Registration Form</h2>
             <div>
             <form onSubmit={onSubmit} >
             <label for="rno" id="rno">Roll Number : </label>

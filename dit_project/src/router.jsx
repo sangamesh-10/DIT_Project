@@ -3,8 +3,13 @@ import {Welcome} from "./views/Welcome.jsx";
 import {StudentLogin} from "./views/StudentLogin.jsx";
 import {FacultyLogin} from "./views/FacultyLogin.jsx";
 import { NotFound } from "./views/NotFound.jsx";
+import { StudentReg } from "./views/StudentRegistration.jsx";
 import NoticeBoard from "./components/NoticeBoard.jsx";
 import Notifications from "./components/Notifications.jsx";
+import StudentHomePage from "./components/StudentHomePage.jsx";
+import DashBoard from "./views/DashBoard.jsx";
+import OtpPage from "./views/OtpVerification.jsx";
+import { UpdatePwd } from "./views/UpdatePwd.jsx";
 
 
 const router = createBrowserRouter([
@@ -14,17 +19,26 @@ const router = createBrowserRouter([
     },
     {
         path : "/",
-        element : <Notifications />,
+        element : <StudentHomePage />,
         children:[
             {
                 path: "/welcome",
                 element: <Welcome />
             },
+
             {
-                path: "/StudentLogin",
-                element: <StudentLogin />
+                path:"/dashBoard",
+                element: <DashBoard />
             },
+            {
+                path:"/updatePwd",
+                element:<UpdatePwd/>
+            }
         ]
+    },
+    {
+        path: "/StudentLogin",
+        element: <StudentLogin />
     },
 
     {
@@ -34,6 +48,15 @@ const router = createBrowserRouter([
     {
         path: '*',
         element: <NotFound />
+    },
+    {
+        path: '/studentRegistration',
+        element :<StudentReg/>
+    },
+    {
+        path:'/OtpVerification',
+        element:<OtpPage/>
+
     }
 ]);
 export default router;

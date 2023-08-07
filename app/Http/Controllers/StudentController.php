@@ -35,14 +35,13 @@ class StudentController extends Controller
 
         return $this->respondWithToken($token,$student_id);
 
-
     }
     protected function respondWithToken($token,$student_id)
     {
         $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
 
         return response()->json([
-            'user'=>$student_id,
+            'user' => auth()->guard('student-api')->user()->student_id,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $expiration->timestamp,
@@ -108,9 +107,9 @@ class StudentController extends Controller
 
         }
     }
-    public function updatePwd(Request $req)
+    public function setPwd(Request $req)
     {
-        $student_id = auth()->user()->student_id;
+        $student_id =$req->input('student_id');
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
@@ -128,7 +127,35 @@ class StudentController extends Controller
             if ($student) {
                 $student->password = Hash::make($new_password);
                 $student->save();
-                return response()->json(['success'=> 'password modified']);
+                return response()->json('true');
+            }
+        }
+    }
+    public function updatePwd(Request $req)
+    {
+        $student_id =auth()->user()->student_id;
+        $old_password=$req->input('old_password');
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+        ];
+
+        $validator = Validator::make($req->all(), $rules);
+
+        if ($validator->fails() || $new_password != $confirm_password) {
+        return response()->json(['error'=> $validator->errors()]);
+        } else {
+            $student = students_login::where('student_id', $student_id)->first();
+            if (Hash::check($old_password, $student->password)) {
+                $student->password = Hash::make($new_password);
+                $student->save();
+                return response()->json('true');
+                //return response()->json(['success'=> 'Password modified']);
+            }
+            else{
+                return response()->json(['Not success'=>'passwords doesnot match']);
             }
         }
     }
@@ -179,7 +206,7 @@ class StudentController extends Controller
 
         if ($actual_otp && $user_otp == $actual_otp) {
 
-            return response()->json("verified otp");
+            return response()->json("true");
         } else {
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }
