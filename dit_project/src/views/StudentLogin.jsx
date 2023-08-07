@@ -18,7 +18,8 @@ export const StudentLogin = () => {
         axiosClient.post('/studentLogin',payload)
         .then(({data})=>{
             setUser(data.user)
-            setToken(data.token)
+            setToken(data.access_token)
+            //localStorage.setItem('ACCESS_TOKEN',data.access_token)
         })
         .catch(err =>{
             const response =err.response;

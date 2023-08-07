@@ -26,24 +26,23 @@ class StudentController extends Controller
     public function login(Request $req)
     {
         $credentials = $req->only('student_id', 'password');
+        $student_id=$req->input('student_id');
 
         if (!$token = auth('student-api')->attempt($credentials)) {
             // dd($token);
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        //return $this->respondWithToken($token);
-        /** @var Students_login $student */
-        $student=auth()->guard('student-api')->user();
-        $token=$student->createToken('main')->plainTextToken;
-        return response (compact('student','token'));
+        return $this->respondWithToken($token,$student_id);
+
 
     }
-    protected function respondWithToken($token)
+    protected function respondWithToken($token,$student_id)
     {
         $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
 
         return response()->json([
+            'user'=>$student_id,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $expiration->timestamp,
