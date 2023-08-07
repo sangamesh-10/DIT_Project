@@ -3,28 +3,29 @@ import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
 import './studentHomePage.css';
+import NoticeBoard from './NoticeBoard';
 
-const StudentHomePage = () => {
+const AdminHomePage = () => {
     const {user,token,setUser,setToken} = useStateContext();
     const navigate = useNavigate();
     if(!token){
-        return <Navigate to = '/StudentLogin' />
+        return <Navigate to = '/AdminLogin' />
     }
 
     const logout = async (e) => {
         e.preventDefault();
         try {
-            await axiosClient.post('/studentLogout');
+            await axiosClient.post('/adminLogout');
             setUser({});
             setToken(null);
-            navigate('/StudentLogin');
+            navigate('/AdminLogin');
         } catch (error) {
             console.error(error);
         }
     };
 
     useEffect(() => {
-        axiosClient.get('/studentMe')
+        axiosClient.get('/adminMe')
           .then(({data}) => {
              setUser(data)
           })
@@ -37,8 +38,9 @@ const StudentHomePage = () => {
     return (
         <div id="defaultLayout">
             <aside>
-                <Link to="/student/dashboard">Dashboard</Link>
-                <Link to="/student/welcome">Welcome</Link>
+                <Link to="/admin/dashboard">Dashboard</Link>
+                <Link to="/admin/welcome">Welcome</Link>
+                <Link to="/admin/addNotice">Update NoticeBoard</Link>
             </aside>
             <div className="content">
                 <header>
@@ -47,11 +49,11 @@ const StudentHomePage = () => {
                     </div>
 
                     <div>
-                    {user && user.name} &nbsp; &nbsp;
                         <a onClick={logout} className="btn-logout" href="#">Logout</a>
                     </div>
                 </header>
                 <main>
+                    <NoticeBoard />
                     <Outlet />
                 </main>
             </div>
@@ -59,4 +61,4 @@ const StudentHomePage = () => {
     );
 };
 
-export default StudentHomePage
+export default AdminHomePage

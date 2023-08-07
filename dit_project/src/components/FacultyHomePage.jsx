@@ -4,27 +4,27 @@ import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
 import './studentHomePage.css';
 
-const StudentHomePage = () => {
+const FacultyHomePage = () => {
     const {user,token,setUser,setToken} = useStateContext();
     const navigate = useNavigate();
     if(!token){
-        return <Navigate to = '/StudentLogin' />
+        return <Navigate to = '/FacultyLogin' />
     }
 
     const logout = async (e) => {
         e.preventDefault();
         try {
-            await axiosClient.post('/studentLogout');
+            await axiosClient.post('/facultyLogout');
             setUser({});
             setToken(null);
-            navigate('/StudentLogin');
+            navigate('/FacultyLogin');
         } catch (error) {
             console.error(error);
         }
     };
 
     useEffect(() => {
-        axiosClient.get('/studentMe')
+        axiosClient.get('/me')
           .then(({data}) => {
              setUser(data)
           })
@@ -37,8 +37,8 @@ const StudentHomePage = () => {
     return (
         <div id="defaultLayout">
             <aside>
-                <Link to="/student/dashboard">Dashboard</Link>
-                <Link to="/student/welcome">Welcome</Link>
+                <Link to="/faculty/dashboard">Dashboard</Link>
+                <Link to="/faculty/welcome">Welcome</Link>
             </aside>
             <div className="content">
                 <header>
@@ -59,4 +59,4 @@ const StudentHomePage = () => {
     );
 };
 
-export default StudentHomePage
+export default FacultyHomePage
