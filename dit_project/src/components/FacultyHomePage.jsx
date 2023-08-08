@@ -3,6 +3,7 @@ import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
 import './studentHomePage.css';
+import NoticeBoard from './NoticeBoard';
 
 const FacultyHomePage = () => {
     const {user,token,setUser,setToken} = useStateContext();
@@ -53,6 +54,7 @@ const FacultyHomePage = () => {
                     </div>
                 </header>
                 <main>
+                    <NoticeBoard />
                     <Outlet />
                 </main>
             </div>

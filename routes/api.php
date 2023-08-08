@@ -46,7 +46,6 @@ Route::group([
     Route::put('facultyMarkAsRead',[FacultyController::class,'markAsRead']);
     Route::get('getFacultyNotifications',[FacultyController::class,'getNotifications']);
 
-
     Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
 
     Route::put('updatePwdFaculty',[FacultyController::class,'updatePassword']);
@@ -54,6 +53,8 @@ Route::group([
 
     Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"]);
     Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"]);
+
+
 
 });
 
@@ -134,7 +135,6 @@ Route::group([
     Route::put('updateContactStd',[StudentController::class,'updateContact']);
     Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
 
-    Route::get('getNotice',[NoticeBoardController::class,'get'])->name('student.notice')->withoutMiddleware('auth:admin-api');
 
     Route::post('sendOTPStd',[StudentController::class,"sendOtp"])->withoutMiddleware('auth:student-api');
     Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
