@@ -39,6 +39,7 @@ const FacultyHomePage = () => {
             <aside>
                 <Link to="/faculty/dashboard">Dashboard</Link>
                 <Link to="/faculty/welcome">Welcome</Link>
+                <Link to="/faculty/addMarks">Add Marks</Link>
             </aside>
             <div className="content">
                 <header>

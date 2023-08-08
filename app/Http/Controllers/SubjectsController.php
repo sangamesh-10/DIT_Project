@@ -70,7 +70,8 @@ class SubjectsController extends Controller
      }
 
      public function facultySubjects(Request $req){
-        $faculty_id = $req->query('faculty_id');
+        //$faculty_id = $req->query('faculty_id');
+        $faculty_id=auth()->user()->faculty_id;
         $subjects = assign_faculty::where('faculty_id',$faculty_id)->pluck('subject_code');
         return response()->json($subjects);
      }
