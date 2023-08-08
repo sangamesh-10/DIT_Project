@@ -15,6 +15,10 @@ import App from "./App.jsx";
 import UpdateNoticeBoard from "./views/UpdateNoticeBoard.jsx";
 import OtpPage from "./views/OtpVerification.jsx";
 import { UpdatePwd } from "./views/UpdatePwd.jsx";
+import { FacultyReg } from "./views/FacultyRegistration.jsx";
+import { AssignFaculty } from "./views/AssignFaculty.jsx";
+import { AddSubjects } from "./views/AddSubjects.jsx";
+import { AddMarks } from "./views/AddMarks.jsx";
 
 
 const router = createBrowserRouter([
@@ -59,6 +63,10 @@ const router = createBrowserRouter([
                 path:"/faculty/dashBoard",
                 element: <DashBoard />
             },
+            {
+                path:"/faculty/addMarks",
+                element:<AddMarks/>
+            }
 
         ]
     },
@@ -84,9 +92,21 @@ const router = createBrowserRouter([
                 element: <NoticeBoard />
             },
             {
-                path: 'admin/studentRegistration',
+                path: '/admin/studentRegistration',
                 element :<StudentReg/>
-            }
+            },
+            {
+                path:"/admin/facultyRegistration",
+                element:<FacultyReg/>
+            },
+            {
+                path:"/admin/assignFaculty",
+                element:<AssignFaculty/>
+            },
+            {
+                path:"/admin/addSubjects",
+                element:<AddSubjects/>
+            },
         ]
     },
     {

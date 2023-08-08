@@ -41,6 +41,10 @@ const AdminHomePage = () => {
                 <Link to="/admin/dashboard">Dashboard</Link>
                 <Link to="/admin/welcome">Welcome</Link>
                 <Link to="/admin/addNotice">Update NoticeBoard</Link>
+                <Link to="/admin/studentRegistration">Add Student</Link>
+                <Link to="/admin/facultyRegistration">Add Faculty</Link>
+                <Link to="/admin/assignFaculty">Assign Faculty</Link>
+                <Link to="/admin/addSubjects">Add Subjects  </Link>
             </aside>
             <div className="content">
                 <header>
