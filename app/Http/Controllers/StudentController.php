@@ -40,6 +40,7 @@ class StudentController extends Controller
         $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
 
         return response()->json([
+            'user' => auth()->guard('student-api')->user()->student_id,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $expiration->timestamp,
