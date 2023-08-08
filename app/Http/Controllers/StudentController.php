@@ -57,7 +57,7 @@ class StudentController extends Controller
     public function getNotifications()
     {
         $user = auth()->user()->student_id;
-        $notifications =  notifications::where('receiver_id',$user)->orderBy('created_at', 'desc')->get();
+        $notifications =  notifications::where('receiver_id',$user)->where('is_read',0)->orderBy('created_at', 'desc')->get();
 
         // Return the notifications as JSON response
         return response()->json(['notifications' => $notifications]);

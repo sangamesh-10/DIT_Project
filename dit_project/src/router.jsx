@@ -43,6 +43,10 @@ const router = createBrowserRouter([
             {
                 path:"/student/updatePwd",
                 element:<UpdatePwd/>
+            },
+            {
+                path:'/student/notifications',
+                element:<Notifications />
             }
         ]
     },

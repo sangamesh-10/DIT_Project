@@ -3,6 +3,8 @@ import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
 import './studentHomePage.css';
+import Notifications from './Notifications';
+import NoticeBoard from './NoticeBoard';
 
 const StudentHomePage = () => {
     const {user,token,setUser,setToken} = useStateContext();
@@ -40,7 +42,6 @@ const StudentHomePage = () => {
                 <Link to="/student/dashboard">Dashboard</Link>
                 <Link to="/student/welcome">Welcome</Link>
             </aside>
-            <div className="content">
                 <header>
                     <div>
                         Header
@@ -51,7 +52,10 @@ const StudentHomePage = () => {
                         <a onClick={logout} className="btn-logout" href="#">Logout</a>
                     </div>
                 </header>
+            <div className="content">
                 <main>
+                    <Notifications />
+                    <NoticeBoard />
                     <Outlet />
                 </main>
             </div>
