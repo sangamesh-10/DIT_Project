@@ -96,7 +96,7 @@ Route::group([
     Route::put('updateCalendar',[AcademicCalendarController::class,'update']);
 
     Route::post('addNotice',[NoticeBoardController::class,'add']);
-    Route::get('getNotice',[NoticeBoardController::class,'get']);
+    Route::get('getNotice',[NoticeBoardController::class,'get'])->name('admin.notice');
     Route::put('updateNotice',[NoticeBoardController::class,'update']);
     Route::delete('deleteNotice',[NoticeBoardController::class,'delete']);
 
@@ -134,7 +134,7 @@ Route::group([
     Route::put('updateContactStd',[StudentController::class,'updateContact']);
     Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
 
-
+    Route::get('getNotice',[NoticeBoardController::class,'get'])->name('student.notice')->withoutMiddleware('auth:admin-api');
 
     Route::post('sendOTPStd',[StudentController::class,"sendOtp"])->withoutMiddleware('auth:student-api');
     Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
