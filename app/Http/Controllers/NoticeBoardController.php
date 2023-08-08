@@ -36,7 +36,7 @@ class NoticeBoardController extends Controller
             $result = $object->save();
         }
         if($result){
-            NoticeBoardController::sendNotifications($object->notice_id,$object->description);
+            $this->sendNotifications($object->notice_id,$object->description);
             return response()->json(['message'=>'NoticeBoard  Updated']);
         }
         else{
