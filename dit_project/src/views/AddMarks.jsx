@@ -28,15 +28,7 @@ export const AddMarks=()=>
           console.error('Error fetching students:', error);
         }
       };
-      const handleMarksChange = (studentId,marks) => {
-        const updatedStudents = enrolledStudents.map(student => {
-          if (student.roll_num === studentId) {
-            return { ...student,marks: Number(marks) };
-          }
-          return student;
-        });
-        setEnrolledStudents(updatedStudents);
-      };
+      console.log(enrolledStudents);
 
     return(
         <div>
@@ -50,13 +42,13 @@ export const AddMarks=()=>
         <div>
           <h2>Add Marks</h2>
           {enrolledStudents.map(student => (
-            <div>
-                <label>{student} : </label>
-                <input type="number" value={student || ''}
-                  onChange={(e) => handleMarksChange(student, e.target.value)}
-                />
-            </div>
-          ))}
+            <div key={student}>
+            <label>{student} : </label>
+            <input type="number"/>
+          </div>
+        ))}
+          <br />
+          <button>Submit Marks</button>
         </div>
       )}
 
