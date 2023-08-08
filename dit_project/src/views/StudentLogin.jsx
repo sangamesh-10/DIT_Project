@@ -2,6 +2,8 @@ import React, { useState,useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
+import './StudentLogin.css';
+
 
 export const StudentLogin = () => {
     const student_id = useRef();
@@ -35,7 +37,7 @@ export const StudentLogin = () => {
             {loggedIn ? (
                 <Navigate to="/" replace={true} />
             ) : (
-                <div>
+                <div id="firstdiv">
                     <h2>LOGIN FORM</h2>
                     <div>
                         <form onSubmit={onSubmit}>

@@ -7,6 +7,7 @@ import NoticeBoard from "./components/NoticeBoard.jsx";
 import Notifications from "./components/Notifications.jsx";
 import StudentHomePage from "./components/StudentHomePage.jsx";
 import DashBoard from "./views/DashBoard.jsx";
+import UpdateContact from "./views/UpdateContact.jsx";
 
 
 const router = createBrowserRouter([
@@ -26,6 +27,11 @@ const router = createBrowserRouter([
             {
                 path:"/dashBoard",
                 element: <DashBoard />
+            },
+
+            {
+                path:"/updateContact",
+                element:<UpdateContact/>
             }
         ]
     },
