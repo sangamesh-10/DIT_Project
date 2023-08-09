@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axiosClient from '../axios-client';
+// import axiosClient from '../axios-client';
+import axios from 'axios'; // Import axios
+
 import './studentHomePage.css';
 
 const NoticeBoard = () => {
@@ -9,7 +11,7 @@ const NoticeBoard = () => {
 
   const fetchNotices = async (page) => {
     try {
-      const response = await axiosClient.get(`/getNotice?page=${page}`);
+      const response = await axios.get(`http://127.0.0.1:8000/api/getNotice?page=${page}`);
       const { data, meta } = response.data;
       setNotices(data.data);
       setTotalPages(meta.last_page);

@@ -1,59 +1,65 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client";
 
 export const AddMarks = () => {
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState('');
     const [enrolledStudents, setEnrolledStudents] = useState([]);
-    const [studentMarks, setStudentMarks] = useState([])
+    const [studentMarks, setStudentMarks] = useState([]);
+    const [submissionMessage, setSubmissionMessage] = useState('');
 
     useEffect(() => {
         fetchSubjects();
     }, []);
+
     const fetchSubjects = async () => {
         try {
             const response = await axiosClient.get("/getFacultySubjects");
             setSubjects(response.data);
-            //setSelectedSubject('');
         } catch (error) {
             console.error('Error fetching subjects:', error);
         }
     };
+
     const handleSubjectClick = async (subject) => {
-        window.alert(subject);
         setSelectedSubject(subject);
         try {
             const response = await axiosClient.get(`/getEnrolledStudents?subject_code=${subject}`);
             setEnrolledStudents(response.data);
-            setStudentMarks(enrolledStudents.map(rollNum => ({ rollNum, marks: 0 })))
 
+            // Create studentMarks object with roll numbers as keys and 0 as values
+            const initialStudentMarks = response.data.reduce((marksObj, rollNum) => {
+                marksObj[rollNum] = 0;
+                return marksObj;
+            }, {});
+
+            setStudentMarks(initialStudentMarks);
         } catch (error) {
             console.error('Error fetching students:', error);
         }
     };
+
     const handleMarksChange = (rollNum, newMarks) => {
-        //console.log("hie");
-        setStudentMarks(prevStudentMarks =>
-            prevStudentMarks.map(studentMark =>
-                studentMark.rollNum === rollNum ? { ...studentMark, marks: newMarks } : studentMark
-            )
-        );
+        setStudentMarks(prevStudentMarks => ({
+            ...prevStudentMarks,
+            [rollNum]: newMarks
+        }));
     };
 
     const onSubmit = async (e) => {
-        e.preventDefault;
-        console.log(selectedSubject);
+        e.preventDefault();
         const payload = {
             subject_code: selectedSubject,
             students: studentMarks
-        }
-        console.log(payload);
+        };
+
         try {
-            const { data } = await axiosClient.post("/addInternalMarks", payload)
-            console.log(data);
-        }
-        catch (err) {
-            console.error("Error while submitting data",err);
+            const { data } = await axiosClient.post("/addInternalMarks", payload);
+            setSubmissionMessage('Successfully added marks');
+            setStudentMarks({});
+        } catch (err) {
+            console.error("Error while submitting data", err);
+            setSubmissionMessage('Error while submitting marks');
         }
     }
 
@@ -72,18 +78,19 @@ export const AddMarks = () => {
                 ))}
             </div>
             <div>
-                {studentMarks.map(studentMark => (
-                    <div key={studentMark.rollNum}>
-                        <label >{studentMark.rollNum}:</label>
-                        <input type="number" value={studentMark.marks}
-                            onChange={e => handleMarksChange(studentMark.rollNum, e.target.value)}
+                {Object.keys(studentMarks).map(rollNum => (
+                    <div key={rollNum}>
+                        <label>{rollNum}:</label>
+                        <input
+                            type="number"
+                            value={studentMarks[rollNum] || ''}
+                            onChange={e => handleMarksChange(rollNum, e.target.value)}
                         />
                     </div>
                 ))}
                 <button onClick={onSubmit}>Submit Marks</button>
+                <p>{submissionMessage}</p>
             </div>
-
         </div>
-    )
-
-}
+    );
+};

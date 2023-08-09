@@ -43,7 +43,7 @@ class NoticeBoardController extends Controller
             return response()->json(['message'=>'NoticeBoard not Updated'],500);
         }
     }
-    public function get(Request $req)
+    public function getNotices(Request $req)
     {
 
          $perPage = $req->query('perPage', 10);
