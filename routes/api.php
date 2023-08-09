@@ -139,4 +139,6 @@ Route::group([
 
     Route::post('sendOTPStd',[StudentController::class,"sendOtp"])->withoutMiddleware('auth:student-api');
     Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
+    Route::get('getInternalMarks',[StudentController::class,'checkMarks']);
+    Route::get('getAttendance',[StudentController::class,'checkAttendance']);
 });
