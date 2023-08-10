@@ -1,7 +1,8 @@
 import React,{useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
-export const UpdatePwd=()=>{
+
+export const UpdatePwdFaculty=()=>{
     const oldPassword=useRef()
     const newPassword=useRef()
     const confirmPassword=useRef()
@@ -16,7 +17,7 @@ export const UpdatePwd=()=>{
         }
         console.log(payload);
         try {
-            const { data } = await axiosClient.put('/updatePwdStd', payload);
+            const { data } = await axiosClient.put('/updatePwdFaculty', payload);
 
             if (data === 'true') {
                 console.log("Password Updated");
