@@ -35,9 +35,9 @@ const AdminHomePage = () => {
     //   if (!token) {
     //     return <Navigate to="/StudentLogin" />;
     // }
-    function closeDashboard() {
-        setDashboardOpen(false);
-      }
+    useEffect(()=>{
+        <NoticeBoard/>
+    },[]);
     return (
         <div id="defaultLayout">
             <header>
@@ -53,7 +53,7 @@ const AdminHomePage = () => {
             <button  className="dropbtn" onClick={setDashboardOpen}>Dashboard</button>
             <div class="dropdown-content">
                 <div class="dropdown-content-link-style">
-                <Link onClick={closeDashboard}>NoticeBoard</Link>
+                <Link to="/admin/NoticeBoard">NoticeBoard</Link>
                 <Link to="/admin/welcome">Welcome</Link>
                 <Link to="">Update password</Link>
                 </div>
@@ -128,6 +128,7 @@ const AdminHomePage = () => {
                 <main>
                     {/* <NoticeBoard /> */}
                     {dashboardOpen ? null : <NoticeBoard />}
+
                     <Outlet />
                 </main>
             </div>

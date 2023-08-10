@@ -27,7 +27,7 @@ class DeleteReadNotificationsCommand extends Command
      */
     public function handle()
     {
-        $olderThanDays = 7; // Delete notifications older than 7 days
+        $olderThanDays = 1; // Delete notifications older than 7 days
         $timestamp = Carbon::now()->subDays($olderThanDays);
 
         notifications::where('is_read', true)

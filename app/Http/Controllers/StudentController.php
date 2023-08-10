@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
+use App\Models\attendance_satisfied;
+use App\Models\internal_mark;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -211,6 +213,35 @@ class StudentController extends Controller
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }
     }
+
+    public function checkMarks(Request $req) {
+        $roll_num = $req->query('roll_num');
+
+        $marks = internal_mark::where('roll_num', $roll_num)
+            ->join('subjects', 'internal_marks.subject_code', '=', 'subjects.subject_code')
+            ->select('internal_marks.subject_code', 'subjects.subject_name', 'internal_marks.mid1', 'internal_marks.mid2')
+            ->get();
+
+        if ($marks->count() > 0) {
+            return response()->json($marks);
+        } else {
+            return response()->json(['error' => 'No marks found for the provided roll number'], 404);
+        }
+    }
+    public function checkAttendance(Request $req){
+        $roll_num= $req->query('roll_num');
+        $attendance=attendance_satisfied::where('roll_num', $roll_num)
+        ->join('subjects', 'attendance_satisfied.subject_code', '=', 'subjects.subject_code')
+        ->select('attendance_satisfied.subject_code', 'subjects.subject_name', 'attendance_satisfied.attended', 'attendance_satisfied.total','attendance_satisfied.percentage')
+        ->get();
+        if ($attendance->count() > 0) {
+            return response()->json($attendance);
+        } else {
+            return response()->json(['error' => 'No attendace record found for the provided roll number'], 404);
+        }
+    }
+
+
 
 
 }

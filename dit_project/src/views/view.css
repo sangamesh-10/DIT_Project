@@ -1,0 +1,38 @@
+/* Add this CSS in a separate file or in a <style> tag */
+
+/* Basic styling for the container */
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 800px;
+  }
+
+  /* Styling for the table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  /* Styling for loading and error messages */
+  .loading-message {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .error-message {
+    text-align: center;
+    margin-top: 20px;
+    color: red;
+  }
+
+  /* Optional: Add more styling according to your design */

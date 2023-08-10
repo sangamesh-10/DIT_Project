@@ -20,6 +20,8 @@ import { AssignFaculty } from "./views/AssignFaculty.jsx";
 import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
 import { AddAttendance } from "./views/AddAttendance.jsx";
+import InternalMarks from "./views/InternalMarks.jsx";
+import Attendance from "./views/Attendance.jsx";
 
 
 const router = createBrowserRouter([
@@ -48,6 +50,22 @@ const router = createBrowserRouter([
             {
                 path:'/student/notifications',
                 element:<Notifications />
+            },
+            {
+                path:'/student/InternalMarks',
+                element:<InternalMarks />
+            },
+            {
+                path:'/student/Attendance',
+                element:<Attendance />
+            },
+            {
+                path:"/student/Noticeboard",
+                element:<NoticeBoard/>
+            },
+            {
+                path:'/student/Notifications',
+                element:<Notifications/>
             }
         ]
     },
@@ -71,6 +89,10 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/addAttendance",
                 element:<AddAttendance/>
+            },
+            {
+                path:"/faculty/Noticeboard",
+                element:<NoticeBoard/>
             }
 
         ]

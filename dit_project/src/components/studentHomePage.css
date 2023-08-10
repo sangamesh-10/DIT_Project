@@ -11,6 +11,8 @@
     top: 150px;
     height: 100vh;
     width: 75%;
+    transition:height 0.3s ease;
+    overflow-y: scroll;
 }
 
 header {
@@ -28,7 +30,6 @@ header {
     color: #d9534f;
     cursor: pointer;
 }
-
 aside {
     padding: 10px;
     background-color: #f0f0f0;
