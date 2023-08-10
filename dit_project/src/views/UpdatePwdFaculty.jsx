@@ -1,10 +1,10 @@
 import React,{useRef,useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
-export const UpdatePwd=()=>{
+
+export const UpdatePwdFaculty=()=>{
     const [submissionMessage, setSubmissionMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
-
     const oldPassword=useRef()
     const newPassword=useRef()
     const confirmPassword=useRef()
@@ -19,18 +19,20 @@ export const UpdatePwd=()=>{
         }
         console.log(payload);
         try {
-            const { data } = await axiosClient.put('/updatePwdStd', payload);
+            const { data } = await axiosClient.put('/updatePwdFaculty', payload);
+            console.log(data)
 
             if (data === 'true') {
-                setSubmissionMessage("Password Updated");
+                console.log("Password Updated");
+                setSubmissionMessage("Password updated");
                 setSubmitted(true);
-
+                console.log(submitted);
             }
         } catch (err) {
             const response = err.response;
             if (response && response.status === 422) {
                 console.log(response.data.errors);
-                setSubmissionMessage("Error Occured");
+                setSubmissionMessage("Error Occurred");
             }
         }
     }

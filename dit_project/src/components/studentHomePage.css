@@ -1,6 +1,11 @@
 /* You can put this CSS in a separate file or use a CSS-in-JS solution like styled-components */
-
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
 .content {
+
     padding: 20px;
     border: 0.5px solid #ccc;
     border-radius: 3px;
