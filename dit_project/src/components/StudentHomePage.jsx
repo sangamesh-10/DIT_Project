@@ -38,10 +38,6 @@ const StudentHomePage = () => {
 
     return (
         <div id="defaultLayout">
-            <aside>
-                <Link to="/student/dashboard">Dashboard</Link>
-                <Link to="/student/welcome">Welcome</Link>
-            </aside>
                 <header>
                     <div>
                         Header
@@ -52,6 +48,11 @@ const StudentHomePage = () => {
                         <a onClick={logout} className="btn-logout" href="#">Logout</a>
                     </div>
                 </header>
+            <aside>
+                <Link to="/student/dashboard">Dashboard</Link>
+                <Link to="/student/welcome">Welcome</Link>
+                <Link to="/student/updatePwd">Update Password</Link>
+            </aside>
             <div className="content">
                 <main>
                     <Notifications />

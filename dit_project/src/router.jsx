@@ -19,6 +19,7 @@ import { FacultyReg } from "./views/FacultyRegistration.jsx";
 import { AssignFaculty } from "./views/AssignFaculty.jsx";
 import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
+import { AddAttendance } from "./views/AddAttendance.jsx";
 
 
 const router = createBrowserRouter([
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/addMarks",
                 element:<AddMarks/>
+            },
+            {
+                path:"/faculty/addAttendance",
+                element:<AddAttendance/>
             }
 
         ]

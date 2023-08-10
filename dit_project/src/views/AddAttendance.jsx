@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client";
 
-export const AddMarks = () => {
+export const AddAttendance = () => {
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState('');
     const [enrolledStudents, setEnrolledStudents] = useState([]);
-    const [studentMarks, setStudentMarks] = useState([]);
+    const [studentAttd, setStudentAttd] = useState([]);
     const [submissionMessage, setSubmissionMessage] = useState('');
-    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         fetchSubjects();
@@ -29,21 +28,21 @@ export const AddMarks = () => {
             setEnrolledStudents(response.data);
 
             // Create studentMarks object with roll numbers as keys and 0 as values
-            const initialStudentMarks = response.data.reduce((marksObj, rollNum) => {
-                marksObj[rollNum] = 0;
-                return marksObj;
+            const initialStudentAttd = response.data.reduce((attdObj, rollNum) => {
+                attdObj[rollNum] = 0;
+                return attdObj;
             }, {});
 
-            setStudentMarks(initialStudentMarks);
+            setStudentAttd(initialStudentAttd);
         } catch (error) {
             console.error('Error fetching students:', error);
         }
     };
 
-    const handleMarksChange = (rollNum, newMarks) => {
-        setStudentMarks(prevStudentMarks => ({
-            ...prevStudentMarks,
-            [rollNum]: newMarks
+    const handleAttendanceChange = (rollNum) => {
+        setStudentAttd(prevAttendance => ({
+            ...prevAttendance,
+            [rollNum]: 1
         }));
     };
 
@@ -51,21 +50,19 @@ export const AddMarks = () => {
         e.preventDefault();
         const payload = {
             subject_code: selectedSubject,
-            students: studentMarks
+            students: studentAttd
         };
+        console.log(payload);
 
         try {
-            const { data } = await axiosClient.post("/addInternalMarks", payload);
-            setSubmissionMessage('Successfully added marks');
-            setStudentMarks({});
-            setSubmitted(true);
+            const { data } = await axiosClient.post("/markAttendance", payload);
+            setSubmissionMessage('Successfully added Attendance');
+            setStudentAttd({});
         } catch (err) {
             console.error("Error while submitting data", err);
-            setSubmissionMessage('Error while submitting marks');
-            setSubmitted(false)
+            setSubmissionMessage('Error while submitting Attendace');
         }
     }
-
     return (
         <div>
             <label>Subjects:</label>
@@ -80,24 +77,23 @@ export const AddMarks = () => {
                     </button>
                 ))}
             </div>
-            {selectedSubject && !submitted &&(
-            <div>
-                {Object.keys(studentMarks).map(rollNum => (
-                    <div key={rollNum}>
-                        <label>{rollNum}:</label>
-                        <input
-                            type="number"
-                            value={studentMarks[rollNum] || ''}
-                            onChange={e => handleMarksChange(rollNum, e.target.value)}
-                        />
-                    </div>
-                ))}
-                <button onClick={onSubmit}>Submit Marks</button>
+            {selectedSubject && (
+                <div>
+                    {Object.keys(studentAttd).map(rollNum => (
+                        <div key={rollNum}>
+                            <label>{rollNum}:</label>
+                            <input
+                                type="checkbox"
+                                checked={studentAttd[rollNum]}
+                                onChange={() => handleAttendanceChange(rollNum)}
+                            />
+                        </div>
+                    ))}
+                    <button onClick={onSubmit}>Submit Attendance</button>
+                    <p>{submissionMessage}</p>
+
+                </div>
+                )}
             </div>
-            )}
-            {submitted  && (
-            <p>{submissionMessage}</p>
-            )}
-        </div>
     );
-};
+}

@@ -21,7 +21,7 @@ export const UpdatePwd=()=>{
 
             if (data === 'true') {
                 console.log("Password Updated");
-                navigate("/");
+                navigate("/student");
             }
         } catch (err) {
             const response = err.response;
