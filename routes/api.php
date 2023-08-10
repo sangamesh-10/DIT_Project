@@ -38,7 +38,7 @@ Route::group([
     Route::post('facultyLogin', [FacultyController::class, 'login'])->name('faculty.login')
     ->withoutMiddleware('auth:faculty-api');
     Route::post('facultyLogout', [FacultyController::class,'logout']);
-    Route::post('me', [FacultyController::class,'me']);
+    Route::get('me', [FacultyController::class,'me']);
     Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects'])->withoutMiddleware('auth:admin-api');
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
@@ -54,7 +54,6 @@ Route::group([
 
     Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"]);
     Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"]);
-
 
 });
 
@@ -131,11 +130,12 @@ Route::group([
 
     Route::post('raiseComplaintStudent',[StudentController::class,'raiseComplaint']);
 
-    Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
+    Route::put('SetPwdStd',[StudentController::class,'setPwd'])->withoutMiddleware('auth:student-api');
     Route::put('updateContactStd',[StudentController::class,'updateContact']);
+    Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
 
-    Route::post('sendOTPStd',[StudentController::class,"sendOtp"]);
-    Route::post('otpVerifyStd',[StudentController::class,"otpVerification"]);
 
+
+    Route::post('sendOTPStd',[StudentController::class,"sendOtp"])->withoutMiddleware('auth:student-api');
+    Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
 });
-

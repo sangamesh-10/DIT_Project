@@ -1,26 +1,28 @@
 /* You can put this CSS in a separate file or use a CSS-in-JS solution like styled-components */
-*{
-    padding:0;
-    margin:0;
-    box-sizing: border-box;
+#defaultLayout{
+    margin-top: -300px;
 }
 .content {
-
-    padding: 20px;
-    border: 1px solid #ccc;
+    width: 90vw;
+    height: 20px;
+    padding: 10px;
+    border: none;
     border-radius: 5px;
     margin: 20px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* background-color: #007bff; */
 }
 
 header {
+    width: 90vw;
+    height: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #f0f0f0;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin: -10px;
 }
 
 .btn-logout {
@@ -31,13 +33,13 @@ header {
 aside {
     padding: 10px;
     background-color: #f0f0f0;
-    display: inline-flex;
+    display:flex;
     justify-content:space-around;
-
+    margin: 20px;
     border-radius: 5px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
-    width: 100%;
+    margin-top: 0px;
+    width: 90vw;
 }
 
 aside a {
@@ -55,7 +57,9 @@ aside a:hover {
 /* App.css */
 .notice-board {
     width: 70%;
-    margin: 0 auto;
+    /* margin: 0 auto; */
+    margin-top: 50px;
+    margin-bottom: 50px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;

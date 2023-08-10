@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
 import axiosClient from '../axios-client';
 
-export default function UpdateContact() {
+
+export default function UpdateContactFaculty() {
     const mobile=useRef();
     const onSubmit=async(e)=>
     {
@@ -10,7 +11,7 @@ export default function UpdateContact() {
             mobile:mobile.current.value
         };
         try{
-            const {data}=await axiosClient.put('/updateContactStd',payload)
+            const {data}=await axiosClient.put('/updateContactFaculty',payload)
             console.log(data);
         }
         catch(err){
