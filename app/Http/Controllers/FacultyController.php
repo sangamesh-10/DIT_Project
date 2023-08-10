@@ -285,7 +285,7 @@ class FacultyController extends Controller
                 $faculty->password = Hash::make($new_password);
                 $faculty->save();
 
-                return response()->json(['success'=> 'password modified']);
+                return response()->json('true');
             }
         }
     }

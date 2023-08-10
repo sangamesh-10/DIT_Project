@@ -28,7 +28,7 @@ const Attendance = () => {
   }
 
   if (attendanceData.length === 0) {
-    return <div className="error-message">No marks found.</div>;
+    return <div className="error-message">No Attendance found.</div>;
   }
 
   return (
