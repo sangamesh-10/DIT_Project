@@ -36,14 +36,14 @@ class NoticeBoardController extends Controller
             $result = $object->save();
         }
         if($result){
-            // NoticeBoardController::sendNotifications($object->notice_id,$object->description);
+            $this->sendNotifications($object->notice_id,$object->description);
             return response()->json(['message'=>'NoticeBoard  Updated']);
         }
         else{
             return response()->json(['message'=>'NoticeBoard not Updated'],500);
         }
     }
-    public function get(Request $req)
+    public function getNotices(Request $req)
     {
 
          $perPage = $req->query('perPage', 10);

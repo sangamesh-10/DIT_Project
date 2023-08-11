@@ -187,7 +187,8 @@ class FacultyController extends Controller
                     notifications::create([
                         'sender_id' => $user,
                         'receiver_id' => $studentId,
-                        'message' => 'Mid1 marks updated, chuskogalaru',
+                        'message' => "Mid1 marks updated for the subject $subject",
+
                     ]);
                 }
 

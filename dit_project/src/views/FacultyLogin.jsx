@@ -20,7 +20,6 @@ export const FacultyLogin = () => {
             const { data } = await axiosClient.post('/facultyLogin', payload);
             setUser(data.user);
             setToken(data.access_token);
-            console.log(data);
             setLoggedIn(true);
         } catch (err) {
             const response = err.response;

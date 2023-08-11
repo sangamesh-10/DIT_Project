@@ -36,7 +36,8 @@ export const StudentReg=()=>{
             religion :religion.current.value
         }
         const {data}=await axiosClient.post('/studentRegistration',payload)
-        .then(console.log("Registered Successfully",data))
+        .then(window.alert("Registered successfully"))
+        .then(window.location.reload())
         .catch(err =>{
             const response =err.response;
             if(response && response.status===422)

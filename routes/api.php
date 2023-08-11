@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('getNotice',[NoticeBoardController::class,'getNotices'])->name('admin.notice')->withoutMiddleware('auth:admin-api');
 
 
 Route::group([
@@ -46,7 +47,6 @@ Route::group([
     Route::put('facultyMarkAsRead',[FacultyController::class,'markAsRead']);
     Route::get('getFacultyNotifications',[FacultyController::class,'getNotifications']);
 
-
     Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
 
     Route::put('updatePwdFaculty',[FacultyController::class,'updatePassword']);
@@ -54,6 +54,9 @@ Route::group([
 
     Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"]);
     Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"]);
+
+    // Route::get('getNotice',[NoticeBoardController::class,'get'])->name('faculty.notice');
+
 
 });
 
@@ -96,7 +99,6 @@ Route::group([
     Route::put('updateCalendar',[AcademicCalendarController::class,'update']);
 
     Route::post('addNotice',[NoticeBoardController::class,'add']);
-    Route::get('getNotice',[NoticeBoardController::class,'get']);
     Route::put('updateNotice',[NoticeBoardController::class,'update']);
     Route::delete('deleteNotice',[NoticeBoardController::class,'delete']);
 
@@ -135,7 +137,8 @@ Route::group([
     Route::put('updatePwdStd',[StudentController::class,'updatePwd']);
 
 
-
     Route::post('sendOTPStd',[StudentController::class,"sendOtp"])->withoutMiddleware('auth:student-api');
     Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
+    Route::get('getInternalMarks',[StudentController::class,'checkMarks']);
+    Route::get('getAttendance',[StudentController::class,'checkAttendance']);
 });
