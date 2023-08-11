@@ -156,7 +156,7 @@ class FacultyController extends Controller
                     'message' => 'I had raised a complaint,please Respond',
                 ]);
 
-                $to_email = 'sangameshsangu023@gmail.com';
+                $to_email = 'anupamavegesna1331@gmail.com';
                 $subject = 'Complaint Raised';
                 $message = 'A complaint has been raised by ' . $user . '. Please see the description below.';
                 $message .= "\n\n" . $req->input("description");

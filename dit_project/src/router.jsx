@@ -104,17 +104,16 @@ const router = createBrowserRouter([
                 element:<AddMarks/>
             },
             {
-<<<<<<< HEAD
                 path:'/faculty/RaiseComplaint',
                 element:<RaiseComplaint />
-=======
+            },
+            {
                 path:"/faculty/addAttendance",
                 element:<AddAttendance/>
             },
             {
                 path:"/faculty/Noticeboard",
                 element:<NoticeBoard/>
->>>>>>> b00f1482a406c53f467e4da68a5b30bdd55d003d
             }
 
         ]
