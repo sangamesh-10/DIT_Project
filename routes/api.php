@@ -110,6 +110,8 @@ Route::group([
 
     Route::post("studentRegistration",[AdminController::class,'studentReg']);
     Route::get("studentsDetails",[AdminController::class,'getStudents']);
+    Route::post("uploadSoftCopies",[AdminController::class,'uploadAndSaveFiles']);
+
 });
 
 

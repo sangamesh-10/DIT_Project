@@ -2,9 +2,11 @@
 
 namespace App\Mail;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -17,9 +19,11 @@ class MailSender extends Mailable
      * Create a new message instance.
      */
     public $mailData;
+    public $attachmentsReceived;
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
+        $this->attachmentsReceived = $mailData['attachments'];
     }
 
     /**
@@ -37,9 +41,19 @@ class MailSender extends Mailable
      */
     public function content(): Content
     {
-        return new Content(
-            view: 'emails.OtpEmail',
-        );
+        $view = $this->mailData['view'];
+
+        if ($view === 'emails.OtpEmail') {
+            return new Content(
+                view: $view,
+            );
+        } else if ($view === 'emails.Complaints') {
+            return new Content(
+                view: $view,
+            );
+        } else {
+            throw new Exception('Invalid view');
+        }
     }
     /**
      * Get the attachments for the message.
@@ -48,6 +62,13 @@ class MailSender extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        if (empty($this->attachmentsReceived)) {
+            return [];
+        }
+        else{
+            return $this->attachmentsReceived;
+        }
+
+
     }
 }

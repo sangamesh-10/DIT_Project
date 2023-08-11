@@ -21,6 +21,8 @@ import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
 import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
+import RaiseComplaint from "./components/RaiseComplaint";
+import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 
 
 const router = createBrowserRouter([
@@ -76,6 +78,10 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/addMarks",
                 element:<AddMarks/>
+            },
+            {
+                path:'/faculty/RaiseComplaint',
+                element:<RaiseComplaint />
             }
 
         ]
@@ -117,6 +123,10 @@ const router = createBrowserRouter([
                 path:"/admin/addSubjects",
                 element:<AddSubjects/>
             },
+            {
+                path: '/admin/uploadSoftCopies',
+                element:<SoftCopiesUpload />
+            }
         ]
     },
     {
