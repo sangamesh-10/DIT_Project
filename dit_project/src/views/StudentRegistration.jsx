@@ -35,17 +35,20 @@ export const StudentReg=()=>{
             caste :caste.current.value,
             religion :religion.current.value
         }
+        console.log(payload);
+        try{
         const {data}=await axiosClient.post('/studentRegistration',payload)
-        // .then(window.alert("Registered successfully"))
-        // .then(window.location.reload())
-        .catch(err =>{
+        console.log(data)
+        .then(window.alert("Registered successfully"))
+        .then(window.location.reload())
+        }
+        catch(err){
             const response =err.response;
             if(response && response.status===422)
             {
                 console.log(response.data.errors);
             }
-        })
-        console.log(data);
+        }
     }
 
     return(

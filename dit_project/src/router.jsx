@@ -15,10 +15,14 @@ import App from "./App.jsx";
 import UpdateNoticeBoard from "./views/UpdateNoticeBoard.jsx";
 import OtpPage from "./views/OtpVerification.jsx";
 import { UpdatePwd } from "./views/UpdatePwd.jsx";
+import { UpdatePwdFaculty } from "./views/UpdatePwdFaculty.jsx";
+import UpdateContactStd from "./views/UpdateContactStd.jsx";
+import UpdateContactFaculty from "./views/UpdateContactFaculty.jsx";
 import { FacultyReg } from "./views/FacultyRegistration.jsx";
 import { AssignFaculty } from "./views/AssignFaculty.jsx";
 import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
+import { AddAttendance } from "./views/AddAttendance.jsx";
 import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
 import RaiseComplaint from "./components/RaiseComplaint";
@@ -49,6 +53,10 @@ const router = createBrowserRouter([
                 element:<UpdatePwd/>
             },
             {
+                path:"/student/updateContact",
+                element:<UpdateContactStd/>
+            },
+            {
                 path:'/student/notifications',
                 element:<Notifications />
             },
@@ -59,6 +67,14 @@ const router = createBrowserRouter([
             {
                 path:'/student/Attendance',
                 element:<Attendance />
+            },
+            {
+                path:"/student/Noticeboard",
+                element:<NoticeBoard/>
+            },
+            {
+                path:'/student/Notifications',
+                element:<Notifications/>
             }
         ]
     },
@@ -76,12 +92,29 @@ const router = createBrowserRouter([
                 element: <DashBoard />
             },
             {
+                path:"/faculty/updatePwd",
+                element:<UpdatePwdFaculty/>
+            },
+            {
+                path:"/faculty/updateContact",
+                element:<UpdateContactFaculty/>
+            },
+            {
                 path:"/faculty/addMarks",
                 element:<AddMarks/>
             },
             {
+<<<<<<< HEAD
                 path:'/faculty/RaiseComplaint',
                 element:<RaiseComplaint />
+=======
+                path:"/faculty/addAttendance",
+                element:<AddAttendance/>
+            },
+            {
+                path:"/faculty/Noticeboard",
+                element:<NoticeBoard/>
+>>>>>>> b00f1482a406c53f467e4da68a5b30bdd55d003d
             }
 
         ]

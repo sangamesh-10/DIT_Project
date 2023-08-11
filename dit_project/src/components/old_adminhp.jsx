@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
@@ -7,7 +7,6 @@ import NoticeBoard from './NoticeBoard';
 
 const AdminHomePage = () => {
     const { user, token, setUser, setToken } = useStateContext();
-    const [dashboardOpen, setDashboardOpen] = useState(false);
     const navigate = useNavigate();
     if (!token) {
         return <Navigate to='/AdminLogin' />
@@ -35,9 +34,7 @@ const AdminHomePage = () => {
     //   if (!token) {
     //     return <Navigate to="/StudentLogin" />;
     // }
-    useEffect(()=>{
-        <NoticeBoard/>
-    },[]);
+
     return (
         <div id="defaultLayout">
             <header>
@@ -49,16 +46,14 @@ const AdminHomePage = () => {
                     </div>
             </header>
             <aside>
-            <div id="mySidenav" className={`sidenav ${dashboardOpen ? 'open' : ''}`}    >
-            <button  className="dropbtn" onClick={setDashboardOpen}>Dashboard</button>
+            <div class="sidenav">
+            <button class="dropbtn">Dashboard</button>
             <div class="dropdown-content">
-                <div class="dropdown-content-link-style">
-                <Link to="/admin/NoticeBoard">NoticeBoard</Link>
+                <Link to="/admin/dashboard">Dashboard</Link>
                 <Link to="/admin/welcome">Welcome</Link>
                 <Link to="">Update password</Link>
-                </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">NoticeBoard Activities</button>
+                    <button class="dropbtn">NoticeBoard Activities</button>
                     <div class="nested-dropdown-content">
                         <Link to="/admin/addNotice">Add Notice</Link>
                         <Link to="">Delete Notice</Link>
@@ -66,7 +61,7 @@ const AdminHomePage = () => {
                     </div>
                 </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Student Activities</button>
+                    <button class="dropbtn">Student Activities</button>
                     <div class="nested-dropdown-content">
                         <Link to="/admin/studentRegistration">Add Students</Link>
                         <Link to="">View Students</Link>
@@ -77,7 +72,7 @@ const AdminHomePage = () => {
                 </div>
 
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Faculty Activities</button>
+                    <button class="dropbtn">Faculty Activities</button>
                     <div class="nested-dropdown-content">
                         <Link to="/admin/facultyRegistration">Add New Faculty</Link>
                         <Link to="">View Faculty</Link>
@@ -88,14 +83,14 @@ const AdminHomePage = () => {
                     </div>
                 </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Subjects</button>
+                    <button class="dropbtn">Subjects</button>
                     <div class="nested-dropdown-content">
                         <Link to="/admin/addSubjects">Add Subject</Link>
                         <Link to="">View Subjects</Link>
                     </div>
                 </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Semester Details</button>
+                    <button class="dropbtn">Semester Details</button>
                     <div class="nested-dropdown-content">
                         <Link to="">Add Semester</Link>
                         <Link to="">View Semester</Link>
@@ -104,7 +99,7 @@ const AdminHomePage = () => {
                     </div>
                 </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Academic Calendar</button>
+                    <button class="dropbtn">Academic Calendar</button>
                     <div class="nested-dropdown-content">
                         <Link to="">Add Calendar</Link>
                         <Link to="">View Calendar</Link>
@@ -112,7 +107,7 @@ const AdminHomePage = () => {
                     </div>
                 </div>
                 <div class="nested-sidenav">
-                    <button class="nested-dropbtn">Logins</button>
+                    <button class="dropbtn">Logins</button>
                     <div class="nested-dropdown-content">
                         <Link to="">Add Student Login</Link>
                         <Link to="">Delete Student Login</Link>
@@ -124,11 +119,9 @@ const AdminHomePage = () => {
             </div>
             </aside>
 
-            <div id="content" className={`content ${!dashboardOpen ? 'dashboard-open' : ''}`}>
+            <div className="content">
                 <main>
-                    {/* <NoticeBoard /> */}
-                    {dashboardOpen ? null : <NoticeBoard />}
-
+                    <NoticeBoard />
                     <Outlet />
                 </main>
             </div>
