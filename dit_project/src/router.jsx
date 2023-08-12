@@ -24,6 +24,7 @@ import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
 import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
+import ProfileStd from "./views/ProfileStd.jsx";
 
 
 const router = createBrowserRouter([
@@ -40,10 +41,13 @@ const router = createBrowserRouter([
                 path: "/student/welcome",
                 element: <Welcome />
             },
-
             {
                 path:"/student/dashBoard",
                 element: <DashBoard />
+            },
+            {
+                path:"/student/Profile",
+                element: <ProfileStd />
             },
             {
                 path:"/student/updatePwd",

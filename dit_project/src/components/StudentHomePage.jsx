@@ -41,6 +41,7 @@ const StudentHomePage = () => {
             <aside>
                 <Link to="/student/dashboard">Dashboard</Link>
                 <Link to="/student/welcome">Welcome</Link>
+                {/* <Link to={'/student/ProfileStd'}>Profile</Link> */}
                 <Link to={'/student/InternalMarks'}>Check Internal Marks</Link>
                 <Link to={'/student/Attendance'}>Check Attendance</Link>
 
