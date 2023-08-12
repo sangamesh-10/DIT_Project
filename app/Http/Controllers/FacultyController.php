@@ -264,6 +264,30 @@ class FacultyController extends Controller
 
         return response()->json(['success'=> 'Contact modified']);
     }
+    public function setPassword(Request $req)
+    {
+        $faculty_id =$req->input('faculty_id');
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+        ];
+
+        $validator = Validator::make($req->all(), $rules);
+
+        if ($validator->fails() || $new_password != $confirm_password) {
+        return response()->json(['error'=> $validator->errors()]);
+        } else {
+            $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
+
+            if ($faculty) {
+                $faculty->password = Hash::make($new_password);
+                $faculty->save();
+                return response()->json('true');
+            }
+        }
+    }
     function updatePassword(Request $req)
     {
         $faculty_id = auth()->user()->faculty_id;
@@ -317,8 +341,8 @@ class FacultyController extends Controller
         $actual_otp = Cache::get('otp');
 
         if ($actual_otp && $user_otp == $actual_otp) {
+            return response()->json("true");
 
-            return response()->json("verified otp");
         } else {
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }

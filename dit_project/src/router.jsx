@@ -25,6 +25,7 @@ import { AddMarks } from "./views/AddMarks.jsx";
 import { AddAttendance } from "./views/AddAttendance.jsx";
 import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
+import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
 
 
 const router = createBrowserRouter([
@@ -173,6 +174,10 @@ const router = createBrowserRouter([
         path:'/OtpVerification',
         element:<OtpPage/>
 
+    },
+    {
+        path:"/OtpVerificationFaculty",
+        element:<OtpPageFaculty/>
     }
 ]);
 export default router;

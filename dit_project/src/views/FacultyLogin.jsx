@@ -42,6 +42,7 @@ export const FacultyLogin = () => {
                             <input ref={password} type="password" placeholder='password' /><br /><br />
                             <button>LOGIN</button>
                         </form>
+                        <a  href="/OtpVerificationFaculty">Forgot Password?</a>
                     </div>
                 </div>
             )}

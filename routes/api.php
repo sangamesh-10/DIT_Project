@@ -50,10 +50,11 @@ Route::group([
     Route::post('raiseComplaintFaculty',[FacultyController::class,'raiseComplaint']);
 
     Route::put('updatePwdFaculty',[FacultyController::class,'updatePassword']);
+    Route::put('setPwdFaculty',[FacultyController::class,'setPassword'])->withoutMiddleware('auth:faculty-api');
     Route::put('updateContactFaculty',[FacultyController::class,'updateContact']);
 
-    Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"]);
-    Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"]);
+    Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"])->withoutMiddleware('auth:faculty-api');
+    Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"])->withoutMiddleware('auth:faculty-api');
 
     // Route::get('getNotice',[NoticeBoardController::class,'get'])->name('faculty.notice');
 
