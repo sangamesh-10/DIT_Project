@@ -22,8 +22,11 @@ import { FacultyReg } from "./views/FacultyRegistration.jsx";
 import { AssignFaculty } from "./views/AssignFaculty.jsx";
 import { AddSubjects } from "./views/AddSubjects.jsx";
 import { AddMarks } from "./views/AddMarks.jsx";
+import { AddAttendance } from "./views/AddAttendance.jsx";
 import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
+import RaiseComplaint from "./components/RaiseComplaint";
+import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 import ProfileStd from "./views/ProfileStd.jsx";
 
 
@@ -68,6 +71,14 @@ const router = createBrowserRouter([
             {
                 path:'/student/Attendance',
                 element:<Attendance />
+            },
+            {
+                path:"/student/Noticeboard",
+                element:<NoticeBoard/>
+            },
+            {
+                path:'/student/Notifications',
+                element:<Notifications/>
             }
         ]
     },
@@ -95,6 +106,18 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/addMarks",
                 element:<AddMarks/>
+            },
+            {
+                path:'/faculty/RaiseComplaint',
+                element:<RaiseComplaint />
+            },
+            {
+                path:"/faculty/addAttendance",
+                element:<AddAttendance/>
+            },
+            {
+                path:"/faculty/Noticeboard",
+                element:<NoticeBoard/>
             }
 
         ]
@@ -136,6 +159,10 @@ const router = createBrowserRouter([
                 path:"/admin/addSubjects",
                 element:<AddSubjects/>
             },
+            {
+                path: '/admin/uploadSoftCopies',
+                element:<SoftCopiesUpload />
+            }
         ]
     },
     {

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\faculty_login;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -138,23 +139,60 @@ class FacultyController extends Controller
     }
     public function raiseComplaint(Request $req)
     {
-        $user = auth()->guard('faculty-api')->user()->faculty_id;
-        $object = new raise_complaint;
-        $object->from_id = $user;
-        $object->description = $req->input("description");
-        $object->date = date('Y-m-d');
-        $result = $object->save();
-        if ($result) {
-            notifications::create([
-                'sender_id' => $user,
-                'receiver_id' => 'S101',
-                'message' => 'I had raised a complaint,please Respond',
-            ]);
-            return response()->json($object);
-        } else {
-            return response()->json(['message' => 'could not save data']);
+        try {
+            $user = auth()->guard('faculty-api')->user()->faculty_id;
+            $object = new raise_complaint;
+            $object->from_id = $user;
+            $object->description = $req->input("description");
+            $object->date = date('Y-m-d');
+
+            // Validate and save the complaint
+            $result = $object->save();
+
+            if ($result) {
+                notifications::create([
+                    'sender_id' => $user,
+                    'receiver_id' => 'S101',
+                    'message' => 'I had raised a complaint,please Respond',
+                ]);
+
+                $to_email = 'anupamavegesna1331@gmail.com';
+                $subject = 'Complaint Raised';
+                $message = 'A complaint has been raised by ' . $user . '. Please see the description below.';
+                $message .= "\n\n" . $req->input("description");
+
+                $attachments = [];
+
+                if ($req->hasFile('attachments')) {
+                    foreach ($req->file('attachments') as $file) {
+                        $filename = $file->getClientOriginalName();
+                        $data = file_get_contents($file->getRealPath());
+
+                        $attachments[] = Attachment::fromPath($file)
+                            ->as('Report.pdf')
+                            ->withMime('application/pdf');
+                    }
+                }
+
+                $mailData = [
+                    'view' => 'emails.Complaints',
+                    'subject' => $subject,
+                    'title' => 'Mail from Laravel Project',
+                    'body' => $message,
+                    'attachments' => $attachments,
+                ];
+
+                Mail::to($to_email)->send(new MailSender($mailData));
+
+                return response()->json($object);
+            }
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur
+            return response()->json(['error' => 'An error occurred while raising the complaint.'], 500);
         }
     }
+
+
 
     public function addInternalMarks(Request $req)
     {
@@ -285,7 +323,7 @@ class FacultyController extends Controller
                 $faculty->password = Hash::make($new_password);
                 $faculty->save();
 
-                return response()->json(['success'=> 'password modified']);
+                return response()->json('true');
             }
         }
     }
@@ -301,6 +339,7 @@ class FacultyController extends Controller
         Cache::put('otp', $otp, 60);
         // Send the OTP to the client via email
         $mailData = [
+            'view' =>'emails.OtpEmail',
             'subject' => 'OTP Verification',
             'title' => 'Mail from Laravel Project',
             'body' => 'Your OTP for verification is: ',

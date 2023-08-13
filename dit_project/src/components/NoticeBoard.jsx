@@ -14,7 +14,7 @@ const NoticeBoard = () => {
       const response = await axios.get(`http://127.0.0.1:8000/api/getNotice?page=${page}`);
       const { data, meta } = response.data;
       setNotices(data.data);
-      setTotalPages(meta.last_page);
+      setTotalPages(data.last_page);
     } catch (error) {
       console.error('API Error:', error);
     }

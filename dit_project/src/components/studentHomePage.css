@@ -7,10 +7,17 @@
 .content {
 
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 20px;
+    border: 0.5px solid #ccc;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-left:270px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    position: static;
+    top: 150px;
+    height: 100vh;
+    width: 75%;
+    transition:height 0.3s ease;
+    overflow-y: scroll;
 }
 
 header {
@@ -28,17 +35,14 @@ header {
     color: #d9534f;
     cursor: pointer;
 }
-
 aside {
     padding: 10px;
     background-color: #f0f0f0;
-    display: inline-flex;
-    justify-content:space-around;
-
+    display: flex;
+    flex-direction: column; /* Display links vertically */
+    align-items: flex-start; /* Align links to the left */
     border-radius: 5px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
-    width: 100%;
 }
 
 aside a {
@@ -51,6 +55,7 @@ aside a {
 aside a:hover {
     color: #007bff;
 }
+
 
 /* noticeBoard css */
 /* App.css */
@@ -154,3 +159,117 @@ aside a:hover {
   .active {
     background-color: #efefef;
   }
+
+
+/* Style the dropdown button */
+
+
+.sidenav {
+    height: 20px;
+}
+
+
+.dropbtn {
+    color: rgb(8, 8, 8);
+    font-size: 16px;
+    border: none;
+    background:none;
+    cursor: pointer;
+    text-align: left;
+    font-weight: 700;
+}
+.nested-dropbtn{
+    color: rgb(8, 8, 8);
+    font-size: 16px;
+    border: none;
+    background:none;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    height: 100vh;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    transition: max-height 0.3s ease-in-out; /* Add smooth transition */
+    overflow: hidden;
+}
+.dropdown-content.open {
+    display: block;
+    max-height: 500px; /* Adjust the max height as needed */
+}
+.dropdown-content-link-style{
+
+ padding: 0px;
+ padding-left: 5px;
+ margin-bottom: 0px;
+}
+.sidenav:focus-within .dropdown-content {
+    display: block;
+}
+
+.nested-sidenav {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.nested-sidenav .nested-content {
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    position: absolute;
+    left: 100%;
+    top: 0;
+}
+
+.sidenav:focus-within .nested-sidenav .nested-content {
+    display: block;
+}
+
+.dropdown-content a, .nested-content a {
+    color: black;
+    /* padding: 7px 16px; */
+    padding-left: 16px;
+    padding-top: 12px;
+    text-decoration: none;
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+}
+.nested-sidenav:focus-within .nested-dropdown-content {
+    display: block;
+}
+
+.dropdown-content:hover, .nested-dropdown-content:hover {
+    background-color: #ddd;
+}
+.nested-dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: 3;
+    top:109px;
+    left: 273px;
+}
+
+
+
+/* Style the dropdown button */
+.dropbtn.open {
+    background-color: #ddd; /* Change color to indicate open state */
+  }
+
+  /* Adjusted Content Styles */
+  .content.dashboard-open {
+    margin-left: 250px; /* Adjusted width when dashboard is open */
+  }
+
+
+

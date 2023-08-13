@@ -8,8 +8,6 @@ use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\SubjectsController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\NoticeBoardController;
-
-
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\StudentController;
 /*
@@ -110,6 +108,8 @@ Route::group([
 
     Route::post("studentRegistration",[AdminController::class,'studentReg']);
     Route::get("studentsDetails",[AdminController::class,'getStudents']);
+    Route::post("uploadSoftCopies",[AdminController::class,'uploadAndSaveFiles']);
+
 });
 
 
@@ -127,6 +127,7 @@ Route::group([
     ->withoutMiddleware('auth:student-api');
     Route::post('studentLogout', [StudentController::class,'logout']);
     Route::get('studentMe', [StudentController::class,'me']);
+    Route::get('studentsEnrolled', [StudentController::class,'enrolledStds']);
     Route::get('getStudentNotifications',[StudentController::class,'getNotifications']);
     Route::put('studentMarkAsRead',[StudentController::class,'markAsRead']);
 

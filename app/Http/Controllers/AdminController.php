@@ -10,9 +10,9 @@ use App\Models\admin_login;
 use Carbon\Carbon;
 use App\Models\raise_complaint;
 use App\Models\faculty;
+use App\Models\Std_softcopie;
 use App\Models\student;
-
-
+use App\Models\students_login;
 
 class AdminController extends Controller
 {
@@ -110,35 +110,114 @@ public function getFaculty()
 }
 public function studentReg(Request $req)
 {
-    $object=new student;
-        $object->roll_num=$req->rollNumber;
-        $object->name=$req->name;
-        $object->email=$req->email;
-        $object->phone_num=$req->phoneNo;
-        $object->aadhar_num=$req->aadharNo;
-        $object->mother_name=$req->motherName;
-        $object->father_name=$req->fatherName;
-        $object->parent_num=$req->parentPhNo;
-        $object->dob=$req->dob;
-        $object->permanent_addr=$req->permanentAddr;
-        $object->present_addr=$req->presentAddr;
-        $object->blood_group=$req->bloodGroup;
-        $object->caste=$req->caste;
-        $object->religion=$req->religion;
+    try {
+        $object = new student;
+        dd($req->rollNumber);
+        $object->roll_num = $req->rollNumber;
+        $object->name = $req->name;
+        $object->email = $req->email;
+        $object->phone_num = $req->phoneNo;
+        $object->aadhar_num = $req->aadharNo;
+        $object->mother_name = $req->motherName;
+        $object->father_name = $req->fatherName;
+        $object->parent_num = $req->parentPhNo;
+        $object->dob = $req->dob;
+        $object->permanent_addr = $req->permanentAddr;
+        $object->present_addr = $req->presentAddr;
+        $object->blood_group = $req->bloodGroup;
+        $object->caste = $req->caste;
+        $object->religion = $req->religion;
 
-        $result=$object->save();
-        if($result)
-        {
+        $result = $object->save();
+
+        if ($result) {
+            // Create directory if not exists
+            $directoryPath = public_path('Student_softCopies/' . $req->rollNumber);
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0777, true);
+            }
+
+            // Insert row in student_login table
+            $studentLogin = new students_login();
+            $studentLogin->student_id = $req->rollNumber;
+            $studentLogin->password = Hash::make('Dit123'); // You can hash this password for security
+            $studentLogin->save();
+
             return response()->json($object);
+        } else {
+            return response()->json(['result' => 'operation failed']);
         }
-        else
-        {
-            return response()->json(['result'=>'operation failed']);
-        }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
 }
+
 public function getStudents()
 {
     $object=student::all();
     return response()->json($object);
 }
+public function uploadAndSaveFiles(Request $req)
+{
+    try {
+        $paths = '';
+        $roll_num = $req->input('roll_num');
+        $stdSoftCopy = new Std_softcopie();
+
+        // Handle the soft copy columns
+        $softCopyColumns = ['photo', 'aadhar', 'ssc_memo', 'inter_diploma_memo', 'grad_memo', 'transfer', 'provisional', 'community', 'income_ews', 'joining_report', 'allotment_order', 'bonafide_inter', 'bonafide_grad'];
+
+        foreach ($softCopyColumns as $column) {
+            if ($req->hasFile($column)) {
+                $file = $req->file($column);
+                $fileExtension = $file->getClientOriginalExtension();
+                $fileName = $column . '.' . $fileExtension; // Use column name as filename
+                $filePath = 'Student_softCopies/' . $roll_num . '/' . $fileName;
+
+                $file->move(public_path('Student_softCopies/' . $roll_num), $fileName);
+
+                $stdSoftCopy->$column = $filePath;
+            }
+        }
+
+        $bonafides = $req->file('bonafides');
+        // Handle bonafides files
+        if (!empty($bonafides)) {
+            $bonafidesPaths = [];
+
+            foreach ($bonafides as $index => $bonafide) {
+                $bonafideExtension = $bonafide->getClientOriginalExtension();
+                $bonafideName = 'bonafide_' . ($index + 1) . '.' . $bonafideExtension;
+                $bonafidePath = 'Student_softCopies/' . $roll_num . '/' . $bonafideName;
+
+                $bonafide->move(public_path('Student_softCopies/' . $roll_num), $bonafideName);
+                $bonafidesPaths[] = $bonafideName; // Store only the filename
+
+                // Make sure to store the full path in the std_softcopies table
+                $stdSoftCopy->$column = public_path($bonafidePath);
+            }
+
+            $stdSoftCopy->bonafides = implode('@', $bonafidesPaths);
+        } else {
+            return response()->json(['message' => 'No bonafides uploaded'], 400);
+        }
+
+        // Save the soft copies in the std_softCopies table
+        $stdSoftCopy->roll_num = $roll_num;
+        $stdSoftCopy->save();
+
+        return response()->json(['message' => 'Soft copies saved successfully']);
+    } catch (\Illuminate\Database\QueryException $e) {
+        // Handle SQL errors
+        return response()->json(['error' => 'An SQL error occurred: ' . $e->getMessage()]);
+    } catch (\Exception $e) {
+        // Handle other exceptions
+        return response()->json(['error' => 'An error occurred while processing the files.']);
+    }
+}
+
+
+
+
+
 }

@@ -1,7 +1,10 @@
-import React,{useRef} from "react";
+import React,{useRef,useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
 export const UpdatePwd=()=>{
+    const [submissionMessage, setSubmissionMessage] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+
     const oldPassword=useRef()
     const newPassword=useRef()
     const confirmPassword=useRef()
@@ -19,13 +22,15 @@ export const UpdatePwd=()=>{
             const { data } = await axiosClient.put('/updatePwdStd', payload);
 
             if (data === 'true') {
-                console.log("Password Updated");
-                navigate("/");
+                setSubmissionMessage("Password Updated");
+                setSubmitted(true);
+
             }
         } catch (err) {
             const response = err.response;
             if (response && response.status === 422) {
                 console.log(response.data.errors);
+                setSubmissionMessage("Error Occured");
             }
         }
     }
@@ -40,6 +45,9 @@ export const UpdatePwd=()=>{
                 <input type="password" ref={confirmPassword} /><br /><br />
                 <input type="submit" value="Update" />
             </form>
+            {submitted  && (
+            <p>{submissionMessage}</p>
+            )}
         </div>
     )
 }
