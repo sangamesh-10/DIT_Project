@@ -97,10 +97,14 @@ export const OtpPage=()=> {
                     <div>
                         <p>OTP Verified Successfully!</p>
                         <form form className="form" onSubmit={setPwd}>
+                        <div className="form-group">
                             <label htmlFor="newPassword" id="new_pwd"> New Password :{' '}</label>
                             <input type="password" ref={newPassword} className="input-field"/>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="confirmPassword" id="confirm_pwd">Confirm Password :{' '}</label>
                             <input type="password" ref={confirmPassword} className="input-field"/>
+                        </div>
                             <input type="submit" value="Update" className="submit-button"/>
                         </form>
                     </div>
