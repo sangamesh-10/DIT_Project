@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\notifications;
 use App\Models\raise_complaint;
 use Illuminate\Http\Request;
@@ -9,6 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
 use App\Models\students_login;
 use App\Models\student;
+use App\Models\enrolled_student;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -57,6 +57,101 @@ class StudentController extends Controller
         $object=Student::where("roll_num",$loginId)->first();
         return response()->json($object);
     }
+//     public function enrolledStds()
+// {
+//     $user = auth()->guard('student-api')->user();
+//     $loginId = $user->student_id;
+
+//     // Fetch the enrolled student details from the "enrolledstudents" table based on the composite key
+//     $enrolledStudent = enrolled_student::where([
+//         "year" => substr($loginId, 0, 2),
+//         "code" => substr($loginId, 5, 2)
+//     ])->first();
+
+//     // If enrolled student details are not found, return an error response
+//     if (!$enrolledStudent) {
+//         return response()->json(['error' => 'Enrolled student details not found'], 404);
+//     }
+
+//     // Extract the studying year from the "year" field and compute the batch
+//     $studyingYear = $enrolledStudent->year;
+//     $batchPrefix = "20"; // The prefix for the batch
+//     $batch = $batchPrefix . $studyingYear . "-" . (intval($studyingYear) + 2);
+//     $branchCode = $enrolledStudent->code;
+//     // Determine the branch based on the extracted branch code
+//     $branchDescription = ($branchCode === 'F0') ? 'MCA' : (($branchCode === 'D2') ? 'Mtech' : 'Unknown Branch');
+//     // Include the batch (with "20" placed before the year and a hyphen followed by the result of adding two years), branch, and semester in the response
+//     return response()->json([
+//         'batch' => $batch,
+//         'branch' => $branchDescription,
+//         'semester' => $enrolledStudent->semester
+//     ]);
+// }
+public function enrolledStds()
+{
+    $user = auth()->guard('student-api')->user();
+    $loginId = $user->student_id;
+
+    // Fetch the enrolled student details from the "enrolledstudents" table based on the composite key
+    $enrolledStudent = enrolled_student::where([
+        "year" => substr($loginId, 0, 2),
+        "code" => substr($loginId, 5, 2)
+    ])->first();
+
+    // If enrolled student details are not found, return an error response
+    if (!$enrolledStudent) {
+        return response()->json(['error' => 'Enrolled student details not found'], 404);
+    }
+
+    // Extract the studying year from the "year" field and compute the batch
+    $studyingYear = $enrolledStudent->year;
+    $batchPrefix = "20"; // The prefix for the batch
+    $batch = $batchPrefix . $studyingYear . "-" . (intval($studyingYear) + 2);
+
+    // Extract the 6th and 7th characters of the login ID
+    $sixthCharacter = substr($loginId, 5, 1);
+    $seventhCharacter = substr($loginId, 6, 1);
+
+    // Determine the branch and specialization based on the extracted characters
+    $branchDescription = '';
+    $specialization = '';
+
+    if ($sixthCharacter === 'F') {
+        $branchDescription = 'MCA';
+        $specialization = 'MCA'; // Specialization for MCA
+    } elseif ($sixthCharacter === 'D') {
+        $branchDescription = 'Mtech';
+        // Determine the specialization based on the 7th character
+        switch ($seventhCharacter) {
+            case '6':
+                $specialization = 'cnis';
+                break;
+            case 'B':
+                $specialization = 'data science';
+                break;
+            case '2':
+                $specialization = 'software engineering';
+                break;
+            case '0':
+                $specialization = 'computer science';
+                break;
+            default:
+                $specialization = 'Unknown Specialization';
+                break;
+        }
+    } else {
+        $branchDescription = 'Unknown Branch';
+    }
+
+    // Include the batch, branch, specialization, and semester in the response
+    return response()->json([
+        'batch' => $batch,
+        'branch' => $branchDescription,
+        'specialization' => $specialization,
+        'semester' => $enrolledStudent->semester
+    ]);
+}
+
     public function getNotifications()
     {
         $user = auth()->user()->student_id;
