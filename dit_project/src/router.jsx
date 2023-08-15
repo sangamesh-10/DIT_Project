@@ -27,6 +27,7 @@ import InternalMarks from "./views/InternalMarks.jsx";
 import Attendance from "./views/Attendance.jsx";
 import RaiseComplaint from "./components/RaiseComplaint";
 import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
+import ProfileStd from "./views/ProfileStd.jsx";
 import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
 
 
@@ -44,10 +45,13 @@ const router = createBrowserRouter([
                 path: "/student/welcome",
                 element: <Welcome />
             },
-
             {
                 path:"/student/dashBoard",
                 element: <DashBoard />
+            },
+            {
+                path:"/student/Profile",
+                element: <ProfileStd />
             },
             {
                 path:"/student/updatePwd",

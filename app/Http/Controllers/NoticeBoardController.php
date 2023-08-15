@@ -105,7 +105,7 @@ class NoticeBoardController extends Controller
                 notifications::create([
                     'sender_id' => $user,
                     'receiver_id' => $student_id,
-                    'message' => 'Notice Board Update aindi, chuskogalaru',
+                    'message' => 'Notice Board is Updated,Please Check !',
                 ]);
             }
         }

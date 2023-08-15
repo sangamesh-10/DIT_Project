@@ -58,7 +58,7 @@ const StudentHomePage = () => {
             <button  className="dropbtn" onClick={setDashboardOpen}>Dashboard</button>
             <div className="dropdown-content">
                 <div className="dropdown-content-link-style">
-                <Link to="">Profile</Link>
+                <Link to="/student/Profile">Profile</Link>
                 <Link to="/student/welcome">Welcome</Link>
                 <Link to="/student/Noticeboard">NoticeBoard</Link>
                 <Link to="/student/Notifications">Notifications</Link>
