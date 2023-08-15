@@ -56,8 +56,8 @@ const StudentHomePage = () => {
             <aside>
             <div id="mySidenav" className={`sidenav ${dashboardOpen ? 'open' : ''}`}    >
             <button  className="dropbtn" onClick={setDashboardOpen}>Dashboard</button>
-            <div class="dropdown-content">
-                <div class="dropdown-content-link-style">
+            <div className="dropdown-content">
+                <div className="dropdown-content-link-style">
                 <Link to="">Profile</Link>
                 <Link to="/student/welcome">Welcome</Link>
                 <Link to="/student/Noticeboard">NoticeBoard</Link>

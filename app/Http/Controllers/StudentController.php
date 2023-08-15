@@ -191,6 +191,7 @@ class StudentController extends Controller
 
         Cache::put('otp', $otp, 60);
         $mailData = [
+            'view' =>'emails.OtpEmail',
             'subject' => 'OTP Verification',
             'title' => 'Mail from Laravel Project',
             'body' => 'Your OTP for verification is: ',

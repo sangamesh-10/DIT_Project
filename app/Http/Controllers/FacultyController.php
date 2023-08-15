@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\faculty_login;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -138,27 +139,65 @@ class FacultyController extends Controller
     }
     public function raiseComplaint(Request $req)
     {
-        $user = auth()->guard('faculty-api')->user()->faculty_id;
-        $object = new raise_complaint;
-        $object->from_id = $user;
-        $object->description = $req->input("description");
-        $object->date = date('Y-m-d');
-        $result = $object->save();
-        if ($result) {
-            notifications::create([
-                'sender_id' => $user,
-                'receiver_id' => 'S101',
-                'message' => 'I had raised a complaint,please Respond',
-            ]);
-            return response()->json($object);
-        } else {
-            return response()->json(['message' => 'could not save data']);
+        try {
+            $user = auth()->guard('faculty-api')->user()->faculty_id;
+            $object = new raise_complaint;
+            $object->from_id = $user;
+            $object->description = $req->input("description");
+            $object->date = date('Y-m-d');
+
+            // Validate and save the complaint
+            $result = $object->save();
+
+            if ($result) {
+                notifications::create([
+                    'sender_id' => $user,
+                    'receiver_id' => 'S101',
+                    'message' => 'I had raised a complaint,please Respond',
+                ]);
+
+                $to_email = 'anupamavegesna1331@gmail.com';
+                $subject = 'Complaint Raised';
+                $message = 'A complaint has been raised by ' . $user . '. Please see the description below.';
+                $message .= "\n\n" . $req->input("description");
+
+                $attachments = [];
+
+                if ($req->hasFile('attachments')) {
+                    foreach ($req->file('attachments') as $file) {
+                        $filename = $file->getClientOriginalName();
+                        $data = file_get_contents($file->getRealPath());
+
+                        $attachments[] = Attachment::fromPath($file)
+                            ->as('Report.pdf')
+                            ->withMime('application/pdf');
+                    }
+                }
+
+                $mailData = [
+                    'view' => 'emails.Complaints',
+                    'subject' => $subject,
+                    'title' => 'Mail from Laravel Project',
+                    'body' => $message,
+                    'attachments' => $attachments,
+                ];
+
+                Mail::to($to_email)->send(new MailSender($mailData));
+
+                return response()->json($object);
+            }
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur
+            return response()->json(['error' => 'An error occurred while raising the complaint.'], 500);
         }
     }
+
+
 
     public function addInternalMarks(Request $req)
     {
         $user = auth()->user()->faculty_id;
+        $exam_type=$req->input('exam_type');
         $subject = $req->input('subject_code');
         $subject_code = substr($subject, 0, 2);
         $branchCodes = array(
@@ -170,13 +209,14 @@ class FacultyController extends Controller
         );
         $sem = 4;
         $students = $req->get('students');
-        $today = date('Y-m-d');
-        $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
-        $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
-        $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
+        // $today = date('Y-m-d');
+        // $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
+        // $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
+        // $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
         if (is_array($students)) {
 
-            if ($today > $mid1Date && $today < $mid2Date) {
+            // if ($today > $mid1Date && $today < $mid2Date) {
+            if($exam_type=='mid1'){
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = new internal_mark();
                     $internalMarks->roll_num = $studentId;
@@ -194,7 +234,7 @@ class FacultyController extends Controller
 
                 return response()->json(['message' => 'Marks Added successfully']);
             } else {
-                if ($today < $semStartDate) {
+                // if ($today < $semStartDate) {
 
                     foreach ($students as $studentId => $marks) {
                         $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
@@ -207,10 +247,11 @@ class FacultyController extends Controller
                         ]);
                     }
                     return response()->json(['message' => 'Marks Added successfully']);
-                } else {
-                    return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
-                }
-            }
+                 }
+                //  else {
+            //         return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
+            //     }
+            // }
         } else {
             // Handle the case where $students is null or not an array
             return response()->json(['error' => 'Invalid student data'], 400);
@@ -325,6 +366,7 @@ class FacultyController extends Controller
         Cache::put('otp', $otp, 60);
         // Send the OTP to the client via email
         $mailData = [
+            'view' =>'emails.OtpEmail',
             'subject' => 'OTP Verification',
             'title' => 'Mail from Laravel Project',
             'body' => 'Your OTP for verification is: ',

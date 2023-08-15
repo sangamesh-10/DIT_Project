@@ -10,7 +10,7 @@ function App() {
       <h1>Welcome to the Department Of Information Technology</h1>
       <p>Click the buttons below to navigate:</p>
 
-      <div className="button-container">
+      <div className="button-container-1">
         <button className="login-button" onClick={() => navigate('/StudentLogin')}>
           Student Login
         </button>

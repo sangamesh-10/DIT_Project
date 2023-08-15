@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import axiosClient from '../axios-client';
 import { useNavigate } from 'react-router-dom';
+import './form.css'
 
 export const OtpPage=()=> {
     const rollNum=useRef()
@@ -78,16 +79,16 @@ export const OtpPage=()=> {
     }
 
     return (
-
-        <div>
-        <h2>OTP Page</h2>
+        <div className="form-container">
+        <h2 className="form-title">OTP Page</h2>
         {!otpSent ? (
             <div>
-                <form onSubmit={sendOtp}>
-                    <input type="text" ref={rollNum} placeholder="Enter RollNumber" />
-                    <br />
-                    <br />
-                    <input type="submit" name="sendOtp" value="Send OTP" />
+                <form className="form" onSubmit={sendOtp}>
+                <div className="form-group">
+                    <input type="text" ref={rollNum} placeholder="Enter RollNumber" className="input-field"/>
+                </div>
+                    <input type="submit" name="sendOtp" value="Send OTP" className="submit-button"/>
+
                 </form>
             </div>
         ) : (
@@ -95,30 +96,21 @@ export const OtpPage=()=> {
                 {isOtpVerified ? (
                     <div>
                         <p>OTP Verified Successfully!</p>
-                        <form onSubmit={setPwd}>
-                            <label htmlFor="newPassword" id="new_pwd">
-                                New Password :{' '}
-                            </label>
-                            <input type="password" ref={newPassword} />
-                            <br />
-                            <br />
-                            <label htmlFor="confirmPassword" id="confirm_pwd">
-                                Confirm Password :{' '}
-                            </label>
-                            <input type="password" ref={confirmPassword} />
-                            <br />
-                            <br />
-                            <input type="submit" value="Update" />
+                        <form form className="form" onSubmit={setPwd}>
+                            <label htmlFor="newPassword" id="new_pwd"> New Password :{' '}</label>
+                            <input type="password" ref={newPassword} className="input-field"/>
+                            <label htmlFor="confirmPassword" id="confirm_pwd">Confirm Password :{' '}</label>
+                            <input type="password" ref={confirmPassword} className="input-field"/>
+                            <input type="submit" value="Update" className="submit-button"/>
                         </form>
                     </div>
                 ) : (
                     <div>
-                        <p>Enter OTP sent to your email:</p>
-                        <form onSubmit={verifyOtp}>
-                            <input type="text" ref={otp} />
-                            <br />
-                            <br />
-                            <input type="submit" name="verifyOtp" value="Verify OTP" />
+                        <form  form className="form" onSubmit={verifyOtp}>
+                             <div className="form-group">
+                            <input type="text" ref={otp} placeholder='Enter OTP sent to your email' className="input-field"/>
+                            </div>
+                            <input type="submit" name="verifyOtp" value="Verify OTP" className="submit-button"/>
                         </form>
                     </div>
                 )}

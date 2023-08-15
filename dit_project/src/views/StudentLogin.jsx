@@ -1,7 +1,8 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
+import './form.css';
 
 
 export const StudentLogin = () => {
@@ -30,25 +31,26 @@ export const StudentLogin = () => {
             }
         }
     };
-
     return (
-        <div>
+        <div className="form-container">
             {loggedIn ? (
                 <Navigate to="/student" replace={true} />
             ) : (
                 <div>
-                    <h2>LOGIN FORM</h2>
-                    <div>
-                        <form onSubmit={onSubmit}>
-                            <input ref={student_id} type="text" placeholder='RollNumber' /><br /><br />
-                            <input ref={password} type="password" placeholder='password' /><br /><br />
-                            <button>LOGIN</button>
-                        </form>
-                        <a  href="/OtpVerification">Forgot Password?</a>
-
-                    </div>
+                    <h2 className="form-title">LOGIN FORM</h2>
+                    <form className="form" onSubmit={onSubmit}>
+                        <div className="form-group">
+                            <input ref={student_id} type="text" placeholder="Roll Number" className="input-field" />
+                        </div>
+                        <div className="form-group">
+                            <input ref={password} type="password" placeholder="Password" className="input-field" />
+                        </div>
+                        <button className="button-container">LOGIN</button>
+                    </form>
+                    <a href="/OtpVerification" className="forgot-password-link">Forgot Password?</a>
                 </div>
             )}
         </div>
     );
 };
+

@@ -54,8 +54,8 @@ const FacultyHomePage = () => {
             <aside>
                 <div id="mySidenav" className={`sidenav ${dashboardOpen ? 'open' : ''}`}    >
                     <button className="dropbtn" onClick={setDashboardOpen}>Dashboard</button>
-                    <div class="dropdown-content">
-                        <div class="dropdown-content-link-style">
+                    <div className="dropdown-content">
+                        <div className="dropdown-content-link-style">
                             <Link to="/faculty/welcome">Welcome</Link>
                             <Link to="/faculty/Noticeboard">NoticeBoard</Link>
                             <Link to="/faculty/updatePwd">Update Password</Link>
@@ -64,7 +64,7 @@ const FacultyHomePage = () => {
                             <Link to="/faculty/AddAttendance">Mark Attendance</Link>
                             <Link to="/faculty/AddMarks">Add InternalMarks</Link>
                             <Link to="">Send Notifications</Link>
-                            <Link to="">Raise Complaints</Link>
+                            <Link to="/faculty/RaiseComplaint">Raise Complaints</Link>
 
                         </div>
                     </div>

@@ -52,57 +52,70 @@ export const StudentReg=()=>{
     }
 
     return(
-        <div>
-            <h2>Student Registration Form</h2>
-            <div>
-            <form onSubmit={onSubmit} >
+        <div className="form-container">
+            <h2 className="form-title">STUDENT REGISTRATION</h2>
+            <form className="form" onSubmit={onSubmit} >
+
+            <div className="form-group">
             <label htmlFor="rno" id="rno">Roll Number : </label>
-            <input type="text" name="rno" required ref={rno}/><br/><br/>
-
+            <input type="text" name="rno" required ref={rno}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="name" id="name">Name : </label>
-            <input type="text" name="name" required ref={name}/><br/><br/>
-
+            <input type="text" name="name" required ref={name}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="email" id="email">Email : </label>
-            <input type="email" name="email" required ref={email}/><br/><br/>
-
+            <input type="email" name="email" required ref={email}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="phno" id="phno">Phone Number : </label>
-            <input type="text" name="phno" required ref={phno}/><br/><br/>
-
+            <input type="text" name="phno" required ref={phno}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="Aadharno" id="aadharno">Aadhar Number : </label>
-            <input type="text" name="aadharno" required ref={aadharno}/><br/><br/>
-
+            <input type="text" name="aadharno" required ref={aadharno}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="MotherName" id="mothername">Mother's Name : </label>
-            <input type="text" name="mname" required ref={mname}/><br/><br/>
-
+            <input type="text" name="mname" required ref={mname}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="FatherName" id="fathername">Father's Name : </label>
-            <input type="text" name="fname" required ref={fname}/><br/><br/>
-
+            <input type="text" name="fname" required ref={fname}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="parentnum" id="parentphno">Parent Number: </label>
-            <input type="text" name="parentphno" required ref={parentphno}/><br/><br/>
-
+            <input type="text" name="parentphno" required ref={parentphno}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="dob" id="dob">Date Of Birth : </label>
-            <input type="date" name="dob" required ref={dob}/><br/><br/>
-
-            <label htmlFor="permanentaddr" id="permanentaddr">permanent Address : </label>
-            <textarea rows="5" cols="20" name="permanentaddr" required ref={permanentaddr}></textarea><br/><br/>
-
+            <input type="date" name="dob" required ref={dob}/>
+            </div>
+            <div className="form-group">
+            <label htmlFor="permanentaddr" id="permanentaddr">Permanent Address : </label>
+            <textarea rows="5" cols="20" name="permanentaddr" required ref={permanentaddr}></textarea>
+            </div>
+            <div className="form-group">
             <label htmlFor="presentaddr" id="presentaddr">Present Address : </label>
-            <textarea rows="5" cols="20" name="presentaddr" required ref={presentaddr}></textarea><br/><br/>
-
+            <textarea rows="5" cols="20" name="presentaddr" required ref={presentaddr}></textarea>
+            </div>
+            <div className="form-group">
             <label htmlFor="bloodgroup" id="bgroup">Blood Group : </label>
-            <input type="text" name="bgroup" required ref={bgroup}/><br/><br/>
-
+            <input type="text" name="bgroup" required ref={bgroup}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="caste" id="caste">Caste : </label>
-            <input type="text" name="caste" required ref={caste}/><br/><br/>
-
+            <input type="text" name="caste" required ref={caste}/>
+            </div>
+            <div className="form-group">
             <label htmlFor="Religion" id="religion">Religion : </label>
-            <input type="text" name="religion" required ref={religion}/><br/><br/>
-
-            <input type="submit" name="submit"/>
-            <input type="reset" name="reset"/>
-            </form>
+            <input type="text" name="religion" required ref={religion}/>
             </div>
 
-        </div>
+            <input type="submit"className="submit-button" name="submit"/>
+            <input type="reset" className="reset-button" name="reset"/>
+            </form>
+            </div>
     )
 }
