@@ -198,6 +198,7 @@ class FacultyController extends Controller
     public function addInternalMarks(Request $req)
     {
         $user = auth()->user()->faculty_id;
+        $exam_type=$req->input('exam_type');
         $subject = $req->input('subject_code');
         $subject_code = substr($subject, 0, 2);
         $branchCodes = array(
@@ -209,13 +210,14 @@ class FacultyController extends Controller
         );
         $sem = 4;
         $students = $req->get('students');
-        $today = date('Y-m-d');
-        $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
-        $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
-        $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
+        // $today = date('Y-m-d');
+        // $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
+        // $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
+        // $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
         if (is_array($students)) {
 
-            if ($today > $mid1Date && $today < $mid2Date) {
+            // if ($today > $mid1Date && $today < $mid2Date) {
+            if($exam_type=='mid1'){
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = new internal_mark();
                     $internalMarks->roll_num = $studentId;
@@ -233,7 +235,7 @@ class FacultyController extends Controller
 
                 return response()->json(['message' => 'Marks Added successfully']);
             } else {
-                if ($today < $semStartDate) {
+                // if ($today < $semStartDate) {
 
                     foreach ($students as $studentId => $marks) {
                         $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
@@ -246,10 +248,11 @@ class FacultyController extends Controller
                         ]);
                     }
                     return response()->json(['message' => 'Marks Added successfully']);
-                } else {
-                    return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
-                }
-            }
+                 }
+                //  else {
+            //         return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
+            //     }
+            // }
         } else {
             // Handle the case where $students is null or not an array
             return response()->json(['error' => 'Invalid student data'], 400);
@@ -302,6 +305,30 @@ class FacultyController extends Controller
         }
 
         return response()->json(['success'=> 'Contact modified']);
+    }
+    public function setPassword(Request $req)
+    {
+        $faculty_id =$req->input('faculty_id');
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+        ];
+
+        $validator = Validator::make($req->all(), $rules);
+
+        if ($validator->fails() || $new_password != $confirm_password) {
+        return response()->json(['error'=> $validator->errors()]);
+        } else {
+            $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
+
+            if ($faculty) {
+                $faculty->password = Hash::make($new_password);
+                $faculty->save();
+                return response()->json('true');
+            }
+        }
     }
     function updatePassword(Request $req)
     {
@@ -357,8 +384,8 @@ class FacultyController extends Controller
         $actual_otp = Cache::get('otp');
 
         if ($actual_otp && $user_otp == $actual_otp) {
+            return response()->json("true");
 
-            return response()->json("verified otp");
         } else {
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }

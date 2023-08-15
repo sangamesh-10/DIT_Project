@@ -37,15 +37,23 @@ export const UpdatePwdFaculty=()=>{
         }
     }
     return(
-        <div>
-            <form onSubmit={updatePwd}>
+        <div className="form-container">
+            <h2 className="form-title">Update Password</h2>
+            <form className="form" onSubmit={updatePwd}>
+            <div className="form-group">
                 <label htmlFor="oldPassword" id="old_pwd"> Old Password :{' '}</label>
-                <input type="password" ref={oldPassword} /><br /><br />
+                <input type="password" ref={oldPassword} className="input-field"/>
+            </div>
+            <div className="form-group">
                 <label htmlFor="newPassword" id="new_pwd"> New Password :{' '}</label>
-                <input type="password" ref={newPassword} /><br /><br />
+                <input type="password" ref={newPassword} className="input-field"/>
+            </div>
+            <div className="form-group">
                 <label htmlFor="confirmPassword" id="confirm_pwd">Confirm Password :{' '}</label>
-                <input type="password" ref={confirmPassword} /><br /><br />
-                <input type="submit" value="Update" />
+                <input type="password" ref={confirmPassword} className="input-field"/>
+            </div>
+                {/* <input type="submit" value="Update" className="submit-button"/> */}
+                <button className='button-container'>Update</button>
             </form>
             {submitted  && (
             <p>{submissionMessage}</p>

@@ -41,15 +41,18 @@ const RaiseComplaint = () => {
     };
 
     return (
+        <div>
+            <h2>Raise Complaint</h2><br />
         <form onSubmit={handleSubmit}>
             <label htmlFor="description">Description</label>
-            <input type="text" name="description" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <input type="text" name="description" id="description" value={description} onChange={(e) => setDescription(e.target.value)} /> <br /><br />
 
             <label htmlFor="attachments">Attachments</label>
-            <input type="file" name="attachments[]" id="attachments" multiple onChange={handleFileChange} />
+            <input type="file" name="attachments[]" id="attachments" multiple onChange={handleFileChange} /> <br /><br />
 
             <button type="submit">Raise Complaint</button>
         </form>
+        </div>
     );
 };
 

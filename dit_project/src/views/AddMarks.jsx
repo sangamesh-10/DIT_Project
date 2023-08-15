@@ -6,8 +6,11 @@ export const AddMarks = () => {
     const [selectedSubject, setSelectedSubject] = useState('');
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [studentMarks, setStudentMarks] = useState([]);
+    const [selectedExam, setSelectedExam] = useState('');
     const [submissionMessage, setSubmissionMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [reviewStage, setReviewStage] = useState(false); // State for the review stage
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         fetchSubjects();
@@ -47,10 +50,29 @@ export const AddMarks = () => {
         }));
     };
 
+
     const onSubmit = async (e) => {
         e.preventDefault();
         const payload = {
             subject_code: selectedSubject,
+            exam_type: selectedExam,
+            students: studentMarks
+        };
+        console.log(payload);
+
+        try {
+            setReviewStage(true); // Move to the review stage after form submission
+        } catch (err) {
+            console.error("Error while submitting data", err);
+            setSubmissionMessage('Error while submitting marks');
+            setSubmitted(false);
+        }
+    };
+
+    const handleFinalSubmit = async () => {
+        const payload = {
+            subject_code: selectedSubject,
+            exam_type: selectedExam,
             students: studentMarks
         };
 
@@ -59,12 +81,14 @@ export const AddMarks = () => {
             setSubmissionMessage('Successfully added marks');
             setStudentMarks({});
             setSubmitted(true);
+            setReviewStage(false);
+            setEditMode(false); // Reset edit mode
         } catch (err) {
             console.error("Error while submitting data", err);
             setSubmissionMessage('Error while submitting marks');
-            setSubmitted(false)
+            setSubmitted(false);
         }
-    }
+    };
 
     return (
         <div>
@@ -80,23 +104,53 @@ export const AddMarks = () => {
                     </button>
                 ))}
             </div>
-            {selectedSubject && !submitted &&(
-            <div>
-                {Object.keys(studentMarks).map(rollNum => (
-                    <div key={rollNum}>
-                        <label>{rollNum}:</label>
-                        <input
-                            type="number"
-                            value={studentMarks[rollNum] || ''}
-                            onChange={e => handleMarksChange(rollNum, e.target.value)}
-                        />
-                    </div>
-                ))}
-                <button onClick={onSubmit}>Submit Marks</button>
-            </div>
+            {selectedSubject && !submitted && !reviewStage && (
+                <div>
+                    <label>Exams:</label>
+                    <select
+                        value={selectedExam}
+                        onChange={(e) => setSelectedExam(e.target.value)}
+                    >
+                        <option value="">Select Exam</option>
+                        <option value="mid1">Midterm 1</option>
+                        <option value="mid2">Midterm 2</option>
+                    </select>
+                    {Object.keys(studentMarks).map(rollNum => (
+                        <div key={rollNum}>
+                            <label>{rollNum}:</label>
+                            <input
+                                type="number"
+                                value={studentMarks[rollNum] || ''}
+                                onChange={e => handleMarksChange(rollNum, e.target.value)}
+                            />
+                        </div>
+                    ))}
+                     {editMode ? (
+                        <div>
+                            <button onClick={handleFinalSubmit}>Submit Marks</button>
+                        </div>
+                    ) : (
+                        <button onClick={onSubmit}>Submit Marks</button>
+                    )}
+                </div>
             )}
-            {submitted  && (
-            <p>{submissionMessage}</p>
+           {reviewStage && (
+                <div>
+                    <h3>Review Marks</h3>
+                    {Object.keys(studentMarks).map(rollNum => (
+                        <div key={rollNum}>
+                            <span>{rollNum}:</span>
+                            <span>{studentMarks[rollNum]}</span>
+                        </div>
+                    ))}
+                    <div>
+                        <button onClick={() => setReviewStage(false)}>Edit Marks</button>
+                        <button onClick={handleFinalSubmit}>Confirm and Submit</button>
+                    </div>
+                </div>
+            )}
+            {submitted && (
+                <p>{submissionMessage}</p>
             )}
         </div>
     );
