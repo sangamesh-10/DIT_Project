@@ -73,6 +73,10 @@ const router = createBrowserRouter([
                 element:<NoticeBoard/>
             },
             {
+                path:"/student/raiseComplaint",
+                element:<RaiseComplaint />
+            },
+            {
                 path:'/student/Notifications',
                 element:<Notifications/>
             }

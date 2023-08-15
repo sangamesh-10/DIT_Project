@@ -175,6 +175,7 @@ class FacultyController extends Controller
                 }
 
                 $mailData = [
+                    'user'=> $user,
                     'view' => 'emails.Complaints',
                     'subject' => $subject,
                     'title' => 'Mail from Laravel Project',
