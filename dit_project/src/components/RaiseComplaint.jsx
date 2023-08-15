@@ -4,10 +4,15 @@ import axiosClient from '../axios-client';
 const RaiseComplaint = () => {
     const [description, setDescription] = useState('');
     const [attachments, setAttachments] = useState([]);
-
+    const url = window.location.href; // Get the current URL
+    let route = '/'; // Default route
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        if (url.includes('faculty/raiseComplaint')) {
+            route = '/raiseComplaintFaculty';
+          } else if (url.includes('student/raiseComplaint')) {
+            route = '/raiseComplaintStudent';
+          }
         const formData = new FormData();
         formData.append('description', description);
 
@@ -16,7 +21,7 @@ const RaiseComplaint = () => {
         }
 
         try {
-            const response = await axiosClient.post('/raiseComplaintFaculty', formData);
+            const response = await axiosClient.post(route, formData);
 
             if (response.status === 200) {
                 alert('Complaint raised successfully!');

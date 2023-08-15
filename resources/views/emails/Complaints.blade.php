@@ -1,5 +1,5 @@
 @php
-    $user = auth()->guard('faculty-api')->user()->faculty_id;
+    $user = $mailData['user'];
     $message = $mailData['body'];
 @endphp
 

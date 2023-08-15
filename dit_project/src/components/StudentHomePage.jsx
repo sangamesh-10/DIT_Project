@@ -66,7 +66,7 @@ const StudentHomePage = () => {
                 <Link to="/student/updateContact">Update Contact</Link>
                 <Link to="/student/Attendance">Check Attendance</Link>
                 <Link to="/student/InternalMarks">Check InternalMarks</Link>
-                <Link to="">Raise Complaints</Link>
+                <Link to="/student/raiseComplaint">Raise Complaints</Link>
 
              </div>
              </div>

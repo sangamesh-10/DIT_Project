@@ -19,11 +19,14 @@ class MailSender extends Mailable
      * Create a new message instance.
      */
     public $mailData;
-    public $attachmentsReceived;
+    public $attachmentsReceived = null;
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
-        $this->attachmentsReceived = $mailData['attachments'];
+        if(array_key_exists('attachments',$mailData)){
+
+            $this->attachmentsReceived = $mailData['attachments'];
+        }
     }
 
     /**
