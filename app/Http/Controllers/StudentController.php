@@ -56,37 +56,7 @@ class StudentController extends Controller
         $object=Student::where("roll_num",$loginId)->first();
         return response()->json($object);
     }
-//     public function enrolledStds()
-// {
-//     $user = auth()->guard('student-api')->user();
-//     $loginId = $user->student_id;
-
-//     // Fetch the enrolled student details from the "enrolledstudents" table based on the composite key
-//     $enrolledStudent = enrolled_student::where([
-//         "year" => substr($loginId, 0, 2),
-//         "code" => substr($loginId, 5, 2)
-//     ])->first();
-
-//     // If enrolled student details are not found, return an error response
-//     if (!$enrolledStudent) {
-//         return response()->json(['error' => 'Enrolled student details not found'], 404);
-//     }
-
-//     // Extract the studying year from the "year" field and compute the batch
-//     $studyingYear = $enrolledStudent->year;
-//     $batchPrefix = "20"; // The prefix for the batch
-//     $batch = $batchPrefix . $studyingYear . "-" . (intval($studyingYear) + 2);
-//     $branchCode = $enrolledStudent->code;
-//     // Determine the branch based on the extracted branch code
-//     $branchDescription = ($branchCode === 'F0') ? 'MCA' : (($branchCode === 'D2') ? 'Mtech' : 'Unknown Branch');
-//     // Include the batch (with "20" placed before the year and a hyphen followed by the result of adding two years), branch, and semester in the response
-//     return response()->json([
-//         'batch' => $batch,
-//         'branch' => $branchDescription,
-//         'semester' => $enrolledStudent->semester
-//     ]);
-// }
-public function enrolledStds()
+    public function enrolledStds()
 {
     $user = auth()->guard('student-api')->user();
     $loginId = $user->student_id;
