@@ -12,7 +12,10 @@ use App\Models\raise_complaint;
 use App\Models\faculty;
 use App\Models\Std_softcopie;
 use App\Models\student;
+use App\Models\StudentForm;
 use App\Models\students_login;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use App\Models\faculty_login;
 use Illuminate\Support\Facades\Validator;
 use App\Models\enrolled_student;
@@ -274,4 +277,98 @@ public function uploadAndSaveFiles(Request $req)
         return response()->json(['error' => 'An error occurred while processing the files.']);
     }
 }
+
+public function addForms(Request $req){
+    try {
+        $id = $req->input('id');
+        $name = $req->input('name');
+        $formFilePath='';
+
+        if ($req->hasFile('formFile')) {
+            $formFile = $req->file('formFile');
+            $fileExtension = $formFile->getClientOriginalExtension();
+
+            $fileName = $name . '.' . $fileExtension;
+            $formFilePath = 'forms/' . $fileName;
+
+            $formFile->move(public_path('forms/'), $fileName);
+        }
+
+        // Create a new StudentForm instance
+        $studentForm = new StudentForm();
+        $studentForm->form_id = $id;
+        $studentForm->form_name = $name;
+        $studentForm->path = $formFilePath;
+        $studentForm->save();
+
+        return response()->json(['message' => 'Form added successfully'], 201);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred while processing the request'], 500);
+    }
+}
+
+    public function viewForms(){
+        try{
+        $forms = StudentForm::all();
+        foreach ($forms as $form) {
+            $form->path = asset($form->path);
+        }
+        return response()->json(['data' => $forms], 200);
+    } catch (QueryException $e) {
+        return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred while processing the request'], 500);
+    }
+    }
+
+    public function updateForm(Request $req){
+        try {
+            $id = $req->input('form_id');
+            $name = $req->input('form_name');
+            $values = $req->input('form_id')." ".$name;
+
+            $form = StudentForm::where('form_id', $id)->where('form_name', $name)->firstOrFail();
+
+            if ($req->hasFile('new_form_file')) {
+                $formFile = $req->file('new_form_file');
+                $fileExtension = $formFile->getClientOriginalExtension();
+
+                $fileName = $name . '.' . $fileExtension;
+                $form->path = 'forms/' . $fileName;
+
+                $formFile->move(public_path('forms/'), $fileName);
+            }
+
+            $form->save();
+
+            return response()->json(['message' => 'Form updated successfully'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Form not found'.$e->getMessage(),$values], 404);
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while processing the request'], 500);
+        }
+    }
+
+    public function deleteForm(Request $req)
+    {
+        try {
+            $form_id = $req->input('form_id');
+            $form_name = $req->input('form_name');
+
+            $result = StudentForm::where('form_id', $form_id)->where('form_name', $form_name)->delete();
+            if ($result === 0) {
+                return response()->json(['message' => 'Record not found'], 404);
+            }
+            return response()->json(['result' => 'Record deleted'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Record not found'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while processing the request'.$e->getMessage()], 500);
+        }
+    }
+
+
+
 }

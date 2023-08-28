@@ -29,6 +29,11 @@ import RaiseComplaint from "./components/RaiseComplaint";
 import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 import ProfileStd from "./views/ProfileStd.jsx";
 import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
+import AddForm from "./views/AddForm.jsx";
+import GetForms from "./views/GetForms.jsx";
+import AdminViewForms from "./views/AdminViewForms.jsx";
+import UpdateForm from "./views/UpdateForm.jsx";
+import DeleteForm from "./views/DeleteForm.jsx";
 import { EnrolledStundents } from "./views/EnrolledStudents.jsx";
 import SendNotifications from "./views/SendingNotificationsFac.jsx";
 import { UpdatePwdAdmin } from "./views/UpdatePwdAdmin.jsx";
@@ -109,6 +114,10 @@ const router = createBrowserRouter([
             {
                 path:'/student/Notifications',
                 element:<Notifications/>
+            },
+            {
+                path:'/student/getForms',
+                element:<GetForms />
             },{
                 path:"/student/viewAcadmicCalendar",
                 element:<ViewAcademicCalendarStudent/>
@@ -217,6 +226,22 @@ const router = createBrowserRouter([
             {
                 path: '/admin/uploadSoftCopies',
                 element:<SoftCopiesUpload />
+            },
+            {
+                path:"/admin/addForm",
+                element:<AddForm />
+            },
+            {
+                path:"/admin/viewForms",
+                element:<AdminViewForms />
+            },
+            {
+                path:"/admin/updateForm",
+                element:<UpdateForm />
+            },
+            {
+                path:"/admin/deleteForm",
+                element:<DeleteForm />
             },
             {
                 path:'/admin/updatePassword',

@@ -69,6 +69,7 @@ const StudentHomePage = () => {
                 <Link to="/student/viewAcadmicCalendar">Academic Calendar</Link>
                 <Link to="/student/enrolledSubjects">Enrolled Subjects</Link>
                 <Link to="/student/raiseComplaint">Raise Complaints</Link>
+                <Link to="/student/getForms">Download Forms</Link>
 
              </div>
              </div>
