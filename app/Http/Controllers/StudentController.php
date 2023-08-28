@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
 use App\Models\attendance_satisfied;
 use App\Models\internal_mark;
+use App\Models\StudentForm;
+use Illuminate\Database\QueryException;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Cache;
 
@@ -344,6 +346,40 @@ public function enrolledStds()
             return response()->json(['error' => 'No attendace record found for the provided roll number'], 404);
         }
     }
+
+
+public function getAvailableForms(){
+    try {
+        $student_id = auth()->user()->student_id;
+        $year = substr($student_id, 0, 2);
+        $code = substr($student_id, 5, 2);
+
+        $sem = enrolled_student::where('year', $year)
+                                ->where('code', $code)
+                                ->value('semester');
+
+        if ($sem === null) {
+            return response()->json(['error' => 'Semester information not found for the student'], 404);
+        }
+
+        $forms = StudentForm::where('form_id', 'LIKE', '_'.$code.'%')
+            ->where(function ($query) use ($sem) {
+                $query->where('form_id', 'LIKE', '%'.$sem)
+                      ->orWhere('form_id', 'LIKE', '%0');
+            })
+            ->get();
+
+        foreach ($forms as $form) {
+            $form->path = asset($form->path);
+        }
+
+        return response()->json(['data' => $forms], 200);
+    } catch (QueryException $e) {
+        return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred while processing the request'], 500);
+    }
+}
 
 
 
