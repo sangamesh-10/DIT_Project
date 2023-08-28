@@ -66,7 +66,7 @@ export const ViewAcademicCalendar = () => {
                 <tr key={index}>
                   <td>{calendar.description}</td>
                   <td>{calendar.from_date}</td>
-                  <td>{calendarItem.to_date ? calendarItem.to_date : "-"}</td>
+                  <td>{calendar.to_date ? calendar.to_date : "-"}</td>
                 </tr>
               ))}
             </tbody>
