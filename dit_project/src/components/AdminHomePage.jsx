@@ -104,6 +104,15 @@ const AdminHomePage = () => {
                     </div>
                 </div>
                 <div className="nested-sidenav">
+                    <button className="nested-dropbtn">Student Forms</button>
+                    <div className="nested-dropdown-content">
+                        <Link to="/admin/addForm">Add Form</Link>
+                        <Link to="/admin/viewForms">View Form</Link>
+                        <Link to="/admin/deleteForm">Delete Form</Link>
+                        <Link to="/admin/updateForm">Update Form</Link>
+                    </div>
+                </div>
+                <div className="nested-sidenav">
                     <button className="nested-dropbtn">Academic Calendar</button>
                     <div className="nested-dropdown-content">
                         <Link to="">Add Calendar</Link>

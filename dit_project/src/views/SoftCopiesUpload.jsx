@@ -59,7 +59,6 @@ function SoftCopiesUpload() {
                 },
             });
 
-            console.log(response.data);
 
             alert('Soft copies saved successfully');
         } catch (error) {
