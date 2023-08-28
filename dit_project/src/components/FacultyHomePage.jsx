@@ -60,10 +60,11 @@ const FacultyHomePage = () => {
                             <Link to="/faculty/Noticeboard">NoticeBoard</Link>
                             <Link to="/faculty/updatePwd">Update Password</Link>
                             <Link to="/faculty/updateContact">Update Contact</Link>
-                            <Link to="">View Enrolled Students</Link>
+                            <Link to="/faculty/enrolledStudents">View Enrolled Students</Link>
                             <Link to="/faculty/AddAttendance">Mark Attendance</Link>
                             <Link to="/faculty/AddMarks">Add InternalMarks</Link>
-                            <Link to="">Send Notifications</Link>
+                            <Link to="/faculty/sendNotifications">Send Notifications</Link>
+                            <Link to="/faculty/viewAcademicCalendar">Academic Calendar</Link>
                             <Link to="/faculty/RaiseComplaint">Raise Complaints</Link>
 
                         </div>

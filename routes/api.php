@@ -40,6 +40,7 @@ Route::group([
     Route::get('me', [FacultyController::class,'me']);
     Route::get('getFacultySubjects',[SubjectsController::class,'facultySubjects'])->withoutMiddleware('auth:admin-api');
     Route::get('getEnrolledStudents',[FacultyController::class,'enrolledStudents']);
+    Route::get('getStudentDetails',[FacultyController::class,'getStudentDetails']);
     Route::post('markAttendance',[FacultyController::class,'markAttendance']);
     Route::post('addInternalMarks',[FacultyController::class,'addInternalMarks']);
     Route::put('facultyMarkAsRead',[FacultyController::class,'markAsRead']);
@@ -53,6 +54,10 @@ Route::group([
 
     Route::post('sendOTPFaculty',[FacultyController::class,"sendOtp"])->withoutMiddleware('auth:faculty-api');
     Route::post('otpVerifyFaculty',[FacultyController::class,"otpVerification"])->withoutMiddleware('auth:faculty-api');
+    Route::post('sendNotificationsFaculty',[FacultyController::class,'sendNotifications']);
+
+    Route::get('/getCalendarFaculty',[FacultyController::class,'getCalendar']);
+
 
     // Route::get('getNotice',[NoticeBoardController::class,'get'])->name('faculty.notice');
 
@@ -66,6 +71,7 @@ Route::group([
     Route::post('adminEntry',[AdminController::class,'adminEntry'])->withoutMiddleware('auth:admin-api');
     Route::post('adminLogin',[AdminController::class,'login'])->name('admin.login')->withoutMiddleware('auth:admin-api');
     Route::post('adminLogout',[AdminController::class,'logout']);
+    Route::put('updatePwdAdmin',[AdminController::class,'updatePassword']);
     Route::get('adminMe',[AdminController::class,'me']);
 
     Route::post('addSubjects',[SubjectsController::class,'add'])->withoutMiddleware('auth:faculty-api');
@@ -93,13 +99,13 @@ Route::group([
     Route::put("/updateFacLogin",[AuthenticationController::class,'updateFacLogin']);
     Route::delete("/deleteFacLogin",[AuthenticationController::class,'deleteFacLogin']);
 
-    Route::post('addCalendar',[AcademicCalendarController::class,'add']);
-    Route::get('getCalendar',[AcademicCalendarController::class,'get']);
-    Route::put('updateCalendar',[AcademicCalendarController::class,'update']);
+    Route::post('/addCalendar',[AcademicCalendarController::class,'add']);
+    Route::get('/getCalendar',[AcademicCalendarController::class,'get']);
+    Route::put('/updateCalendar',[AcademicCalendarController::class,'update']);
 
-    Route::post('addNotice',[NoticeBoardController::class,'add']);
-    Route::put('updateNotice',[NoticeBoardController::class,'update']);
-    Route::delete('deleteNotice',[NoticeBoardController::class,'delete']);
+    Route::post('/addNotice',[NoticeBoardController::class,'add']);
+    Route::put('/updateNotice',[NoticeBoardController::class,'update']);
+    Route::delete('/deleteNotice',[NoticeBoardController::class,'delete']);
 
     Route::get('getComplaints',[AdminController::class,'getComplaints']);
     Route::delete('deleteComplaint',[AdminController::class,'deleteComplaint']);
@@ -152,4 +158,7 @@ Route::group([
 
     Route::get('getForms',[StudentController::class,'getAvailableForms']);
 
+
+    Route::get('/getAcademicCalendarStudent',[StudentController::class,'getCalendar']);
+    Route::get('/enrolledSubjects',[StudentController::class,"enrolledSubjects"]);
 });

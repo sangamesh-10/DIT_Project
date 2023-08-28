@@ -18,8 +18,9 @@ class SemesterController extends Controller
         $object->year = $req->input('year');
         $object->code = $req->input('code');
         $object->semester = $req->input('semester');
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');
+        }
     }
     public function get()
     {
@@ -42,7 +43,7 @@ class SemesterController extends Controller
         $result = $object->save();
 
         if ($result) {
-            return response()->json($object);
+            return response()->json('true');
         } else {
             return response()->json(['result' => 'Value not updated'], 500);
         }
@@ -59,17 +60,20 @@ class SemesterController extends Controller
             return response()->json(['result' => 'Record not found'], 404);
         }
 
-        $object->delete();
-
-        return response()->json(['result' => 'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
     }
     public function addReRegister(Request $req)
     {
         $object=new re_register;
         $object->roll_num=$req->input('rollNumber');
         $object->subject_code=$req->input('subjectCode');
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');}
+        else
+        {
+            return response()->json('Error');
+        }
     }
     public function getReRegister()
     {
@@ -80,11 +84,17 @@ class SemesterController extends Controller
     {
         $roll_num =$req->input('rollNumber');
         $subject_code=$req->input('subjectCode');
-
-        $object=re_register::where('roll_num',$roll_num)->where('subject_code',$subject_code)->first();        if (!$object) {
-            return response()->json(['result' => 'Record not found'], 404);
+        $object=re_register::where('roll_num',$roll_num)->where('subject_code',$subject_code)->first();
+        //return response()->json($object);
+        if (!$object) {
+            return response()->json(['result' => 'Record not found']);
         }
-        $object->delete();
-        return response()->json(['result' => 'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');
+        }
+        else
+        {
+            return response()->json('Error');
+        }
     }
 }
