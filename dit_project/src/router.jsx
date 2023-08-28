@@ -29,6 +29,31 @@ import RaiseComplaint from "./components/RaiseComplaint";
 import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 import ProfileStd from "./views/ProfileStd.jsx";
 import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
+import { EnrolledStundents } from "./views/EnrolledStudents.jsx";
+import SendNotifications from "./views/SendingNotificationsFac.jsx";
+import { UpdatePwdAdmin } from "./views/UpdatePwdAdmin.jsx";
+import { AddReRegister } from "./views/AddReRegister.jsx";
+import { ViewReRegisters } from "./views/ViewReRegisters.jsx";
+import { DeleteReRegister } from "./views/DeleteReRegister.jsx";
+import { ViewStudents } from "./views/ViewStudents.jsx";
+import { ViewFaculty } from "./views/ViewFaculty.jsx";
+import { ViewAssignedFaculty } from "./views/ViewAssignedFaculty.jsx";
+import { UpdateFacultyAssignment } from "./views/UpdateFacultyAssignment.jsx";
+import { DeleteFacultyAssignment } from "./views/DeleteFacultyAssignment.jsx";
+import { ViewSubjects } from "./views/ViewSubjects";
+import { AddSemester } from "./views/AddSemester.jsx";
+import { ViewSemester } from "./views/ViewSemester.jsx";
+import { UpdateSemester } from "./views/UpdateSemesters.jsx";
+import { DeleteSemester } from "./views/DeleteSemesters.jsx";
+import { DeleteStudentLogin } from "./views/DeleteStudentLogin.jsx";
+import { DeleteFacultyLogin } from "./views/DeleteFacultyLogin.jsx";
+import { AddCalendar } from "./views/AddAcademicCalendar.jsx";
+import { UpdateCalendar } from "./views/UpdateAcademicCalendar.jsx";
+import { ViewAcademicCalendar } from "./views/ViewAcademicCalendar.jsx";
+import { DeleteNotice } from "./views/DeleteNotice.jsx";
+import { ViewAcademicCalendarFaculty } from "./views/ViewAcademicCalendarFaculty.jsx";
+import { ViewAcademicCalendarStudent } from "./views/ViewAcademicCalendarStd.jsx";
+import { EnrolledSubjects } from "./views/EnrolledSubjects.jsx";
 
 
 const router = createBrowserRouter([
@@ -84,6 +109,12 @@ const router = createBrowserRouter([
             {
                 path:'/student/Notifications',
                 element:<Notifications/>
+            },{
+                path:"/student/viewAcadmicCalendar",
+                element:<ViewAcademicCalendarStudent/>
+            },{
+                path:"/student/enrolledSubjects",
+                element:<EnrolledSubjects/>
             }
         ]
     },
@@ -123,6 +154,17 @@ const router = createBrowserRouter([
             {
                 path:"/faculty/Noticeboard",
                 element:<NoticeBoard/>
+            },
+            {
+                path:"/faculty/enrolledStudents",
+                element:<EnrolledStundents/>
+            },
+            {
+                path:"/faculty/sendNotifications",
+                element:<SendNotifications/>
+            },{
+                path:"/faculty/viewAcademicCalendar",
+                element:<ViewAcademicCalendarFaculty/>
             }
 
         ]
@@ -145,6 +187,10 @@ const router = createBrowserRouter([
                 element: <UpdateNoticeBoard />
             },
             {
+                path:"/admin/deleteNotice",
+                element:<DeleteNotice/>
+            },
+            {
                 path: "/admin/NoticeBoard",
                 element: <NoticeBoard />
             },
@@ -165,8 +211,81 @@ const router = createBrowserRouter([
                 element:<AddSubjects/>
             },
             {
+                path:"/admin/viewSubjects",
+                element:<ViewSubjects/>
+            },
+            {
                 path: '/admin/uploadSoftCopies',
                 element:<SoftCopiesUpload />
+            },
+            {
+                path:'/admin/updatePassword',
+                element:<UpdatePwdAdmin/>
+            },
+            {
+                path:"/admin/addReRegister",
+                element:<AddReRegister/>
+            },
+            {
+                path:"/admin/viewReRegisters",
+                element:<ViewReRegisters/>
+            },
+            {
+                path:"/admin/deleteReRegister",
+                element:<DeleteReRegister/>
+            },
+            {
+                path:"/admin/viewStudents",
+                element:<ViewStudents/>
+            },{
+                path:"/admin/viewFaculty",
+                element:<ViewFaculty/>
+            },
+            {
+                path:"/admin/assignedFaculty",
+                element:<ViewAssignedFaculty/>
+            },
+            {
+                path:"/admin/updateFacultyAssignment",
+                element:<UpdateFacultyAssignment/>
+            },
+            {
+                path:"/admin/deleteFacultyAssignment",
+                element:<DeleteFacultyAssignment/>
+            },{
+                path:"/admin/addSemester",
+                element:<AddSemester/>
+            },
+            {
+                path:"/admin/viewSemester",
+                element:<ViewSemester/>
+            },
+            {
+                path:"/admin/updateSemester",
+                element:<UpdateSemester/>
+            },
+            {
+                path:"/admin/deleteSemester",
+                element:<DeleteSemester/>
+            },
+            {
+                path:"/admin/DeleteStudentLogin",
+                element:<DeleteStudentLogin/>
+            },
+            {
+                path:"/admin/DeleteFacultyLogin",
+                element:<DeleteFacultyLogin/>
+            },{
+                path:"/admin/addAcademicCalendar",
+                element:<AddCalendar/>
+            },
+            {
+                path:"/admin/updateAcademicCalendar",
+                element:<UpdateCalendar/>
+            },
+            {
+                path:"/admin/viewAcademicCalendar",
+                element:<ViewAcademicCalendar/>
             }
         ]
     },

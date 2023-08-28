@@ -55,24 +55,22 @@ const AdminHomePage = () => {
                 <div className="dropdown-content-link-style">
                 <Link to="/admin/NoticeBoard">NoticeBoard</Link>
                 <Link to="/admin/welcome">Welcome</Link>
-                <Link to="">Update password</Link>
+                <Link to="/admin/updatePassword">Update password</Link>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">NoticeBoard Activities</button>
                     <div className="nested-dropdown-content">
                         <Link to="/admin/addNotice">Add Notice</Link>
-                        <Link to="">Delete Notice</Link>
-                        <Link to="">Update Notice</Link>
-                    </div>
+                        <Link to="/admin/deleteNotice">Delete Notice</Link>                    </div>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">Student Activities</button>
                     <div className="nested-dropdown-content">
                         <Link to="/admin/studentRegistration">Add Students</Link>
-                        <Link to="">View Students</Link>
-                        <Link to="">Add Re-Registers</Link>
-                        <Link to="">View Re-Registers</Link>
-                        <Link to="">Remove Re-Registers</Link>
+                        <Link to="/admin/viewStudents">View Students</Link>
+                        <Link to="/admin/addReRegister">Add Re-Registers</Link>
+                        <Link to="/admin/viewReRegisters">View Re-Registers</Link>
+                        <Link to="/admin/deleteReRegister">Remove Re-Registers</Link>
                     </div>
                 </div>
 
@@ -80,44 +78,42 @@ const AdminHomePage = () => {
                     <button className="nested-dropbtn">Faculty Activities</button>
                     <div className="nested-dropdown-content">
                         <Link to="/admin/facultyRegistration">Add New Faculty</Link>
-                        <Link to="">View Faculty</Link>
+                        <Link to="/admin/viewFaculty">View Faculty</Link>
                         <Link to="/admin/assignFaculty">Assign Subject</Link>
-                        <Link to="">View Assigned Subject</Link>
-                        <Link to="">Update Assigned Subject</Link>
-                        <Link to="">Delete Assigned Subject</Link>
+                        <Link to="/admin/assignedFaculty">View Assigned Subject</Link>
+                        <Link to="/admin/updateFacultyAssignment">Update Assigned Subject</Link>
+                        <Link to="/admin/deleteFacultyAssignment">Delete Assigned Subject</Link>
                     </div>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">Subjects</button>
                     <div className="nested-dropdown-content">
                         <Link to="/admin/addSubjects">Add Subject</Link>
-                        <Link to="">View Subjects</Link>
+                        <Link to="/admin/viewSubjects">View Subjects</Link>
                     </div>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">Semester Details</button>
                     <div className="nested-dropdown-content">
-                        <Link to="">Add Semester</Link>
-                        <Link to="">View Semester</Link>
-                        <Link to="">Update Semester</Link>
-                        <Link to="">Delete Semester</Link>
+                        <Link to="/admin/addSemester">Add Semester</Link>
+                        <Link to="/admin/viewSemester">View Semester</Link>
+                        <Link to="/admin/updateSemester">Update Semester</Link>
+                        <Link to="/admin/deleteSemester">Delete Semester</Link>
                     </div>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">Academic Calendar</button>
                     <div className="nested-dropdown-content">
-                        <Link to="">Add Calendar</Link>
-                        <Link to="">View Calendar</Link>
-                        <Link to="">Update Calendar</Link>
+                        <Link to="/admin/addAcademicCalendar">Add Calendar</Link>
+                        <Link to="/admin/viewAcademicCalendar">View Calendar</Link>
+                        <Link to="/admin/updateAcademicCalendar">Update Calendar</Link>
                     </div>
                 </div>
                 <div className="nested-sidenav">
                     <button className="nested-dropbtn">Logins</button>
                     <div className="nested-dropdown-content">
-                        <Link to="">Add Student Login</Link>
-                        <Link to="">Delete Student Login</Link>
-                        <Link to="">Add Faculty Login</Link>
-                        <Link to="">Delete Faculty Login</Link>
+                        <Link to="/admin/deleteStudentLogin">Delete Student Login</Link>
+                        <Link to="/admin/deleteFacultyLogin">Delete Faculty Login</Link>
                     </div>
                 </div>
                 </div>

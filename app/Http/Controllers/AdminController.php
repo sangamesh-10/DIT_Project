@@ -13,6 +13,10 @@ use App\Models\faculty;
 use App\Models\Std_softcopie;
 use App\Models\student;
 use App\Models\students_login;
+use App\Models\faculty_login;
+use Illuminate\Support\Facades\Validator;
+use App\Models\enrolled_student;
+
 
 class AdminController extends Controller
 {
@@ -64,6 +68,34 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
+    function updatePassword(Request $req)
+    {
+        $admin_id = auth()->user()->admin_id;
+        $old_password=$req->input("old_password");
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+        ];
+
+        $validator = Validator::make($req->all(), $rules);
+
+        if ($validator->fails() || $new_password != $confirm_password) {
+            return response()->json(['error' => $validator->errors()]);
+        } else {
+            $admin = admin_login::where('admin_id', $admin_id)->first();
+            if (Hash::check($old_password, $admin->password)) {
+                $admin->password = Hash::make($new_password);
+                $admin->save();
+
+                return response()->json('true');
+            }
+            else{
+                return response()->json(['Not success'=>'passwords doesnot match']);
+            }
+        }
+    }
     public function getComplaints()
     {
         $object = raise_complaint::all();
@@ -95,6 +127,12 @@ class AdminController extends Controller
     $result=$object->save();
     if($result)
     {
+        $facultyLogin=new faculty_login();
+        $facultyLogin->faculty_id=$req->faculty_id;
+        $facultyLogin->password=Hash::make('Secret123');
+        $facultyLogin->save();
+
+
         return response()->json($object);
     }
     else
@@ -152,10 +190,31 @@ public function studentReg(Request $req)
     }
 }
 
-public function getStudents()
+public function getStudents(Request $req)
 {
-    $object=student::all();
-    return response()->json($object);
+    $department=$req->query('department');
+    $semester =$req->query('semester');
+    switch ($department) {
+        case 'MCA':
+            $branch = 'F0';
+            break;
+        case 'Mtech-DS':
+            $branch = 'DB';
+            break;
+        case 'Mtech-CNIS':
+            $branch = 'D6';
+            break;
+        case 'Mtech-SE':
+            $branch = 'D2';
+            break;
+        case 'Mtech-CS':
+            $branch = 'D0';
+            break;
+    }
+    $year = enrolled_student::where('code', $branch)->where('semester', $semester)->value('year');
+    $students = student::where('roll_num', 'LIKE', $year . '___' . $branch . '%')->get();
+    //$object=student::all();
+    return response()->json($students);
 }
 public function uploadAndSaveFiles(Request $req)
 {
@@ -215,9 +274,4 @@ public function uploadAndSaveFiles(Request $req)
         return response()->json(['error' => 'An error occurred while processing the files.']);
     }
 }
-
-
-
-
-
 }

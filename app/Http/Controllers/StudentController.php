@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 use App\Models\notifications;
 use App\Models\raise_complaint;
+use App\Models\subject;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
 use App\Models\students_login;
 use App\Models\student;
 use App\Models\enrolled_student;
+use App\Models\re_register;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
 use App\Models\attendance_satisfied;
+use App\Models\academic_calendar;
 use App\Models\internal_mark;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Cache;
@@ -344,8 +347,53 @@ public function enrolledStds()
             return response()->json(['error' => 'No attendace record found for the provided roll number'], 404);
         }
     }
+    public function getCalendar()
+    {
+        $roll_num=auth()->user()->student_id;
+        $branchCode=substr($roll_num,5,2);
+        $year=substr($roll_num,0,2);
+        $rollNumCodes = array(
+            'F0' => 'MCA',
+            'D0' => 'MTech',
+            'D2' => 'MTech',
+            'D6' => 'MTech',
+            'DB' => 'MTech'
+        );
+        $branch = $rollNumCodes[$branchCode];
+        $sem=enrolled_student::where('code',$branchCode)->where('year',$year)->value('semester');
+        //return response()->json($sem);
+        $calendar= academic_calendar::where('branch',$branch)->where("semester",$sem)->get();
+        return response()->json($calendar);
+    }
+    public function enrolledSubjects()
+    {
+        $roll_num=auth()->user()->student_id;
+        $branchCode=substr($roll_num,5,2);
+        $year=substr($roll_num,0,2);
+        $rollNumCodes = array(
+            'F0' => 'MC',
+            'D0' => 'CS',
+            'D2' => 'SE',
+            'D6' => 'CN',
+            'DB' => 'DS'
+        );
+        $branch = $rollNumCodes[$branchCode];
+        $sem=enrolled_student::where('code',$branchCode)->where('year',$year)->value('semester');
+        $subjects=subject::where('subject_code','LIKE',$branch.$sem."%")->pluck('subject_code');
+        $reRegistered = re_register::where('roll_num', $roll_num)->pluck('subject_code');
+        $finalArray = collect($subjects)->concat($reRegistered)->toArray();
+        $subjectNames = subject::whereIn('subject_code', $finalArray)->pluck('subject_name', 'subject_code');
 
+        $responseArray = [];
+        foreach ($finalArray as $code) {
+            $responseArray[] = [
+                'subject_code' => $code,
+                'subject_name' => $subjectNames[$code]
+            ];
+        }
 
+        return response()->json($responseArray);
+    }
 
 
 }

@@ -53,8 +53,8 @@ class SubjectsController extends Controller
         {
             return response()->json(["message"=>"Record not found"]);
         }
-        $object->delete();
-        return response()->json(['message'=>'record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
      }
      public function updateAssignment(Request $req)
      {
@@ -65,8 +65,8 @@ class SubjectsController extends Controller
             return response()->json(["message"=>"Record not found"]);
         }
         $object->faculty_id=$req->input("facultyID");
-        $object->save();
-        return response()->json(['message'=>'record updated']);
+        if($object->save()){
+        return response()->json('true');}
      }
 
      public function facultySubjects(Request $req){

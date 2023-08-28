@@ -63,7 +63,6 @@ class FacultyController extends Controller
     }
 
 
-
     public function logout()
     {
         auth()->logout();
@@ -82,16 +81,22 @@ class FacultyController extends Controller
             'DS' => 'DB'
         );
         $rollCode = $rollNumCodes[$subject_code];
-        $sem = (int)substr($req->query('subject_code'), 2, 1);
-        $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
-        $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
-        $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
         $sem = (int) substr($req->query('subject_code'), 2, 1);
         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
+        // $sem = (int) substr($req->query('subject_code'), 2, 1);
+        // $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+        // $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
+        // $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
         $finalArray = collect($students)->concat($reRegistered)->toArray();
         return response()->json($finalArray);
+    }
+    public function getStudentDetails(Request $req)
+    {
+        $rollNum = $req->query('roll_num');
+        $student = Student::where('roll_num', $rollNum)->first();
+        return response()->json($student);
     }
     public function markAttendance(Request $req)
     {
@@ -106,7 +111,7 @@ class FacultyController extends Controller
                 $attendance->roll_num = $studentId;
                 $attendance->subject_code = $subjectCode;
                 $attendance->date = date('Y-m-d');
-                $attendance->status = (int)$status;
+                $attendance->status = (int) $status;
                 $attendance->save();
 
                 $attendanceSatisfied = attendance_satisfied::where('roll_num', $studentId)
@@ -115,7 +120,7 @@ class FacultyController extends Controller
 
                 if ($attendanceSatisfied) {
                     // Update existing row
-                    $attendanceSatisfied->attended += (int)$status;
+                    $attendanceSatisfied->attended += (int) $status;
                     $attendanceSatisfied->total += 1;
                     $attendanceSatisfied->percentage = ($attendanceSatisfied->attended / $attendanceSatisfied->total) * 100;
                     $attendanceSatisfied->save();
@@ -124,7 +129,7 @@ class FacultyController extends Controller
                     $attendanceSatisfied = new attendance_satisfied();
                     $attendanceSatisfied->roll_num = $studentId;
                     $attendanceSatisfied->subject_code = $subjectCode;
-                    $attendanceSatisfied->attended = (int)$status;
+                    $attendanceSatisfied->attended = (int) $status;
                     $attendanceSatisfied->total = 1;
                     $attendanceSatisfied->percentage = ($attendanceSatisfied->attended / $attendanceSatisfied->total) * 100;
                     $attendanceSatisfied->save();
@@ -175,7 +180,7 @@ class FacultyController extends Controller
                 }
 
                 $mailData = [
-                    'user'=> $user,
+                    'user' => $user,
                     'view' => 'emails.Complaints',
                     'subject' => $subject,
                     'title' => 'Mail from Laravel Project',
@@ -198,7 +203,7 @@ class FacultyController extends Controller
     public function addInternalMarks(Request $req)
     {
         $user = auth()->user()->faculty_id;
-        $exam_type=$req->input('exam_type');
+        $exam_type = $req->input('exam_type');
         $subject = $req->input('subject_code');
         $subject_code = substr($subject, 0, 2);
         $branchCodes = array(
@@ -217,7 +222,7 @@ class FacultyController extends Controller
         if (is_array($students)) {
 
             // if ($today > $mid1Date && $today < $mid2Date) {
-            if($exam_type=='mid1'){
+            if ($exam_type == 'mid1') {
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = new internal_mark();
                     $internalMarks->roll_num = $studentId;
@@ -237,19 +242,19 @@ class FacultyController extends Controller
             } else {
                 // if ($today < $semStartDate) {
 
-                    foreach ($students as $studentId => $marks) {
-                        $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
-                        $internalMarks->mid2 = $marks;
-                        $internalMarks->save();
-                        notifications::create([
-                            'sender_id' => $user,
-                            'receiver_id' => $studentId,
-                            'message' => 'Mid2 marks updated, chuskogalaru',
-                        ]);
-                    }
-                    return response()->json(['message' => 'Marks Added successfully']);
-                 }
-                //  else {
+                foreach ($students as $studentId => $marks) {
+                    $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
+                    $internalMarks->mid2 = $marks;
+                    $internalMarks->save();
+                    notifications::create([
+                        'sender_id' => $user,
+                        'receiver_id' => $studentId,
+                        'message' => 'Mid2 marks updated, chuskogalaru',
+                    ]);
+                }
+                return response()->json(['message' => 'Marks Added successfully']);
+            }
+            //  else {
             //         return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
             //     }
             // }
@@ -261,8 +266,8 @@ class FacultyController extends Controller
 
     public function markAsRead(Request $req)
     {
-        $notification = notifications::where('id',$req->input('id'))->first();
-        if($notification){
+        $notification = notifications::where('id', $req->input('id'))->first();
+        if ($notification) {
 
             // Ensure the notification belongs to the current user
             if ($notification->receiver_id !== auth()->user()->faculty_id) {
@@ -271,22 +276,21 @@ class FacultyController extends Controller
             $notification->update(['is_read' => true]);
 
             // Redirect back to the notifications index or any other appropriate page
-            return response()->json(['message'=>'Marked as read successfully']);
-        }
-        else{
-            return response()->json(['message'=>'Notification Not Found']);
+            return response()->json(['message' => 'Marked as read successfully']);
+        } else {
+            return response()->json(['message' => 'Notification Not Found']);
 
         }
     }
     public function getNotifications()
     {
         $user = auth()->user()->faculty_id;
-        $notifications =  notifications::where('receiver_id',$user)->orderBy('created_at', 'desc')->get();
+        $notifications = notifications::where('receiver_id', $user)->orderBy('created_at', 'desc')->get();
 
         // Return the notifications as JSON response
         return response()->json(['notifications' => $notifications]);
     }
-   public function updateContact(Request $request)
+    public function updateContact(Request $request)
     {
 
         $request->validate([
@@ -304,11 +308,11 @@ class FacultyController extends Controller
             $faculty->save();
         }
 
-        return response()->json(['success'=> 'Contact modified']);
+        return response()->json(['success' => 'Contact modified']);
     }
     public function setPassword(Request $req)
     {
-        $faculty_id =$req->input('faculty_id');
+        $faculty_id = $req->input('faculty_id');
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
@@ -319,7 +323,7 @@ class FacultyController extends Controller
         $validator = Validator::make($req->all(), $rules);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-        return response()->json(['error'=> $validator->errors()]);
+            return response()->json(['error' => $validator->errors()]);
         } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
@@ -333,6 +337,7 @@ class FacultyController extends Controller
     function updatePassword(Request $req)
     {
         $faculty_id = auth()->user()->faculty_id;
+        $old_password=$req->input("old_password");
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
@@ -342,23 +347,31 @@ class FacultyController extends Controller
 
         $validator = Validator::make($req->all(), $rules);
 
-        if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error'=> $validator->errors()]);
-        } else {
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        else if( $new_password != $confirm_password){
+            return response()->json('Passwords doesnot match');
+        }
+
+        else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
-            if ($faculty) {
+            if (Hash::check($old_password, $faculty->password)) {
                 $faculty->password = Hash::make($new_password);
                 $faculty->save();
 
                 return response()->json('true');
+            }
+            else{
+                return response()->json(['Not success'=>'Old password doesnot match']);
             }
         }
     }
     public function sendOtp(Request $req)
     {
         $faculty_id = $req->input("faculty_id");
-        $faculty_id= faculty::where("faculty_id", $faculty_id)->first();
+        $faculty_id = faculty::where("faculty_id", $faculty_id)->first();
         $email = $faculty_id->email;
 
         // Generate a random OTP
@@ -367,7 +380,7 @@ class FacultyController extends Controller
         Cache::put('otp', $otp, 60);
         // Send the OTP to the client via email
         $mailData = [
-            'view' =>'emails.OtpEmail',
+            'view' => 'emails.OtpEmail',
             'subject' => 'OTP Verification',
             'title' => 'Mail from Laravel Project',
             'body' => 'Your OTP for verification is: ',
@@ -375,7 +388,7 @@ class FacultyController extends Controller
         ];
         Mail::to($email)->send(new MailSender($mailData));
 
-        return response()->json(["Success"=>"OTP SENT"]);
+        return response()->json(["Success" => "OTP SENT"]);
     }
 
     public function otpVerification(Request $req)
@@ -387,7 +400,64 @@ class FacultyController extends Controller
             return response()->json("true");
 
         } else {
-            return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
+            return response()->json(['error' => 'Invalid OTP entered. Please try again.']);
         }
+    }
+    public function sendNotifications(Request $req)
+    {
+        $user = auth()->user()->faculty_id;
+        $select_type = $req->input('select_type');
+        $department = $req->input('department');
+        $semester = $req->input('semester');
+        $roll_numbers = $req->input('roll_numbers');
+        $description=$req->input('description');
+        if ($select_type == 'department') {
+            switch ($department) {
+                case 'MCA':
+                    $branch = 'F0';
+                    break;
+                case 'Mtech-DS':
+                    $branch = 'DB';
+                    break;
+                case 'Mtech-CNIS':
+                    $branch = 'D6';
+                    break;
+                case 'Mtech-SE':
+                    $branch = 'D2';
+                    break;
+                case 'Mtech-CS':
+                    $branch = 'D0';
+                    break;
+            }
+            $year = enrolled_student::where('code', $branch)->where('semester', $semester)->value('year');
+            $students = student::where('roll_num', 'LIKE', $year . '___' . $branch . '%')->pluck('roll_num');
+            foreach ($students as $student_id) {
+                notifications::create([
+                    'sender_id' => $user,
+                    'receiver_id' => $student_id,
+                    'message' => $description
+                ]);
+            }
+            return response()->json('Success');
+        }
+        else
+        {
+            $rollNumberArray = explode(',', $roll_numbers);
+            foreach($rollNumberArray as $student_id){
+                notifications::create([
+                    'sender_id' => $user,
+                    'receiver_id' => $student_id,
+                    'message' => $description
+                ]);
+            }
+            return response()->json('Success');
+        }
+    }
+    function get(Request $req)
+    {
+        $branch=$req->query("branch");
+        $sem=$req->query("semester");
+        $calendar= academic_calendar::where('branch',$branch)->where("semester",$sem)->get();
+        return response()->json($calendar);
     }
 }
