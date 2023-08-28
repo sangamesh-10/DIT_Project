@@ -453,7 +453,7 @@ class FacultyController extends Controller
             return response()->json('Success');
         }
     }
-    function get(Request $req)
+    function getCalendar(Request $req)
     {
         $branch=$req->query("branch");
         $sem=$req->query("semester");
