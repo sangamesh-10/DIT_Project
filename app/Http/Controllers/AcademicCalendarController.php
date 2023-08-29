@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\academic_calendar;
 
@@ -13,6 +15,17 @@ class AcademicCalendarController extends Controller
     }
     function add(Request $req)
     {
+        $validationRules=[
+            'branch'=>'required|String|in:MCA,MTech',
+            'semester'=>'required|numeric|size:1|[1-4]',
+            'description'=>'required|string|max:255',
+            'from'=>'required|date-format:Y-m-d',
+            'to'=>'date-format:Y-m-d|after:from'
+     ];
+        $validator=Validator::make($req->all(),$validationRules);
+        if($validator->fails()){
+            return response->json(['errors'=> $validator->errors()],422);
+        }
         $object = new academic_calendar;
         $object->branch = $req->input("branch");
         $object->semester = $req->input('semester');
@@ -29,6 +42,15 @@ class AcademicCalendarController extends Controller
     }
     function update(Request $req)
     {
+        $validationRules=[
+            'branch'=>'required|String|in:MCA,MTECH-CS,MTECH-DS,MTECH-CNIS,MTECH-SE',
+            'semester'=>'required|numeric|size:1|[1-4]',
+            'description'=>'required|string|max:255',
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+        if($validator->fails()){
+            return response->json(['errors'=> $validator->errors()],422);
+        }
         $branch = $req->input("branch");
         $semester = $req->input("semester");
         $description = $req->input("description");

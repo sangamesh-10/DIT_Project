@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\students_login;
 use App\Models\faculty_login;
@@ -17,6 +19,7 @@ class AuthenticationController extends Controller
     }
     public function addStdLogin(Request $req)
     {
+
         $object=new students_login;
         $object->student_id=$req->input("rollNumber");
         $object->password=Hash::make($req->input("password"));
@@ -37,6 +40,14 @@ class AuthenticationController extends Controller
     }
     public function deleteStdLogin(Request $req)
     {
+        $validationRules=[
+            'student_id'=>'required|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
         $student_id=$req->input("rollNumber");
         $object=students_login::where('student_id',$student_id)->first();
         if(!$object)
@@ -68,6 +79,15 @@ class AuthenticationController extends Controller
     }
     public function deleteFacLogin(Request $req)
     {
+        $validationRules=[
+            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
         $faculty_id=$req->input("facultyID");
         $object=faculty_login::where('faculty_id',$faculty_id)->first();
         if(!$object)

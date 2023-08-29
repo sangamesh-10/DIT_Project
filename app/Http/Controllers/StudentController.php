@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\Models\notifications;
 use App\Models\raise_complaint;
 use Illuminate\Http\Request;
@@ -9,12 +11,12 @@ use Carbon\Carbon;
 use App\Models\students_login;
 use App\Models\student;
 use App\Models\enrolled_student;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
 use App\Models\attendance_satisfied;
 use App\Models\internal_mark;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -27,10 +29,20 @@ class StudentController extends Controller
     }
     public function login(Request $req)
     {
-        $credentials = $req->only('student_id', 'password');
-        $student_id=$req->input('student_id');
+        $validationRules=[
+            'student_id'=>'required|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+            'password'=>'required'
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
 
-        if (!$token = auth('student-api')->attempt($credentials)) {
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
+        $credentials = $req->only('student_id', 'password');
+        //$student_id=$req->input('student_id');
+
+        if (!$token = auth('student-api')->claims(['password' => $credentials['password']])->attempt($credentials)) {
             // dd($token);
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -56,7 +68,7 @@ class StudentController extends Controller
         $object=Student::where("roll_num",$loginId)->first();
         return response()->json($object);
     }
-    public function enrolledStds()
+public function enrolledStds()
 {
     $user = auth()->guard('student-api')->user();
     $loginId = $user->student_id;
@@ -93,16 +105,16 @@ class StudentController extends Controller
         // Determine the specialization based on the 7th character
         switch ($seventhCharacter) {
             case '6':
-                $specialization = 'cnis';
+                $specialization = 'CNIS';
                 break;
             case 'B':
-                $specialization = 'data science';
+                $specialization = 'Data science';
                 break;
             case '2':
-                $specialization = 'software engineering';
+                $specialization = 'Software engineering';
                 break;
             case '0':
-                $specialization = 'computer science';
+                $specialization = 'Computer science';
                 break;
             default:
                 $specialization = 'Unknown Specialization';
@@ -135,24 +147,60 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
+
     public function raiseComplaint(Request $req)
     {
-        $user = auth()->guard('student-api')->user()->student_id;
-        $object = new raise_complaint;
-        $object->from_id= $user;
-        $object->description=$req->input("description");
-        $object->date=date('Y-m-d');
-        $result=$object->save();
-        if($result){
-            notifications::create([
-                'sender_id'=>$user,
-                'receiver_id'=>'S101',
-                'message'=>'I had raised a complaint,please Respond',
-            ]);
-        return response()->json($object);
-        }
-        else{
-            return response()->json(['message'=>'could not save data']);
+        try {
+            $user = auth()->guard('student-api')->user()->student_id;
+            $object = new raise_complaint;
+            $object->from_id = $user;
+            $object->description = $req->input("description");
+            $object->date = date('Y-m-d');
+
+            // Validate and save the complaint
+            $result = $object->save();
+
+            if ($result) {
+                notifications::create([
+                    'sender_id' => $user,
+                    'receiver_id' => 'S101',
+                    'message' => 'I had raised a complaint,please Respond',
+                ]);
+
+                $to_email = 'anupamavegesna1331@gmail.com';
+                $subject = 'Complaint Raised';
+                $message = 'A complaint has been raised by ' . $user . '. Please see the description below.';
+                $message .= "\n\n" . $req->input("description");
+
+                $attachments = [];
+
+                if ($req->hasFile('attachments')) {
+                    foreach ($req->file('attachments') as $file) {
+                        $filename = $file->getClientOriginalName();
+                        $data = file_get_contents($file->getRealPath());
+
+                        $attachments[] = Attachment::fromPath($file)
+                            ->as('Report.pdf')
+                            ->withMime('application/pdf');
+                    }
+                }
+
+                $mailData = [
+                    'user' => $user,
+                    'view' => 'emails.Complaints',
+                    'subject' => $subject,
+                    'title' => 'Mail from Laravel Project',
+                    'body' => $message,
+                    'attachments' => $attachments,
+                ];
+
+                Mail::to($to_email)->send(new MailSender($mailData));
+
+                return response()->json($object);
+            }
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur
+            return response()->json(['error' => 'An error occurred while raising the complaint.'. $e->getMessage()], 500);
         }
     }
     public function markAsRead(Request $req)
@@ -181,13 +229,19 @@ class StudentController extends Controller
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
-
-        $validator = Validator::make($req->all(), $rules);
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules, $customMessages);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-        return response()->json(['error'=> $validator->errors()]);
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors]);
         } else {
             $student = students_login::where('student_id', $student_id)->first();
 
@@ -200,37 +254,42 @@ class StudentController extends Controller
     }
     public function updatePwd(Request $req)
     {
-        $student_id =auth()->user()->student_id;
-        $old_password=$req->input('old_password');
+        $student_id = auth()->user()->student_id;
+        $old_password = $req->input('old_password');
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',        ];
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
+        $validator = Validator::make($req->all(), $rules ,$customMessages);
 
-        $validator = Validator::make($req->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        else if ($new_password != $confirm_password) {
+            return response()->json(['error' => 'New password and confirm password do not match.']);
+        }
+        else{
+        $student = students_login::where('student_id', $student_id)->first();
 
-        if ($validator->fails() || $new_password != $confirm_password) {
-        return response()->json(['error'=> $validator->errors()]);
-        } else {
-            $student = students_login::where('student_id', $student_id)->first();
-            if (Hash::check($old_password, $student->password)) {
-                $student->password = Hash::make($new_password);
-                $student->save();
-                return response()->json('true');
-                //return response()->json(['success'=> 'Password modified']);
-            }
-            else{
-                return response()->json(['Not success'=>'passwords doesnot match']);
-            }
+        if (Hash::check($old_password, $student->password)){
+        $student->password = Hash::make($new_password);
+        $student->save();
+        return response()->json('true');
+        }
+        else
+         {
+            return response()->json(['Not Success' => 'Old password is incorrect.']);
         }
     }
-    public function updateContact(Request $request)
+}
+ public function updateContact(Request $request)
     {
-
-        $request->validate([
-            'mobile' => 'required',
+     $request->validate([
+            'mobile' => 'required|numeric|digits:10',
         ]);
 
         $student_id = auth()->user()->student_id;
@@ -247,7 +306,14 @@ class StudentController extends Controller
     }
 
     public function sendOtp(Request $req)
-    {
+    {   $validationRules=[
+        'student_id'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+    ];
+    $validator = Validator::make($req->all(), $validationRules);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()]);
+    }
         $student_id = $req->input("student_id");
         $student = Student::where("roll_num", $student_id)->first();
         $email = $student->email;
@@ -279,7 +345,6 @@ class StudentController extends Controller
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }
     }
-
     public function checkMarks(Request $req) {
         $roll_num = $req->query('roll_num');
 

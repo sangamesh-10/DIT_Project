@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\enrolled_student;
 use App\Models\re_register;
@@ -14,6 +16,16 @@ class SemesterController extends Controller
     }
     public function add(Request $req)
     {
+        $validationRules=[
+            'year'=>'numeric|digits:2',
+            'code'=>'string|in:F0,D0,D2,D6,DB',
+            'semester'=>'numeric|in:1,2,3,4',
+        ];
+        $validator= Validator::make($req->all(),$validationRules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $object = new enrolled_student;
         $object->year = $req->input('year');
         $object->code = $req->input('code');
@@ -28,6 +40,14 @@ class SemesterController extends Controller
     }
     public function update(Request $req)
     {
+        $validationRules=[
+            'year'=>'numeric|digits:2|regex:/^[2-9][1-9]$/',
+            'code'=>'string|in:F0,D0,D2,D6,DB',
+        ];
+        $validator= Validator::make($req->all(),$validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $year = $req->input('year');
         $code = $req->input('code');
 
@@ -50,6 +70,14 @@ class SemesterController extends Controller
 
     public function delete(Request $req)
     {
+        $validationRules=[
+            'year'=>'numeric|digits:2|regex:/^[2-9][1-9]$/',
+            'code'=>'string|in:F0,D0,D2,D6,DB',
+        ];
+        $validator= Validator::make($req->all(),$validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $year = $req->input('year');
         $code = $req->input('code');
 
@@ -65,6 +93,14 @@ class SemesterController extends Controller
     }
     public function addReRegister(Request $req)
     {
+        $validationRules=[
+            'rollNumber'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+
+        ];
+        $validator= Validator::make($req->all(),$validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $object=new re_register;
         $object->roll_num=$req->input('rollNumber');
         $object->subject_code=$req->input('subjectCode');
@@ -78,6 +114,14 @@ class SemesterController extends Controller
     }
     public function deleteReRegister(Request $req)
     {
+        $validationRules=[
+            'rollNumber'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+
+        ];
+        $validator= Validator::make($req->all(),$validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $roll_num =$req->input('rollNumber');
         $subject_code=$req->input('subjectCode');
 

@@ -20,7 +20,7 @@ export default function UpdateContactFaculty() {
             console.log(submitted);
         }
         catch(err){
-            const response=err.reponse;
+            const response=err.response;
             if(response && response.status === 422)
             {
                 console.log(response.data.errors);
@@ -31,11 +31,13 @@ export default function UpdateContactFaculty() {
     }
   return (
 
-    <div>
-        <h2>UpdateContact</h2>
-        <form onSubmit={onSubmit}>
-            <input ref={mobile} type="number" placeholder='Enter New Mobile Number'/><br/>
-            <button>Update</button>
+    <div className="form-container">
+        <h2 className="form-title">Update Contact</h2>
+        <form className="form" onSubmit={onSubmit}>
+        <div className="form-group">
+            <input ref={mobile} type="number" placeholder='Enter New Mobile Number' className="input-field"/><br/>
+        </div>
+            <button className="button-container">Update</button>
         </form>
         {submitted  && (
             <p>{submissionMessage}</p>

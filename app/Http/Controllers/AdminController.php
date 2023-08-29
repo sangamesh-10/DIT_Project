@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
@@ -81,35 +82,80 @@ class AdminController extends Controller
             return response()->json(["message" => "record deleted"]);
         }
     }
-    public function facultyReg(Request $req)
-    {
-    $object = new faculty;
-    $object->faculty_id=$req->faculty_id;
-    $object->name=$req->name;
-    $object->email=$req->email;
-    $object->alt_email=$req->altEmail;
-    $object->phone_num=$req->phoneNo;
-    $object->aadhar_num=$req->aadharNo;
-    $object->designation=$req->designation;
-    $object->experience=$req->experience;
-    $result=$object->save();
-    if($result)
-    {
-        return response()->json($object);
-    }
-    else
-    {
-        return['result'=>'operation failed'];
+public function facultyReg(Request $req)
+{
+    $validationRules = [
+        'faculty_id' => 'required|size:4|regex:/^S[0-3][0-9][1-9]$/|unique:faculty,faculty_id',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:faculty,email|ends_with:gmail.com,outlook.com,yahoo.com',
+        'altEmail' => 'nullable|email|different:email|ends_with:gmail.com,outlook.com,yahoo.com',
+        'phoneNo' => 'numeric|digits:10|unique:faculty,phone_num',
+        'aadharNo' => 'numeric|digits:12|unique:faculty,aadhar_num',
+        'designation' => 'required|string',
+        'experience' => 'required|numeric|digits:2',
+    ];
+
+    $validator = Validator::make($req->all(), $validationRules);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
     }
 
+    $object = new faculty;
+    $object->faculty_id = $req->faculty_id;
+    $object->name = $req->name;
+    $object->email = $req->email;
+    $object->alt_email = $req->altEmail;
+    $object->phone_num = $req->phoneNo;
+    $object->aadhar_num = $req->aadharNo;
+    $object->designation = $req->designation;
+    $object->experience = $req->experience;
+
+    $result = $object->save();
+    if ($result) {
+        return response()->json($object);
+    } else {
+        return ['result' => 'operation failed'];
+    }
 }
+
 public function getFaculty()
 {
     $object=faculty::all();
     return response()->json($object);
 }
 public function studentReg(Request $req)
-{
+    {
+        $validationRules = [
+            'rollNumber' => 'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,r',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students,email|ends_with:gmail.com,outlook.com,yahoo.com',
+            'phoneNo' => 'required|numeric|digits:10|unique:students,phone_num',
+            'aadharNo' => 'required|numeric|digits:12|unique:students,aadhar_num',
+            'motherName'=>'required|string|max:255',
+            'fatherName'=>'required|string|max:255',
+            'parentPhNo'=>'required|numeric|digits:10',
+            'dob'=>'required|date|before:'.now()->subYears(18)->format('Y-m-d'),
+            'permanentAddr'=>'required|string|max:255',
+            'presentAddr'=>'required|string|max:255',
+            'bloodGroup'=>'required|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'caste' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::in(array_map('strtolower', ['SC', 'ST', 'BC', 'EWS','OC', 'Other'])),
+            ],
+            'religion' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::in(array_map('strtolower', ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Other'])),
+            ],
+];
+        $validator = Validator::make($req->all(), $validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
     try {
         $object = new student;
         dd($req->rollNumber);
@@ -151,7 +197,6 @@ public function studentReg(Request $req)
         return response()->json(['error' => $e->getMessage()]);
     }
 }
-
 public function getStudents()
 {
     $object=student::all();
@@ -215,9 +260,4 @@ public function uploadAndSaveFiles(Request $req)
         return response()->json(['error' => 'An error occurred while processing the files.']);
     }
 }
-
-
-
-
-
 }

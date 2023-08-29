@@ -28,6 +28,8 @@ import Attendance from "./views/Attendance.jsx";
 import RaiseComplaint from "./components/RaiseComplaint";
 import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 import ProfileStd from "./views/ProfileStd.jsx";
+import ProfileFaculty from "./views/ProfileFaculty.jsx";
+import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
 
 
 const router = createBrowserRouter([
@@ -77,6 +79,10 @@ const router = createBrowserRouter([
                 element:<NoticeBoard/>
             },
             {
+                path:"/student/raiseComplaint",
+                element:<RaiseComplaint />
+            },
+            {
                 path:'/student/Notifications',
                 element:<Notifications/>
             }
@@ -90,7 +96,10 @@ const router = createBrowserRouter([
                 path: "/faculty/welcome",
                 element: <Welcome />
             },
-
+            {
+                path:"/faculty/Profile",
+                element: <ProfileFaculty/>
+            },
             {
                 path:"/faculty/dashBoard",
                 element: <DashBoard />
@@ -187,6 +196,10 @@ const router = createBrowserRouter([
         path:'/OtpVerification',
         element:<OtpPage/>
 
+    },
+    {
+        path:"/OtpVerificationFaculty",
+        element:<OtpPageFaculty/>
     }
 ]);
 export default router;

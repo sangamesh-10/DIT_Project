@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\Models\academic_calendar;
 use App\Models\attendance_satisfied;
 use App\Models\daily_attendance;
@@ -16,7 +18,6 @@ use App\Models\student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\raise_complaint;
-use Illuminate\Support\Facades\Validator;
 use App\Models\faculty_login;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
@@ -32,11 +33,21 @@ class FacultyController extends Controller
     }
     public function login(Request $req)
     {
+        $validationRules=[
+            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+            'password'=>'required'
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
         $credentials = $req->only('faculty_id', 'password');
 
-        if (!$token = auth('faculty-api')->attempt($credentials)) {
+        if (!$token = auth('faculty-api')->claims(['password' => $credentials['password']])->attempt($credentials)) {
             // dd($token);
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
@@ -61,8 +72,6 @@ class FacultyController extends Controller
         // dd($faculty_id);
         return response()->json($faculty);
     }
-
-
 
     public function logout()
     {
@@ -175,6 +184,7 @@ class FacultyController extends Controller
                 }
 
                 $mailData = [
+                    'user'=> $user,
                     'view' => 'emails.Complaints',
                     'subject' => $subject,
                     'title' => 'Mail from Laravel Project',
@@ -191,12 +201,10 @@ class FacultyController extends Controller
             return response()->json(['error' => 'An error occurred while raising the complaint.'], 500);
         }
     }
-
-
-
-    public function addInternalMarks(Request $req)
+     public function addInternalMarks(Request $req)
     {
         $user = auth()->user()->faculty_id;
+        $exam_type=$req->input('exam_type');
         $subject = $req->input('subject_code');
         $subject_code = substr($subject, 0, 2);
         $branchCodes = array(
@@ -208,13 +216,19 @@ class FacultyController extends Controller
         );
         $sem = 4;
         $students = $req->get('students');
-        $today = date('Y-m-d');
-        $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
-        $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
-        $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
+        foreach ($students as $studentId => $marks) {
+            if (!is_numeric($marks) || $marks < 0 || $marks > 40) {
+                return response()->json(['error' => 'Invalid marks input for student ' . $studentId], 400);
+            }
+        }
+        // $today = date('Y-m-d');
+        // $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
+        // $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
+        // $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
         if (is_array($students)) {
 
-            if ($today > $mid1Date && $today < $mid2Date) {
+            // if ($today > $mid1Date && $today < $mid2Date) {
+            if($exam_type=='mid1'){
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = new internal_mark();
                     $internalMarks->roll_num = $studentId;
@@ -232,7 +246,7 @@ class FacultyController extends Controller
 
                 return response()->json(['message' => 'Marks Added successfully']);
             } else {
-                if ($today < $semStartDate) {
+                // if ($today < $semStartDate) {
 
                     foreach ($students as $studentId => $marks) {
                         $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
@@ -245,10 +259,11 @@ class FacultyController extends Controller
                         ]);
                     }
                     return response()->json(['message' => 'Marks Added successfully']);
-                } else {
-                    return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
-                }
-            }
+                 }
+                //  else {
+            //         return response()->json(['message' => 'Can\'t Upload, Sem exams Started']);
+            //     }
+            // }
         } else {
             // Handle the case where $students is null or not an array
             return response()->json(['error' => 'Invalid student data'], 400);
@@ -284,11 +299,14 @@ class FacultyController extends Controller
     }
    public function updateContact(Request $request)
     {
+        $validationRules=[
+            'mobile'=>'required|numeric|digits:10',
+        ];
+        $validator=Validator::make($request->all(),$validationRules);
 
-        $request->validate([
-            'mobile' => 'required',
-        ]);
-
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
         $faculty_id = auth()->user()->faculty_id;
         //return $faculty_id;
         $newPhoneNumber = $request->input('mobile');
@@ -302,33 +320,84 @@ class FacultyController extends Controller
 
         return response()->json(['success'=> 'Contact modified']);
     }
-    function updatePassword(Request $req)
+    public function setPassword(Request $req)
     {
-        $faculty_id = auth()->user()->faculty_id;
+        $faculty_id =$req->input('faculty_id');
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            // 'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
+        $customMessages = [
+            'password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules,$customMessages);
 
-        $validator = Validator::make($req->all(), $rules);
-
-        if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error'=> $validator->errors()]);
-        } else {
+        if ($validator->fails() )  {
+        return response()->json(['error'=> $validator->errors()]);
+        }
+        else if($new_password != $confirm_password)
+        {
+         return response()->json("Passwords doesnot match");
+        }
+        else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
             if ($faculty) {
                 $faculty->password = Hash::make($new_password);
                 $faculty->save();
+                return response()->json('true');
+            }
+        }
+    }
+    function updatePassword(Request $req)
+    {
+        $faculty_id = auth()->user()->faculty_id;
+        $old_password=$req->input("old_password");
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+        ];
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules, $customMessages);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        else if( $new_password != $confirm_password){
+            return response()->json('Passwords doesnot match');
+        }
+
+        else {
+            $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
+
+            if (Hash::check($old_password, $faculty->password)) {
+                $faculty->password = Hash::make($new_password);
+                $faculty->save();
 
                 return response()->json('true');
+            }
+            else{
+                return response()->json(['Not success'=>'Old password doesnot match']);
             }
         }
     }
     public function sendOtp(Request $req)
     {
+        $validationRules=[
+            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+        ];
+        $validator = Validator::make($req->all(), $validationRules);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
         $faculty_id = $req->input("faculty_id");
         $faculty_id= faculty::where("faculty_id", $faculty_id)->first();
         $email = $faculty_id->email;
@@ -349,15 +418,14 @@ class FacultyController extends Controller
 
         return response()->json(["Success"=>"OTP SENT"]);
     }
-
     public function otpVerification(Request $req)
     {
         $user_otp = $req->input('otp');
         $actual_otp = Cache::get('otp');
 
         if ($actual_otp && $user_otp == $actual_otp) {
+            return response()->json("true");
 
-            return response()->json("verified otp");
         } else {
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }

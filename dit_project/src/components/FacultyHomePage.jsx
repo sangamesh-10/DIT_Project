@@ -57,6 +57,7 @@ const FacultyHomePage = () => {
                     <div className="dropdown-content">
                         <div className="dropdown-content-link-style">
                             <Link to="/faculty/welcome">Welcome</Link>
+                            <Link to="/faculty/Profile">Profile</Link>
                             <Link to="/faculty/Noticeboard">NoticeBoard</Link>
                             <Link to="/faculty/updatePwd">Update Password</Link>
                             <Link to="/faculty/updateContact">Update Contact</Link>
