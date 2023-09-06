@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -45,40 +46,6 @@ class SubjectsController extends Controller
     }
  public function assignFaculty(Request $req)
 {
-    // $validPrefixes5Chars = ['MC'];
-    // $validPrefixes6Chars = ['SE', 'DS', 'CS', 'CN'];
-
-    // $validationRules = [
-    //     'subjectCode' => [
-    //         'required',
-    //         function ($attribute, $value, $fail) use ($validPrefixes5Chars, $validPrefixes6Chars) {
-    //             if (strlen($value) === 5) {
-    //                 if (!in_array(substr($value, 0, 2), $validPrefixes5Chars)
-    //                     || !is_numeric(substr($value, 2, 1))
-    //                     || !in_array(substr($value, 3, 1), ['1', '2', '3', '4'])
-    //                     || !is_numeric(substr($value, 4, 1))) {
-    //                     $fail('The subject code is not valid.');
-    //                 }
-    //             } elseif (strlen($value) === 6) {
-    //                 if (!in_array(substr($value, 0, 2), $validPrefixes6Chars)
-    //                     || !is_numeric(substr($value, 2, 1))
-    //                     || !in_array(substr($value, 3, 1), ['e', 'c'])
-    //                     || !is_numeric(substr($value, 4, 1))
-    //                     || !is_numeric(substr($value, 5, 1))) {
-    //                     $fail('The subject code is not valid.');
-    //                 }
-    //             } else {
-    //                 $fail('The subject code length is invalid.');
-    //             }
-    //         },
-    //     ],
-    //     'facultyID' => 'requiredregex:/^S[0-3][0-9][1-9]$/',
-    // ];
-    // $validator=Validator::make($req->all(),$validationRules);
-
-    //     if($validator->fails()){
-    //         return response()->json(['errors'=>$validator->errors()],422);
-    //     }
     $validationRules=[
         'subjectCode' => ['custom_subject_code'],
         'facultyID' => 'regex:/^S[0-3][0-9][1-9]$/',
@@ -89,12 +56,29 @@ class SubjectsController extends Controller
         if($validator->fails()){
             return response()->json(['errors'=>$validator->errors()],422);
         }
-    $object = new assign_faculty;
-    $object->subject_code = $req->input('subjectCode');
-    $object->faculty_id = $req->input("facultyID");
-    $object->save();
+        $facultyID = $req->input('facultyID');
+        $subjectCode = $req->input('subjectCode');
+        $assignmentsCount = assign_faculty::where('faculty_id', $facultyID)->count();
 
-    return response()->json($object);
+        if ($assignmentsCount >= 3) {
+            return response()->json(['errors' => ['facultyID' => 'The faculty is already assigned to 3 subjects.']], 422);
+        }
+        try{
+        $object = new assign_faculty;
+        $object->subject_code = $req->input('subjectCode');
+        $object->faculty_id = $req->input("facultyID");
+        $object->save();
+       return response()->json($object);
+        }
+        catch (QueryException $e) {
+        // Check if it's an integrity constraint violation for subject code
+        if ($e->getCode() === '23000') {
+            return response()->json(['errors' => ['subjectCode' => 'This subject code is already assigned.']], 422);
+        } else {
+            // Handle other database-related errors
+            return response()->json(['errors' => ['database' => 'Database error']], 500);
+        }
+    }
 }
 
     public function getAssignedFaculty()
@@ -121,14 +105,13 @@ class SubjectsController extends Controller
         {
             return response()->json(["message"=>"Record not found"]);
         }
-        $object->delete();
-        return response()->json(['message'=>'record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
      }
      public function updateAssignment(Request $req)
      {
         $validationRules=[
             'subjectCode' => ['required', 'custom_subject_code'],
-            'facultyID' => 'required|regex:/^S[0-3][0-9][1-9]$/',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 
@@ -143,11 +126,10 @@ class SubjectsController extends Controller
             return response()->json(["message"=>"Record not found"]);
         }
         $object->faculty_id=$req->input("facultyID");
-        $object->save();
-        return response()->json(['message'=>'record updated']);
+        if($object->save()){
+        return response()->json('true');}
      }
-
-     public function facultySubjects(Request $req){
+   public function facultySubjects(Request $req){
         //$faculty_id = $req->query('faculty_id');
         $faculty_id=auth()->user()->faculty_id;
         $subjects = assign_faculty::where('faculty_id',$faculty_id)->pluck('subject_code');

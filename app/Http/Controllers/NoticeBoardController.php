@@ -123,9 +123,9 @@ class NoticeBoardController extends Controller
             return response()->json(['result' => 'Record not found'], 404);
         }
 
-        $object->delete();
+        if($object->delete()){
 
-        return response()->json(['result' => 'Record deleted']);
+        return response()->json('true');}
     }
 
     public function sendNotifications($notice_id,$notice_description){

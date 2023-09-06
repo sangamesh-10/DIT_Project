@@ -19,6 +19,7 @@ export const AddAttendance = () => {
         try {
             const response = await axiosClient.get("/getFacultySubjects");
             setSubjects(response.data);
+            //console.log(response.data);
         } catch (error) {
             console.error('Error fetching subjects:', error);
         }

@@ -20,7 +20,7 @@ class AcademicCalendarController extends Controller
             'semester'=>'required|numeric|size:1|[1-4]',
             'description'=>'required|string|max:255',
             'from'=>'required|date-format:Y-m-d',
-            'to'=>'date-format:Y-m-d|after:from'
+            'to'=>'date-format:Y-m-d|after:from',
      ];
         $validator=Validator::make($req->all(),$validationRules);
         if($validator->fails()){
@@ -32,13 +32,16 @@ class AcademicCalendarController extends Controller
         $object->description = $req->input('description');
         $object->from_date = $req->input("from");
         $object->to_date = $req->input("to");
-        $object->save();
-        return response()->json($object);
+        if ($object->save()) {
+            return response()->json('true');
+        }
     }
-    function get()
+    function get(Request $req)
     {
-        $object = academic_calendar::all();
-        return response()->json($object);
+        $branch=$req->query("branch");
+        $sem=$req->query("semester");
+        $calendar= academic_calendar::where('branch',$branch)->where("semester",$sem)->get();
+        return response()->json($calendar);
     }
     function update(Request $req)
     {
@@ -61,15 +64,13 @@ class AcademicCalendarController extends Controller
             ['description', '=', $description]
         ])->first();
 
-        if ($object)
-        {
+        if ($object) {
             //$object->update(['from_date' => $req->input('from'), 'to_date' => $req->input('to')]);
-            $object->from_date=$req->input("from");
-            $object->to_date=$req->input("to");
+            $object->from_date = $req->input("from");
+            $object->to_date = $req->input("to");
             $object->save();
-            return response()->json(['message' => 'Record Updated'], 200);
-        }
-        else {
+            return response()->json('true');
+        } else {
             return response()->json(['message' => 'Record not found'], 404);
         }
     }

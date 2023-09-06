@@ -63,6 +63,7 @@ export const AddMarks = () => {
         try {
             setReviewStage(true); // Move to the review stage after form submission
         } catch (err) {
+            console.log(err);
             console.error("Error while submitting data", err);
             setSubmissionMessage('Error while submitting marks');
             setSubmitted(false);

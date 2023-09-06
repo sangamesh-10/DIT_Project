@@ -23,8 +23,8 @@ class AuthenticationController extends Controller
         $object=new students_login;
         $object->student_id=$req->input("rollNumber");
         $object->password=Hash::make($req->input("password"));
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');}
     }
     public function updateStdLogin(Request $req)
     {
@@ -54,16 +54,16 @@ class AuthenticationController extends Controller
         {
             return response()->json(['message'=>'Record not found'],404);
         }
-        $object->delete();
-        return response()->json(['message'=>'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
     }
     public function addFacLogin(Request $req)
     {
         $object=new faculty_login;
         $object->faculty_id=$req->input("facultyID");
         $object->password=Hash::make($req->input("password"));
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');}
     }
     public function updateFacLogin(Request $req)
     {
@@ -94,8 +94,8 @@ class AuthenticationController extends Controller
         {
             return response()->json(['message'=>'Record not found'],404);
         }
-        $object->delete();
-        return response()->json(['message'=>'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
     }
     public function addAdminLogin(Request $req)
     {

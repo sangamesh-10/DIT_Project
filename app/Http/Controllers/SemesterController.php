@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\enrolled_student;
@@ -30,8 +32,9 @@ class SemesterController extends Controller
         $object->year = $req->input('year');
         $object->code = $req->input('code');
         $object->semester = $req->input('semester');
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');
+        }
     }
     public function get()
     {
@@ -62,7 +65,7 @@ class SemesterController extends Controller
         $result = $object->save();
 
         if ($result) {
-            return response()->json($object);
+            return response()->json('true');
         } else {
             return response()->json(['result' => 'Value not updated'], 500);
         }
@@ -87,27 +90,41 @@ class SemesterController extends Controller
             return response()->json(['result' => 'Record not found'], 404);
         }
 
-        $object->delete();
-
-        return response()->json(['result' => 'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');}
     }
     public function addReRegister(Request $req)
     {
         $validationRules=[
-            'rollNumber'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
-
+            'rollNumber'=>'size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+            'subjectCode' => ['custom_subject_code'],
         ];
         $validator= Validator::make($req->all(),$validationRules);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
         }
+
+        try{
         $object=new re_register;
         $object->roll_num=$req->input('rollNumber');
         $object->subject_code=$req->input('subjectCode');
-        $object->save();
-        return response()->json($object);
+        if($object->save()){
+        return response()->json('true');}
+        else
+        {
+            return response()->json('Error');
+        }
     }
-    public function getReRegister()
+    catch(\Illuminate\Database\QueryException $e){
+    $errorCode = $e->errorInfo[1];
+    if ($errorCode === 1062) {
+        return response()->json('Already registered', 422);
+    }else {
+        return response()->json('Database error', 500);
+    }
+   }
+ }
+   public function getReRegister()
     {
         $object=re_register::all();
         return response()->json($object);
@@ -116,7 +133,7 @@ class SemesterController extends Controller
     {
         $validationRules=[
             'rollNumber'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
-
+            'subjectCode' => ['required', 'custom_subject_code'],
         ];
         $validator= Validator::make($req->all(),$validationRules);
         if ($validator->fails()) {
@@ -124,11 +141,17 @@ class SemesterController extends Controller
         }
         $roll_num =$req->input('rollNumber');
         $subject_code=$req->input('subjectCode');
-
-        $object=re_register::where('roll_num',$roll_num)->where('subject_code',$subject_code)->first();        if (!$object) {
-            return response()->json(['result' => 'Record not found'], 404);
+        $object=re_register::where('roll_num',$roll_num)->where('subject_code',$subject_code)->first();
+        //return response()->json($object);
+        if (!$object) {
+            return response()->json(['result' => 'Record not found']);
         }
-        $object->delete();
-        return response()->json(['result' => 'Record deleted']);
+        if($object->delete()){
+        return response()->json('true');
+        }
+        else
+        {
+            return response()->json('Error');
+        }
     }
 }

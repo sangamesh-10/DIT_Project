@@ -36,7 +36,7 @@ const NoticeBoard = () => {
         {notices.map((notice) => (
           <li key={notice.description} className="notice-item">
             <a
-              href={notice.path} // Replace this with the correct property containing the file URL
+              href={notice.path}
               target="_blank"
               rel="noopener noreferrer"
             >

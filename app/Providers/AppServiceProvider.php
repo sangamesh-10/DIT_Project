@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
             return false;
         });
 
-        Validator::replacer('custom_subject_code', function ($message, $attribute, $rule, $parameters) {
+        Validator::replacer('custom_subject_code', function($message, $attribute, $rule, $parameters) {
             return 'The subject code is not valid.';
         });
     }
