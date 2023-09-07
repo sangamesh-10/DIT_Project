@@ -1,56 +1,133 @@
 import React, { useState, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
-import axiosClient from '../axios-client';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Box from '@mui/material/Box';
 import { useStateContext } from '../contexts/ContextProvider';
-import './form.css';
+import axiosClient from '../axios-client';
+import { CssBaseline } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const StudentLogin = () => {
-    const student_id = useRef();
-    const password = useRef();
-    const { setUser, setToken } = useStateContext();
-    const [loggedIn, setLoggedIn] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        const payload = {
-            student_id: student_id.current.value,
-            password: password.current.value
-        };
+  const handleClick = () => {
+    setOpen(true);
+  };
 
-        try {
-            const { data } = await axiosClient.post('/studentLogin', payload);
-            setUser(data.user);
-            setToken(data.access_token);
-            console.log(data);
-            setLoggedIn(true);
-        } catch (err) {
-            const response = err.response;
-            if (response && response.status === 422) {
-                console.log(response.data.errors);
-            }
-        }
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const student_id = useRef();
+  const password = useRef();
+  const { setUser, setToken } = useStateContext();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      student_id: student_id.current.value,
+      password: password.current.value
     };
-    return (
-        <div className="form-container">
-            {loggedIn ? (
-                <Navigate to="/student" replace={true} />
-            ) : (
-                <div>
-                    <h2 className="form-title">LOGIN FORM</h2>
-                    <form className="form" onSubmit={onSubmit}>
-                        <div className="form-group">
-                            <input ref={student_id} type="text" placeholder="Roll Number" className="input-field" />
-                        </div>
-                        <div className="form-group">
-                            <input ref={password} type="password" placeholder="Password" className="input-field" />
-                        </div>
-                        <button className="button-container">LOGIN</button>
-                    </form>
-                    <a href="/OtpVerification" className="forgot-password-link">Forgot Password?</a>
-                </div>
-            )}
-        </div>
-    );
-};
 
+    try {
+      const { data } = await axiosClient.post('/studentLogin', payload);
+      setUser(data.user);
+      setToken(data.access_token);
+      console.log(data);
+      handleClick(); // Show Snackbar on successful login
+      setTimeout(() => {
+        setLoggedIn(true);
+      }, 2000);
+    } catch (err) {
+      const response = err.response;
+      if (response && response.status === 422) {
+        console.log(response.data.errors);
+      }
+    }
+  };
+  if(loggedIn){
+    return <Navigate to="/student" replace={true} />;
+  }
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign In
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={onSubmit}
+          noValidate
+          sx={{ mt: 1 }}
+        >
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="student_id"
+            label="Roll Number"
+            name="student_id"
+            inputRef={student_id}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            inputRef={password}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Login
+          </Button>
+        </Box>
+        <Typography component="p" variant="body2">
+          <a href="/OtpVerification" className="forgot-password-link">Forgot Password?</a>
+        </Typography>
+      </Box>
+
+      {/* Snackbar */}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Login successful!
+        </Alert>
+      </Snackbar>
+    </Container>
+  );
+};

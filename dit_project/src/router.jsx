@@ -59,6 +59,8 @@ import { DeleteNotice } from "./views/DeleteNotice.jsx";
 import { ViewAcademicCalendarFaculty } from "./views/ViewAcademicCalendarFaculty.jsx";
 import { ViewAcademicCalendarStudent } from "./views/ViewAcademicCalendarStd.jsx";
 import { EnrolledSubjects } from "./views/EnrolledSubjects.jsx";
+import GetSoftCopies from "./views/GetSoftCopies.jsx";
+import Feedback from "./views/Feedback.jsx";
 
 
 const router = createBrowserRouter([
@@ -118,12 +120,22 @@ const router = createBrowserRouter([
             {
                 path:'/student/getForms',
                 element:<GetForms />
-            },{
+            },
+            {
                 path:"/student/viewAcadmicCalendar",
                 element:<ViewAcademicCalendarStudent/>
-            },{
+            }
+            ,{
                 path:"/student/enrolledSubjects",
                 element:<EnrolledSubjects/>
+            }
+            ,{
+                path:"/student/softCopies",
+                element:<GetSoftCopies/>
+            },
+            {
+                path:'/student/feedback',
+                element: <Feedback />
             }
         ]
     },

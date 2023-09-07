@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
 use App\Models\attendance_satisfied;
 use App\Models\academic_calendar;
+use App\Models\FeedbackQuestion;
+use App\Models\FeedbackResponse;
+use App\Models\FeedbackSubmission;
 use App\Models\internal_mark;
+use App\Models\Std_softcopie;
 use App\Models\StudentForm;
 use Illuminate\Database\QueryException;
 use Illuminate\Mail\Mailables\Attachment;
@@ -325,18 +329,65 @@ public function enrolledStds()
 
     public function checkMarks(Request $req) {
         $roll_num = $req->query('roll_num');
+        $branch_code = substr($roll_num, 5, 2);
+        $sem = enrolled_student::where('year',substr($roll_num,0,2))->where('code',$branch_code)->value('semester');
+        $today = date('Y-m-d');
+        $branchCodes = array(
+            'F0' => 'MCA',
+            'D0' => 'MTECH-CS',
+            'D2' => 'MTECH-SE',
+            'D6' => 'MTECH-CNIS',
+            'DB' => 'MTECH-DS'
+        );
+        $rollNumCodes = array(
+           'F0' =>  'MC',
+           'D0' =>  'CS',
+           'D2' =>  'SE',
+           'D6' =>  'CN',
+           'DB' =>  'DS'
+        );
+        $mid2Date = academic_calendar::where('branch', $branchCodes[$branch_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
 
-        $marks = internal_mark::where('roll_num', $roll_num)
-            ->join('subjects', 'internal_marks.subject_code', '=', 'subjects.subject_code')
-            ->select('internal_marks.subject_code', 'subjects.subject_name', 'internal_marks.mid1', 'internal_marks.mid2')
-            ->get();
+        if ($today > $mid2Date) {
+            // Check if all subjects' feedback responses are present for the given roll_num
+            $subjects = subject::where('subject_code','LIKE',$rollNumCodes[$branch_code].$sem.'%')->pluck('subject_code');
 
-        if ($marks->count() > 0) {
-            return response()->json($marks);
+            foreach ($subjects as $subject_code) {
+                $feedback = FeedbackResponse::where('roll_num', $roll_num)
+                    ->where('subject_code', $subject_code)
+                    ->first();
+
+                if (!$feedback) {
+                    return response()->json(['error' => 'Feedback required']);
+                }
+            }
+
+            // If all feedback is present, return marks
+            $marks = internal_mark::where('roll_num', $roll_num)
+                ->join('subjects', 'internal_marks.subject_code', '=', 'subjects.subject_code')
+                ->select('internal_marks.subject_code', 'subjects.subject_name', 'internal_marks.mid1', 'internal_marks.mid2')
+                ->get();
+
+            if ($marks->count() > 0) {
+                return response()->json($marks);
+            } else {
+                return response()->json(['error' => 'No marks found for the provided roll number'], 404);
+            }
         } else {
-            return response()->json(['error' => 'No marks found for the provided roll number'], 404);
+            // If today is before mid2Date, return marks as usual
+            $marks = internal_mark::where('roll_num', $roll_num)
+                ->join('subjects', 'internal_marks.subject_code', '=', 'subjects.subject_code')
+                ->select('internal_marks.subject_code', 'subjects.subject_name', 'internal_marks.mid1', 'internal_marks.mid2')
+                ->get();
+
+            if ($marks->count() > 0) {
+                return response()->json($marks);
+            } else {
+                return response()->json(['error' => 'No marks found for the provided roll number'], 404);
+            }
         }
     }
+
     public function checkAttendance(Request $req){
         $roll_num= $req->query('roll_num');
         $attendance=attendance_satisfied::where('roll_num', $roll_num)
@@ -430,6 +481,109 @@ public function enrolledStds()
             return response()->json(['error' => 'An error occurred while processing the request'], 500);
         }
     }
+
+public function getSoftCopiesUrls(Request $req)
+{
+    $rollNumber = $req->get('roll_num');
+    $softCopies = Std_softcopie::where('roll_num', $rollNumber)->first();
+
+    if (!$softCopies) {
+        return response()->json(['error' => 'Soft copies not found'], 404);
+    }
+
+    $softCopyUrls = [];
+
+    $softCopyColumns = ['photo', 'aadhar', 'ssc_memo', 'inter_diploma_memo', 'grad_memo', 'transfer', 'provisional', 'community', 'income_ews', 'joining_report', 'allotment_order', 'bonafide_inter', 'bonafide_grad'];
+
+    foreach ($softCopyColumns as $column) {
+        if (!empty($softCopies->$column)) {
+            $softCopyUrls[$column] = asset($softCopies->$column);
+        }
+    }
+
+    return response()->json(['softCopies' => $softCopyUrls]);
+}
+public function requiredFeedbackSubjects(Request $req){
+    try {
+        $roll_num = auth()->user()->student_id;
+        $branch_code = substr($roll_num, 5, 2);
+        $sem = enrolled_student::where('year', substr($roll_num, 0, 2))
+            ->where('code', $branch_code)
+            ->value('semester');
+
+        $rollNumCodes = array(
+            'F0' => 'MC',
+            'D0' => 'CS',
+            'D2' => 'SE',
+            'D6' => 'CN',
+            'DB' => 'DS'
+        );
+
+        $subjects = subject::where('subject_code', 'LIKE', $rollNumCodes[$branch_code] . $sem . '%')->pluck('subject_code');
+
+        $feedbackSubjects = FeedbackResponse::where('roll_num', $roll_num)->pluck('subject_code');
+
+        // Find subjects that are missing feedback responses
+        $missingSubjects = $subjects->diff($feedbackSubjects);
+
+        // Get the subject names for the missing subjects
+        $missingSubjectNames = subject::whereIn('subject_code', $missingSubjects)
+        ->pluck('subject_name', 'subject_code')
+        ->toArray();
+        // Create an array with subject code and name for missing subjects
+        $missingSubjectsArray = [];
+        foreach ($missingSubjects as $subjectCode) {
+            $missingSubjectsArray[] = [
+                'subject_code' => $subjectCode,
+                'subject_name' => $missingSubjectNames[$subjectCode],
+            ];
+        }
+
+        return response()->json($missingSubjectsArray);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    }
+}
+public function getFeedbackQuestions()
+{
+    try {
+        // Fetch questions from the FeedbackQuestion model
+        $questions = FeedbackQuestion::select('question_number', 'question')->get();
+
+        // Return the questions as JSON response
+        return response()->json($questions);
+    } catch (\Exception $e) {
+        // Handle any exceptions if they occur
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    }
+}
+public function submitFeedback(Request $request)
+{
+    try {
+        // Get the user's roll number and subject code from the request
+        $rollNum = $request->input('roll_num');
+        $subjectCode = $request->input('subject_code');
+
+        // Get the feedback responses from the request
+        $responses = $request->input('responses');
+
+        // Merge the roll_num and subject_code into the responses array
+        $responses = array_merge($responses, [
+            'roll_num' => $rollNum,
+            'subject_code' => $subjectCode,
+        ]);
+
+        // Store the responses in the FeedbackResponse model
+        FeedbackResponse::create($responses);
+
+        // Return a success response
+        return response()->json(['message' => 'Feedback submitted successfully']);
+    } catch (\Exception $e) {
+        // Handle any exceptions if they occur
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    }
+}
+
 
 
 }

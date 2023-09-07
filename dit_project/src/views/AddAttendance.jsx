@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { Container, CssBaseline, Typography, Button, Checkbox } from "@mui/material";
 import axiosClient from "../axios-client";
 
 export const AddAttendance = () => {
     const [subjects, setSubjects] = useState([]);
-    const [selectedSubject, setSelectedSubject] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState("");
     const [enrolledStudents, setEnrolledStudents] = useState([]);
-    const [studentAttd, setStudentAttd] = useState([]);
-    const [submissionMessage, setSubmissionMessage] = useState('');
+    const [studentAttd, setStudentAttd] = useState({});
+    const [submissionMessage, setSubmissionMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [reviewStage, setReviewStage] = useState(false); // State for the review stage
     const [editMode, setEditMode] = useState(false);
+    const [editCount, setEditCount] = useState(0);
 
     useEffect(() => {
         fetchSubjects();
@@ -33,7 +35,7 @@ export const AddAttendance = () => {
 
             // Create studentMarks object with roll numbers as keys and 0 as values
             const initialStudentAttd = response.data.reduce((attdObj, rollNum) => {
-                attdObj[rollNum] = 0;
+                attdObj[rollNum] = false; // Use boolean to represent attendance
                 return attdObj;
             }, {});
 
@@ -46,15 +48,16 @@ export const AddAttendance = () => {
     const handleAttendanceChange = (rollNum) => {
         setStudentAttd(prevAttendance => ({
             ...prevAttendance,
-            [rollNum]: 1
+            [rollNum]: !prevAttendance[rollNum], // Toggle attendance using boolean
         }));
+        setEditCount((prevCount) => prevCount + 1);
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const payload = {
             subject_code: selectedSubject,
-            students: studentAttd
+            students: studentAttd,
         };
         console.log(payload);
 
@@ -65,11 +68,12 @@ export const AddAttendance = () => {
             setSubmissionMessage('Error while submitting Attendance');
             setSubmitted(false);
         }
-    }
+    };
+
     const handleFinalSubmit = async () => {
         const payload = {
             subject_code: selectedSubject,
-            students: studentAttd
+            students: studentAttd,
         };
 
         try {
@@ -80,73 +84,109 @@ export const AddAttendance = () => {
             setSubmitted(true);
             setEditMode(false); // Reset edit mode
             showAlertWithTotalPresent();
-
         } catch (err) {
             console.error("Error while submitting data", err);
             setSubmissionMessage('Error while submitting Attendance');
             setSubmitted(false);
         }
     };
+
     const showAlertWithTotalPresent = () => {
-        const totalPresent = Object.values(studentAttd).reduce((total, value) => total + value, 0);
+        const totalPresent = Object.values(studentAttd).filter(attended => attended).length;
         alert(`Total Present: ${totalPresent}`);
-        //xwindow.location.reload();
     };
+
     return (
-        <div>
-            <label>Subjects:</label>
-            <div>
-                {subjects.map(subject => (
-                    <button
-                        key={subject}
-                        className={selectedSubject === subject ? 'selected' : ''}
-                        onClick={() => handleSubjectClick(subject)}
-                    >
-                        {subject}
-                    </button>
-                ))}
-            </div>
-            {selectedSubject &&!reviewStage && (
-                <div>
-                    {Object.keys(studentAttd).map(rollNum => (
-                        <div key={rollNum}>
-                            <label>{rollNum}:</label>
-                            <input
-                                type="checkbox"
-                                checked={studentAttd[rollNum]}
-                                onChange={() => handleAttendanceChange(rollNum)}
-                            />
-                        </div>
-                    ))}
-                    {editMode ? (
-                        <div>
-                            <button onClick={handleFinalSubmit}>Submit Attendance</button>
-                        </div>
-                    ) : (
-                        <button onClick={onSubmit}>Submit Attendance</button>
-                    )}
-
-
-                </div>
-                )}
-                {reviewStage && (
-                <div>
-                    <h3>Review Attendance</h3>
-                    {Object.keys(studentAttd).map(rollNum => (
-                        <div key={rollNum}>
-                            <span>{rollNum}:</span>
-                            <span>{studentAttd[rollNum]}</span>
-                        </div>
-                    ))}
+        <Container component="main" maxWidth="md">
+            <CssBaseline />
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginTop: "2rem",
+                }}
+            >
+                <Typography variant="h5" style={{ fontSize: "28px", marginBottom: "1rem" ,fontWeight:'bold'}}>
+                    Add Attendance
+                </Typography>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <label style={{ marginRight: '10px' }}>Subjects:</label>
                     <div>
-                        <button onClick={() => setReviewStage(false)}>Edit Attendance</button>
-                        <button onClick={() => {handleFinalSubmit();}}>Confirm and Submit</button>
+                        {subjects.map(subject => (
+                            <Button
+                                key={subject}
+                                variant={selectedSubject === subject ? "contained" : "outlined"}
+                                color="primary"
+                                onClick={() => handleSubjectClick(subject)}
+                                style={{ marginRight: '10px', marginBottom: '10px' }}
+                            >
+                                {subject}
+                            </Button>
+                        ))}
                     </div>
                 </div>
-            )}
-            {submitted && (
-                <p>{submissionMessage}</p>
-            )}
+                {selectedSubject && !reviewStage && (
+                    <div>
+                        {Object.keys(studentAttd).map(rollNum => (
+                            <div key={rollNum}>
+                                <label>{rollNum}:</label>
+                                <Checkbox
+                                    checked={studentAttd[rollNum]}
+                                    onChange={() => handleAttendanceChange(rollNum)}
+                                />
+                            </div>
+                        ))}
+                        {editMode ? (
+                            <div>
+                                <Button variant="contained" color="primary" onClick={handleFinalSubmit}>
+                                    Submit Attendance
+                                </Button>
+                            </div>
+                        ) : (
+                            <Button variant="contained" color="primary" onClick={onSubmit}>
+                                Submit Attendance
+                            </Button>
+                        )}
+                    </div>
+                )}
+                {reviewStage && (
+                    <div>
+                        <Typography variant="h6" style={{ marginBottom: '10px' }}>Review Attendance</Typography>
+                        {Object.keys(studentAttd).map(rollNum => (
+                            <div key={rollNum} style={{ marginBottom: '10px' }}>
+                                <Typography style={{ display: 'inline-block', width: '100px' }}>{rollNum}:</Typography>
+                                <Typography
+                                    style={{
+                                        display: 'inline-block',
+                                        fontWeight: studentAttd[rollNum] ? 'normal' : 'bold',
+                                    }}
+                                >
+                                    {studentAttd[rollNum] ? 'Present' : 'Absent'}
+                                </Typography>
+                            </div>
+                        ))}
+                        <div>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setReviewStage(false)}
+                                style={{ marginRight: '10px' }}
+                            >
+                                Edit Attendance
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => { handleFinalSubmit(); }}
+                            >
+                                Confirm and Submit
+                            </Button>
+                        </div>
+                    </div>
+                )}
+                {submitted && <Typography variant="body1" style={{ color: "green", marginTop: "1rem" }}>{submissionMessage}</Typography>}
             </div>
+        </Container>
     );
-}
+};
