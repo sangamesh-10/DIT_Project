@@ -161,4 +161,13 @@ Route::group([
 
     Route::get('/getAcademicCalendarStudent',[StudentController::class,'getCalendar']);
     Route::get('/enrolledSubjects',[StudentController::class,"enrolledSubjects"]);
+    Route::get('/getSoftCopies',[StudentController::class,"getSoftCopiesUrls"]);
+    Route::get('/getRequiredFeedbackSubjects',[StudentController::class,"requiredFeedbackSubjects"]);
+    Route::get('/getQuestions',[StudentController::class,"getFeedbackQuestions"]);
+    Route::post('/submitFeedback',[StudentController::class,"submitFeedback"]);
+
+    // routes/api.php
+
+Route::get('/checkFeedback',[StudentController::class,'checkFeedbackRequired']);
+
 });

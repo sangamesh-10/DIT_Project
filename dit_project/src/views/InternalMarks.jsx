@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 import './view.css';
+import { useNavigate } from 'react-router-dom';
 
 const InternalMarks = () => {
   const [marksData, setMarksData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState(null); // New state for error handling
   const { user } = useStateContext(); // Assuming user object contains roll_num
+  const navigate = useNavigate();
 
   useEffect(() => {
     const roll_num = user.roll_num;
@@ -15,11 +17,17 @@ const InternalMarks = () => {
     // Make the API request here
     axiosClient.get(`/getInternalMarks?roll_num=${roll_num}`)
       .then(response => {
-        setMarksData(response.data);
+        if (response.data.error) {
+            navigate('/student/feedback'); // Clear marksData in case of an error
+        } else {
+          setMarksData(response.data);
+        }
         setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        setError('Error fetching data. Please try again.'); // Set a generic error message
+        setMarksData([]); // Clear marksData in case of an error
         setLoading(false);
       });
   }, [user]);
@@ -27,6 +35,7 @@ const InternalMarks = () => {
   if (loading) {
     return <div className="loading-message">Loading...</div>;
   }
+
 
   if (marksData.length === 0) {
     return <div className="error-message">No marks found.</div>;
