@@ -1,45 +1,79 @@
-import React, { useRef,useState } from 'react'
+import React, { useRef, useState } from 'react'
 import axiosClient from '../axios-client';
+import { TextField, Button, Typography, Box } from '@mui/material';
+
 
 export default function UpdateContactStd() {
-    const mobile=useRef();
+    const mobile = useRef();
     const [submissionMessage, setSubmissionMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
-    const onSubmit=async(e)=>
-    {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        const payload={
-            mobile:mobile.current.value
+        const payload = {
+            mobile: mobile.current.value
         };
-        try{
-            const {data}=await axiosClient.put('/updateContactStd',payload)
+        try {
+            const { data } = await axiosClient.put('/updateContactStd', payload)
             console.log(data);
             setSubmitted(true);
             setSubmissionMessage("Updated Successfully");
         }
-        catch(err){
-            const response=err.reponse;
-            if(response && response.status === 422)
-            {
+        catch (err) {
+            const response = err.reponse;
+            if (response && response.status === 422) {
                 console.log(response.data.errors);
                 setSubmissionMessage("Error Occured !")
             }
         }
 
     }
-  return (
+    const containerStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        height: '100vh', // Center vertically in the viewport
+      };
 
-    <div className="form-container">
-        <h2 className="form-title">Update Contact</h2>
-        <form className="form" onSubmit={onSubmit}>
-        <div className="form-group">
-            <input ref={mobile} type="number" placeholder='Enter New Mobile Number' className="input-field"/>
-        </div>
-            <button className="button-container">Update</button>
-        </form>
-        {submitted  && (
-            <p>{submissionMessage}</p>
+      const formStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: '16px',
+      };
+
+      const inputStyle = {
+        marginBottom: '16px',
+      };
+
+      const buttonStyle = {
+        marginBottom: '16px',
+      };
+    return (
+        <div style={containerStyle}>
+            <Typography variant="h5" style={{ fontSize: '24px', marginBottom: '16px' }}>
+                Update Contact
+            </Typography>
+            <form style={formStyle} onSubmit={onSubmit}>
+                <TextField
+                    inputRef={mobile}
+                    type="number"
+                    label="New Mobile Number"
+                    variant="outlined"
+                    style={inputStyle}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onSubmit}
+                    style={buttonStyle}
+                >
+                    Update
+                </Button>
+            </form>
+            {submitted && (
+                <Typography variant="body1"style={{ color: 'green' }}>{submissionMessage}</Typography>
             )}
-    </div>
-  )
+        </div>
+    );
 }
