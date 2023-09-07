@@ -4,19 +4,19 @@ import axiosClient from "../axios-client";
 
 export const AddReRegister = () => {
     const rollNo = useRef();
-    const subjectCode = useRef();
+    const subCode = useRef();
     const [errors, setErrors] = useState({});
     const onSubmit = async (e) => {
         e.preventDefault()
         setErrors({}); // Clear previous errors
         const payload = {
-            roll_num: rollNo.current.value,
-            subject_code: subjectCode.current.value
+            rollNumber: rollNo.current.value,
+            subjectCode: subCode.current.value
         };
         //        console.log(payload);
         try {
-            const { data } = await axiosClient.post("/addReRegister", payload);
-            if (data) {
+            const { response } = await axiosClient.post("/addReRegister", payload);
+            if (response.data=='true') {
                 window.alert("Registered Successfully");
                 window.location.reload();
             }
@@ -24,8 +24,8 @@ export const AddReRegister = () => {
         catch (err) {
             const response = err.response;
             if (response && response.status === 422) {
-                //console.log(response.data.errors);
-                setErrors(response.data.errors);
+                console.log(response.data);
+                setErrors(response.data);
             }
         }
     }
@@ -35,15 +35,15 @@ export const AddReRegister = () => {
             <h2 className="form-title">ADD RE-REGISTER</h2>
                 <form onSubmit={onSubmit}>
                 <div className="form-group">
-                    <label htmlFor="rollNumber">RollNumber :</label>
-                    <input type="text" name="rollnumber"  required ref={rollNo} />
-                    {errors.roll_num && <span className="error">{errors.roll_num.map((error, index) => (<p key={index}>{error}</p>))}</span>}
+                    <label htmlFor="rollNo">RollNumber :</label>
+                    <input type="text" name="rollNo"  required ref={rollNo} />
+                    {errors.rollNumber && <span className="error">{errors.rollNumber.map((error, index) => (<p key={index}>{error}</p>))}</span>}
 
                 </div>
                 <div className="form-group">
-                    <label htmlFor="subjectCode">Subject Code :</label>
-                    <input type="text" name="subjectCode" required ref={subjectCode} />
-                    {errors.subject_code && <span className="error">{errors.subject_code[0]}</span>}
+                    <label htmlFor="subCode">Subject Code :</label>
+                    <input type="text" name="subCode" required ref={subCode} />
+                    {errors.subjectCode && <span className="error">{errors.subjectCode[0]}</span>}
                 </div>
                     <input type="submit" name="Register" />
                 </form>

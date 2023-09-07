@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
+//use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\enrolled_student;
@@ -115,9 +115,9 @@ class SemesterController extends Controller
             return response()->json('Error');
         }
     }
-    catch(\Illuminate\Database\QueryException $e){
-    $errorCode = $e->errorInfo[1];
-    if ($errorCode === 1062) {
+    catch(QueryException $e){
+    //$errorCode = $e->errorInfo[1];
+    if ($e->getCode() === '23000') {
         return response()->json('Already registered', 422);
     }else {
         return response()->json('Database error', 500);
