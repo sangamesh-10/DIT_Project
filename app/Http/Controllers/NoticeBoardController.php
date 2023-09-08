@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation;
+use Illuminate\Support\Facades\Validator;
 use App\Models\enrolled_student;
 use App\Models\noticeboard;
 use App\Models\notifications;
@@ -17,11 +19,22 @@ class NoticeBoardController extends Controller
     }
     public function add(Request $req)
     {
-        $req->validate([
-            'notice_id' => 'required',
-            'description' => 'required',
-            'file' => 'required|mimes:pdf|max:2048', // PDF file, max size 2MB
-        ]);
+        $validationRules=[
+            'notice_id' => 'required|size:4|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\d$/',
+            'description' => 'required|string|max:255',
+            'file' => 'required|mimes:pdf|max:2048',
+         ];
+         $validator = Validator::make($req->all(), $validationRules);
+
+         if ($validator->fails()) {
+             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+         }
+
+        // $req->validate([
+        //     'notice_id' => 'required',
+        //     'description' => 'required',
+        //     'file' => 'required|mimes:pdf|max:2048', // PDF file, max size 2MB
+        // ]);
         if ($req->hasFile('file')) {
             $file = $req->file('file');
             $fileName = $req->description . '.' . $file->getClientOriginalExtension();
@@ -57,7 +70,16 @@ class NoticeBoardController extends Controller
     }
     public function update(Request $req)
     {
+        $validationRules=[
+            'notice_id' => 'required|size:10|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\$/',
+            'description' => 'required|string|max:255',
+            'date' => 'required|date_format:Y-m-d',
+         ];
+         $validator = Validator::make($req->all(), $validationRules);
 
+         if ($validator->fails()) {
+             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+         }
         $notice_id = $req->input('notice_id');
         $description = $req->input('description');
         $date = $req->input('date');
@@ -81,6 +103,16 @@ class NoticeBoardController extends Controller
 
     public function delete(Request $req)
     {
+        $validationRules=[
+            'notice_id' => 'required|size:10|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\$/',
+            'description' => 'required|string|max:255',
+            'date' => 'required|date_format:Y-m-d',
+         ];
+         $validator = Validator::make($req->all(), $validationRules);
+
+         if ($validator->fails()) {
+             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+         }
         $notice_id = $req->input('notice_id');
         $description = $req->input('description');
         $date = $req->input('date');

@@ -3,41 +3,31 @@ import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 import './view.css';
 
-const ProfileStd = () => {
+const ProfileFaculty = () => {
   const [profileData, setProfileData] = useState({});
-  const [enrolledData, setEnrolledData] = useState({});
   const [loading, setLoading] = useState(true);
   const { user } = useStateContext();
-  const roll_num = user?.roll_num || '';
+  const faculty_id = user?.faculty_id || '';
 
   useEffect(() => {
-    if (!roll_num) {
+    if (!faculty_id) {
       setLoading(false); // No need to make the API request if roll_num is empty
       return;
     }
 
     // Make the API request to fetch profile data
     axiosClient
-      .get(`/studentMe?roll_num=${roll_num}`)
+      .get(`/me?faculty_id=${faculty_id}`)
       .then((response) => {
         setProfileData(response.data);
       })
       .catch((error) => {
         console.error('Error fetching profile data:', error);
-      });
-
-    // Make the API request to fetch enrolled student data
-    axiosClient.get(`/studentsEnrolled?roll_num=${roll_num}`)
-    .then((response) => {
-        setEnrolledData(response.data);
       })
-      .catch((error) => {
-        console.error('Error fetching enrolled student data:', error);
-      })
-      .finally(() => {
+    .finally(() => {
         setLoading(false);
       });
-  }, [roll_num]);
+  }, [faculty_id]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -50,11 +40,12 @@ const ProfileStd = () => {
   const {
     name,
     email,
+    alt_email,
     phone_num,
-    father_name,
-    mother_name,
+    designation,
+    experience,
   } = profileData;
-  const { batch, branch,specialization, semester } = enrolledData;
+
 
   return (
     <div className="container">
@@ -70,32 +61,20 @@ const ProfileStd = () => {
             <td>{email}</td>
           </tr>
           <tr>
+            <td>Alternative_Email</td>
+            <td>{alt_email}</td>
+          </tr>
+          <tr>
             <td>Phone Number</td>
             <td>{phone_num}</td>
           </tr>
           <tr>
-            <td>Father's Name</td>
-            <td>{father_name}</td>
+            <td>Designation</td>
+            <td>{designation}</td>
           </tr>
           <tr>
-            <td>Mother's Name</td>
-            <td>{mother_name}</td>
-          </tr>
-          <tr>
-            <td>Batch</td>
-            <td>{batch}</td>
-          </tr>
-          <tr>
-            <td>Branch</td>
-            <td>{branch}</td>
-          </tr>
-          <tr>
-            <td>Specialization</td>
-            <td>{specialization}</td>
-          </tr>
-          <tr>
-            <td>Semester</td>
-            <td>{semester}</td>
+            <td>Experience</td>
+            <td>{experience}</td>
           </tr>
           {/* Add additional profile fields here */}
         </tbody>
@@ -104,5 +83,5 @@ const ProfileStd = () => {
   );
 };
 
-export default ProfileStd;
+export default ProfileFaculty;
 

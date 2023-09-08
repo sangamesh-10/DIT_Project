@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
@@ -12,13 +14,13 @@ use App\Models\raise_complaint;
 use App\Models\faculty;
 use App\Models\Std_softcopie;
 use App\Models\student;
-use App\Models\StudentForm;
 use App\Models\students_login;
+use App\Models\StudentForm;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use App\Models\faculty_login;
-use Illuminate\Support\Facades\Validator;
 use App\Models\enrolled_student;
+
 
 
 class AdminController extends Controller
@@ -42,7 +44,6 @@ class AdminController extends Controller
     public function login(Request $req)
     {
         $credentials = $req->only('admin_id', 'password');
-        ;
 
         if (!$token = auth('admin-api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -71,34 +72,6 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
-    function updatePassword(Request $req)
-    {
-        $admin_id = auth()->user()->admin_id;
-        $old_password=$req->input("old_password");
-        $new_password = $req->input('new_password');
-        $confirm_password = $req->input('confirm_password');
-
-        $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
-        ];
-
-        $validator = Validator::make($req->all(), $rules);
-
-        if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error' => $validator->errors()]);
-        } else {
-            $admin = admin_login::where('admin_id', $admin_id)->first();
-            if (Hash::check($old_password, $admin->password)) {
-                $admin->password = Hash::make($new_password);
-                $admin->save();
-
-                return response()->json('true');
-            }
-            else{
-                return response()->json(['Not success'=>'passwords doesnot match']);
-            }
-        }
-    }
     public function getComplaints()
     {
         $object = raise_complaint::all();
@@ -116,44 +89,96 @@ class AdminController extends Controller
             return response()->json(["message" => "record deleted"]);
         }
     }
-    public function facultyReg(Request $req)
-    {
+public function facultyReg(Request $req)
+{
+    $validationRules = [
+        'faculty_id' => 'required|size:4|regex:/^S[0-3][0-9][1-9]$/|unique:faculty,faculty_id',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:faculty,email|ends_with:gmail.com,outlook.com,yahoo.com',
+        'altEmail' => 'nullable|email|different:email|ends_with:gmail.com,outlook.com,yahoo.com',
+        'phoneNo' => 'numeric|digits:10|unique:faculty,phone_num',
+        'aadharNo' => 'numeric|digits:12|unique:faculty,aadhar_num',
+        'designation' => 'required|string',
+        'experience' => 'required|numeric|digits:2',
+    ];
+
+    $validator = Validator::make($req->all(), $validationRules);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+    }
+
     $object = new faculty;
-    $object->faculty_id=$req->faculty_id;
-    $object->name=$req->name;
-    $object->email=$req->email;
-    $object->alt_email=$req->altEmail;
-    $object->phone_num=$req->phoneNo;
-    $object->aadhar_num=$req->aadharNo;
-    $object->designation=$req->designation;
-    $object->experience=$req->experience;
-    $result=$object->save();
-    if($result)
-    {
-        $facultyLogin=new faculty_login();
-        $facultyLogin->faculty_id=$req->faculty_id;
-        $facultyLogin->password=Hash::make('Secret123');
-        $facultyLogin->save();
+    $object->faculty_id = $req->faculty_id;
+    $object->name = $req->name;
+    $object->email = $req->email;
+    $object->alt_email = $req->altEmail;
+    $object->phone_num = $req->phoneNo;
+    $object->aadhar_num = $req->aadharNo;
+    $object->designation = $req->designation;
+    $object->experience = $req->experience;
 
-
+    $result = $object->save();
+    if ($result) {
         return response()->json($object);
+    } else {
+        return ['result' => 'operation failed'];
     }
-    else
-    {
-        return['result'=>'operation failed'];
-    }
-
 }
+
 public function getFaculty()
 {
     $object=faculty::all();
     return response()->json($object);
 }
 public function studentReg(Request $req)
-{
+    {
+        $validationRules = [
+            'rollNumber' => 'regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,roll_num',
+            'name' => 'string|max:255',
+            'email' => 'email|ends_with:gmail.com,outlook.com,yahoo.com',
+            'phoneNo' => 'numeric|digits:10',
+            'aadharNo' => 'numeric|digits:12|unique:students,aadhar_num',
+            'motherName'=>'string|max:255',
+            'fatherName'=>'string|max:255',
+            'parentPhNo'=>'numeric|digits:10',
+            'dob'=>'date|before:'.now()->subYears(18)->format('Y-m-d'),
+            'permanentAddr'=>'string|max:255',
+            'presentAddr'=>'string|max:255',
+            'bloodGroup'=>['string','max:255',
+            function ($attribute, $value, $fail) {
+                $allowedBgroups = ['a+','a-','b+','b-','ab+','ab-','o+','o-'];
+                if (!in_array(strtolower($value), $allowedBgroups)) {
+                    $fail("The $attribute is invalid.");
+                }
+            }
+        ],
+            'caste' => [
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $allowedCastes = ['sc', 'st', 'bc', 'ews', 'oc', 'other'];
+                    if (!in_array(strtolower($value), $allowedCastes)) {
+                        $fail("The $attribute is invalid.");
+                    }
+                }
+            ],
+            'religion' => [
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $allowedReligions = ['hindu', 'muslim', 'christian', 'sikh', 'buddhist', 'jain', 'other'];
+                    if (!in_array(strtolower($value), $allowedReligions)) {
+                        $fail("The $attribute is invalid.");
+                    }
+                },            ],
+];
+        $validator = Validator::make($req->all(), $validationRules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
     try {
         $object = new student;
-        dd($req->rollNumber);
         $object->roll_num = $req->rollNumber;
         $object->name = $req->name;
         $object->email = $req->email;
@@ -189,38 +214,27 @@ public function studentReg(Request $req)
             return response()->json(['result' => 'operation failed']);
         }
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
+        if ($e->getCode() === '23000') {
+        return response()->json(['errors' => ['rollNumber' => 'This rollnumber is already registered.']], 422);
+    }
+    else
+    return response()->json(['error' => $e->getMessage()]);
     }
 }
-
-public function getStudents(Request $req)
+public function getStudents()
 {
-    $department=$req->query('department');
-    $semester =$req->query('semester');
-    switch ($department) {
-        case 'MCA':
-            $branch = 'F0';
-            break;
-        case 'Mtech-DS':
-            $branch = 'DB';
-            break;
-        case 'Mtech-CNIS':
-            $branch = 'D6';
-            break;
-        case 'Mtech-SE':
-            $branch = 'D2';
-            break;
-        case 'Mtech-CS':
-            $branch = 'D0';
-            break;
-    }
-    $year = enrolled_student::where('code', $branch)->where('semester', $semester)->value('year');
-    $students = student::where('roll_num', 'LIKE', $year . '___' . $branch . '%')->get();
-    //$object=student::all();
-    return response()->json($students);
+    $object=student::all();
+    return response()->json($object);
 }
 public function uploadAndSaveFiles(Request $req)
 {
+   $validationRules=[
+        'rollNumber'=>'size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+    ];
+    $validator= Validator::make($req->all(),$validationRules);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+    }
     try {
         $paths = '';
         $roll_num = $req->input('roll_num');
@@ -277,8 +291,8 @@ public function uploadAndSaveFiles(Request $req)
         return response()->json(['error' => 'An error occurred while processing the files.']);
     }
 }
-
-public function addForms(Request $req){
+public function addForms(Request $req)
+{
     try {
         $id = $req->input('id');
         $name = $req->input('name');
@@ -368,7 +382,4 @@ public function addForms(Request $req){
             return response()->json(['error' => 'An error occurred while processing the request'.$e->getMessage()], 500);
         }
     }
-
-
-
 }

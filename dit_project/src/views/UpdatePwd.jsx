@@ -20,7 +20,7 @@ export const UpdatePwd=()=>{
         console.log(payload);
         try {
             const { data } = await axiosClient.put('/updatePwdStd', payload);
-
+            console.log(data);
             if (data === 'true') {
                 setSubmissionMessage("Password Updated");
                 setSubmitted(true);
