@@ -4,6 +4,8 @@ import { useStateContext } from '../contexts/ContextProvider'
 import axiosClient from '../axios-client';
 import './studentHomePage.css';
 import NoticeBoard from './NoticeBoard';
+import StickyFooter from './StickyFooter';
+import StickyHeader from './StickyHeader';
 
 const AdminHomePage = () => {
     const { user, token, setUser, setToken } = useStateContext();
@@ -40,6 +42,7 @@ const AdminHomePage = () => {
     },[]);
     return (
         <div id="defaultLayout">
+            <StickyHeader/>
             <header>
                     <div>
                         Header
@@ -137,6 +140,7 @@ const AdminHomePage = () => {
                     <Outlet />
                 </main>
             </div>
+            {/* <StickyFooter/> */}
         </div>
     );
 };

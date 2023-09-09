@@ -44,7 +44,6 @@ class AdminController extends Controller
     public function login(Request $req)
     {
         $credentials = $req->only('admin_id', 'password');
-        ;
 
         if (!$token = auth('admin-api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -135,30 +134,44 @@ public function getFaculty()
 public function studentReg(Request $req)
     {
         $validationRules = [
-            'rollNumber' => 'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,r',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email|ends_with:gmail.com,outlook.com,yahoo.com',
-            'phoneNo' => 'required|numeric|digits:10|unique:students,phone_num',
-            'aadharNo' => 'required|numeric|digits:12|unique:students,aadhar_num',
-            'motherName'=>'required|string|max:255',
-            'fatherName'=>'required|string|max:255',
-            'parentPhNo'=>'required|numeric|digits:10',
-            'dob'=>'required|date|before:'.now()->subYears(18)->format('Y-m-d'),
-            'permanentAddr'=>'required|string|max:255',
-            'presentAddr'=>'required|string|max:255',
-            'bloodGroup'=>'required|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'rollNumber' => 'regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,roll_num',
+            'name' => 'string|max:255',
+            'email' => 'email|ends_with:gmail.com,outlook.com,yahoo.com',
+            'phoneNo' => 'numeric|digits:10',
+            'aadharNo' => 'numeric|digits:12|unique:students,aadhar_num',
+            'motherName'=>'string|max:255',
+            'fatherName'=>'string|max:255',
+            'parentPhNo'=>'numeric|digits:10',
+            'dob'=>'date|before:'.now()->subYears(18)->format('Y-m-d'),
+            'permanentAddr'=>'string|max:255',
+            'presentAddr'=>'string|max:255',
+            'bloodGroup'=>['string','max:255',
+            function ($attribute, $value, $fail) {
+                $allowedBgroups = ['a+','a-','b+','b-','ab+','ab-','o+','o-'];
+                if (!in_array(strtolower($value), $allowedBgroups)) {
+                    $fail("The $attribute is invalid.");
+                }
+            }
+        ],
             'caste' => [
-                'required',
                 'string',
                 'max:255',
-                Rule::in(array_map('strtolower', ['SC', 'ST', 'BC', 'EWS','OC', 'Other'])),
+                function ($attribute, $value, $fail) {
+                    $allowedCastes = ['sc', 'st', 'bc', 'ews', 'oc', 'other'];
+                    if (!in_array(strtolower($value), $allowedCastes)) {
+                        $fail("The $attribute is invalid.");
+                    }
+                }
             ],
             'religion' => [
-                'required',
                 'string',
                 'max:255',
-                Rule::in(array_map('strtolower', ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Other'])),
-            ],
+                function ($attribute, $value, $fail) {
+                    $allowedReligions = ['hindu', 'muslim', 'christian', 'sikh', 'buddhist', 'jain', 'other'];
+                    if (!in_array(strtolower($value), $allowedReligions)) {
+                        $fail("The $attribute is invalid.");
+                    }
+                },            ],
 ];
         $validator = Validator::make($req->all(), $validationRules);
         if ($validator->fails()) {
@@ -166,7 +179,6 @@ public function studentReg(Request $req)
         }
     try {
         $object = new student;
-        dd($req->rollNumber);
         $object->roll_num = $req->rollNumber;
         $object->name = $req->name;
         $object->email = $req->email;
@@ -202,7 +214,11 @@ public function studentReg(Request $req)
             return response()->json(['result' => 'operation failed']);
         }
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
+        if ($e->getCode() === '23000') {
+        return response()->json(['errors' => ['rollNumber' => 'This rollnumber is already registered.']], 422);
+    }
+    else
+    return response()->json(['error' => $e->getMessage()]);
     }
 }
 public function getStudents()
