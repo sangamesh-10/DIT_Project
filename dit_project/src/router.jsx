@@ -28,6 +28,7 @@ import Attendance from "./views/Attendance.jsx";
 import RaiseComplaint from "./components/RaiseComplaint";
 import SoftCopiesUpload from "./views/SoftCopiesUpload.jsx";
 import ProfileStd from "./views/ProfileStd.jsx";
+import ProfileFaculty from "./views/ProfileFaculty.jsx";
 import OtpPageFaculty from "./views/OtpVerificationFaculty.jsx";
 import AddForm from "./views/AddForm.jsx";
 import GetForms from "./views/GetForms.jsx";
@@ -147,7 +148,10 @@ const router = createBrowserRouter([
                 path: "/faculty/welcome",
                 element: <Welcome />
             },
-
+            {
+                path:"/faculty/Profile",
+                element: <ProfileFaculty/>
+            },
             {
                 path:"/faculty/dashBoard",
                 element: <DashBoard />

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\Models\academic_calendar;
 use App\Models\attendance_satisfied;
 use App\Models\daily_attendance;
@@ -16,7 +18,6 @@ use App\Models\student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\raise_complaint;
-use Illuminate\Support\Facades\Validator;
 use App\Models\faculty_login;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
@@ -32,17 +33,25 @@ class FacultyController extends Controller
     }
     public function login(Request $req)
     {
+        $validationRules=[
+            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+            'password'=>'required'
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
         $credentials = $req->only('faculty_id', 'password');
 
-        if (!$token = auth('faculty-api')->attempt($credentials)) {
+        if (!$token = auth('faculty-api')->claims(['password' => $credentials['password']])->attempt($credentials)) {
             // dd($token);
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
     }
-
-
     protected function respondWithToken($token)
     {
         $expiration = Carbon::now()->addMinutes(JWTAuth::factory()->getTTL());
@@ -85,10 +94,10 @@ class FacultyController extends Controller
         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
-        // $sem = (int) substr($req->query('subject_code'), 2, 1);
-        // $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
-        // $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
-        // $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
+         $sem = (int) substr($req->query('subject_code'), 2, 1);
+         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
+         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
         $finalArray = collect($students)->concat($reRegistered)->toArray();
         return response()->json($finalArray);
     }
@@ -100,6 +109,14 @@ class FacultyController extends Controller
     }
     public function markAttendance(Request $req)
     {
+        $validationRules=[
+            'subjectCode' => ['custom_subject_code'],
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+
+            if($validator->fails()){
+                return response()->json(['errors'=>$validator->errors()],422);
+            }
         $subjectCode = $req->input('subject_code');
         $students = $req->get('students');
         // dd($req->all());
@@ -197,11 +214,15 @@ class FacultyController extends Controller
             return response()->json(['error' => 'An error occurred while raising the complaint.'], 500);
         }
     }
-
-
-
-    public function addInternalMarks(Request $req)
+     public function addInternalMarks(Request $req)
     {
+        $validationRules=[
+            'subjectCode' => ['custom_subject_code'],
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
+        if($validator->fails()){
+                return response()->json(['errors'=>$validator->errors()],422);
+            }
         $user = auth()->user()->faculty_id;
         $exam_type = $req->input('exam_type');
         $subject = $req->input('subject_code');
@@ -215,6 +236,11 @@ class FacultyController extends Controller
         );
         $sem = 4;
         $students = $req->get('students');
+        foreach ($students as $studentId => $marks) {
+            if (!is_numeric($marks) || $marks < 0 || $marks > 40) {
+                return response()->json(['error' => 'Invalid marks input for student ' . $studentId], 400);
+            }
+        }
         // $today = date('Y-m-d');
         // $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
         // $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
@@ -292,11 +318,14 @@ class FacultyController extends Controller
     }
     public function updateContact(Request $request)
     {
+        $validationRules=[
+            'mobile'=>'required|numeric|digits:10',
+        ];
+        $validator=Validator::make($request->all(),$validationRules);
 
-        $request->validate([
-            'mobile' => 'required',
-        ]);
-
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
         $faculty_id = auth()->user()->faculty_id;
         //return $faculty_id;
         $newPhoneNumber = $request->input('mobile');
@@ -317,13 +346,16 @@ class FacultyController extends Controller
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            // 'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
-
-        $validator = Validator::make($req->all(), $rules);
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules,$customMessages);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error' => $validator->errors()]);
+            return response()->json(['error' => $validator->errors()],422);
         } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
@@ -342,10 +374,12 @@ class FacultyController extends Controller
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
-
-        $validator = Validator::make($req->all(), $rules);
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules, $customMessages);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
@@ -353,7 +387,6 @@ class FacultyController extends Controller
         else if( $new_password != $confirm_password){
             return response()->json('Passwords doesnot match');
         }
-
         else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
@@ -370,6 +403,14 @@ class FacultyController extends Controller
     }
     public function sendOtp(Request $req)
     {
+        $validationRules=[
+            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+        ];
+        $validator = Validator::make($req->all(), $validationRules);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()],422);
+        }
         $faculty_id = $req->input("faculty_id");
         $faculty_id = faculty::where("faculty_id", $faculty_id)->first();
         $email = $faculty_id->email;
@@ -390,7 +431,6 @@ class FacultyController extends Controller
 
         return response()->json(["Success" => "OTP SENT"]);
     }
-
     public function otpVerification(Request $req)
     {
         $user_otp = $req->input('otp');
@@ -405,6 +445,13 @@ class FacultyController extends Controller
     }
     public function sendNotifications(Request $req)
     {
+        $validationRules = [
+            'rollNumber' => 'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,r',
+            'description'=> 'required|string'];
+        $validator = Validator::make($req->all(), $validationRules);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+            }
         $user = auth()->user()->faculty_id;
         $select_type = $req->input('select_type');
         $department = $req->input('department');

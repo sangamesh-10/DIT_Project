@@ -140,7 +140,7 @@ const AdminHomePage = () => {
                     <Outlet />
                 </main>
             </div>
-            <StickyFooter/>
+            {/* <StickyFooter/> */}
         </div>
     );
 };

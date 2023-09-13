@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Validation\Rule;
 use App\Models\notifications;
 use App\Models\raise_complaint;
 use App\Models\subject;
@@ -37,15 +38,25 @@ class StudentController extends Controller
     }
     public function login(Request $req)
     {
-        $credentials = $req->only('student_id', 'password');
-        $student_id=$req->input('student_id');
+        $validationRules=[
+            'student_id'=>'required|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+            'password'=>'required'
+        ];
+        $validator=Validator::make($req->all(),$validationRules);
 
-        if (!$token = auth('student-api')->attempt($credentials)) {
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
+
+        $credentials = $req->only('student_id', 'password');
+        //$student_id=$req->input('student_id');
+
+        if (!$token = auth('student-api')->claims(['password' => $credentials['password']])->attempt($credentials)) {
             // dd($token);
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token,$student_id);
+        return $this->respondWithToken($token,$credentials);
 
     }
     protected function respondWithToken($token,$student_id)
@@ -103,16 +114,16 @@ public function enrolledStds()
         // Determine the specialization based on the 7th character
         switch ($seventhCharacter) {
             case '6':
-                $specialization = 'cnis';
+                $specialization = 'CNIS';
                 break;
             case 'B':
-                $specialization = 'data science';
+                $specialization = 'Data science';
                 break;
             case '2':
-                $specialization = 'software engineering';
+                $specialization = 'Software engineering';
                 break;
             case '0':
-                $specialization = 'computer science';
+                $specialization = 'Computer science';
                 break;
             default:
                 $specialization = 'Unknown Specialization';
@@ -227,13 +238,19 @@ public function enrolledStds()
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
-
-        $validator = Validator::make($req->all(), $rules);
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $validator = Validator::make($req->all(), $rules, $customMessages);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-        return response()->json(['error'=> $validator->errors()]);
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors]);
         } else {
             $student = students_login::where('student_id', $student_id)->first();
 
@@ -246,37 +263,42 @@ public function enrolledStds()
     }
     public function updatePwd(Request $req)
     {
-        $student_id =auth()->user()->student_id;
-        $old_password=$req->input('old_password');
+        $student_id = auth()->user()->student_id;
+        $old_password = $req->input('old_password');
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',        ];
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
+        $validator = Validator::make($req->all(), $rules ,$customMessages);
 
-        $validator = Validator::make($req->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()],422);
+        }
+        else if ($new_password != $confirm_password) {
+            return response()->json(['error' => 'New password and confirm password do not match.']);
+        }
+        else{
+        $student = students_login::where('student_id', $student_id)->first();
 
-        if ($validator->fails() || $new_password != $confirm_password) {
-        return response()->json(['error'=> $validator->errors()]);
-        } else {
-            $student = students_login::where('student_id', $student_id)->first();
-            if (Hash::check($old_password, $student->password)) {
-                $student->password = Hash::make($new_password);
-                $student->save();
-                return response()->json('true');
-                //return response()->json(['success'=> 'Password modified']);
-            }
-            else{
-                return response()->json(['Not success'=>'passwords doesnot match']);
-            }
+        if (Hash::check($old_password, $student->password)){
+        $student->password = Hash::make($new_password);
+        $student->save();
+        return response()->json('true');
+        }
+        else
+         {
+            return response()->json(['Not Success' => 'Old password is incorrect.']);
         }
     }
-    public function updateContact(Request $request)
+}
+ public function updateContact(Request $request)
     {
-
-        $request->validate([
-            'mobile' => 'required',
+     $request->validate([
+            'mobile' => 'required|numeric|digits:10',
         ]);
 
         $student_id = auth()->user()->student_id;
@@ -293,7 +315,14 @@ public function enrolledStds()
     }
 
     public function sendOtp(Request $req)
-    {
+    {   $validationRules=[
+        'student_id'=>'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+    ];
+    $validator = Validator::make($req->all(), $validationRules);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()]);
+    }
         $student_id = $req->input("student_id");
         $student = Student::where("roll_num", $student_id)->first();
         $email = $student->email;
@@ -325,8 +354,6 @@ public function enrolledStds()
             return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
         }
     }
-
-
     public function checkMarks(Request $req) {
         $roll_num = $req->query('roll_num');
         $branch_code = substr($roll_num, 5, 2);
