@@ -276,7 +276,7 @@ public function enrolledStds()
         $validator = Validator::make($req->all(), $rules ,$customMessages);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
+            return response()->json(['error' => $validator->errors()],422);
         }
         else if ($new_password != $confirm_password) {
             return response()->json(['error' => 'New password and confirm password do not match.']);

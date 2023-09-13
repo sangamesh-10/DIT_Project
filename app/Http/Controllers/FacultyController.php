@@ -355,7 +355,7 @@ class FacultyController extends Controller
         $validator = Validator::make($req->all(), $rules,$customMessages);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error' => $validator->errors()]);
+            return response()->json(['error' => $validator->errors()],422);
         } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
@@ -409,7 +409,7 @@ class FacultyController extends Controller
         $validator = Validator::make($req->all(), $validationRules);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
+            return response()->json(['error' => $validator->errors()],422);
         }
         $faculty_id = $req->input("faculty_id");
         $faculty_id = faculty::where("faculty_id", $faculty_id)->first();

@@ -24,7 +24,7 @@ class AcademicCalendarController extends Controller
      ];
         $validator=Validator::make($req->all(),$validationRules);
         if($validator->fails()){
-            return response->json(['errors'=> $validator->errors()],422);
+            return response()->json(['errors'=> $validator->errors()],422);
         }
         $object = new academic_calendar;
         $object->branch = $req->input("branch");
@@ -52,7 +52,7 @@ class AcademicCalendarController extends Controller
         ];
         $validator=Validator::make($req->all(),$validationRules);
         if($validator->fails()){
-            return response->json(['errors'=> $validator->errors()],422);
+            return response()->json(['errors'=> $validator->errors()],422);
         }
         $branch = $req->input("branch");
         $semester = $req->input("semester");

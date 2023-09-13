@@ -99,7 +99,7 @@ public function facultyReg(Request $req)
         'phoneNo' => 'numeric|digits:10|unique:faculty,phone_num',
         'aadharNo' => 'numeric|digits:12|unique:faculty,aadhar_num',
         'designation' => 'required|string',
-        'experience' => 'required|numeric|digits:2',
+        'experience' => 'required|numeric|min:1',
     ];
 
     $validator = Validator::make($req->all(), $validationRules);
@@ -120,6 +120,10 @@ public function facultyReg(Request $req)
 
     $result = $object->save();
     if ($result) {
+        $faculty_login=new faculty_login;
+        $faculty_login->faculty_id= $req->faculty_id;
+        $faculty_login->password=Hash::make('Safe123');
+        $faculty_login->save();
         return response()->json($object);
     } else {
         return ['result' => 'operation failed'];
