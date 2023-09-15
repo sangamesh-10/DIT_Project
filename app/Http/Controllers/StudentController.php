@@ -52,7 +52,7 @@ class StudentController extends Controller
         $credentials = $req->only('student_id', 'password');
         //$student_id=$req->input('student_id');
 
-        if (!$token = auth('student-api')->claims(['password' => $credentials['password']])->attempt($credentials)) {
+        if (!$token = auth('student-api')->attempt($credentials)) {
             // dd($token);
             return response()->json(['error' => 'Unauthorized'], 401);
         }

@@ -54,7 +54,7 @@ const Feedback = () => {
 
     return (
         <container>
-            <Grid conatiner spacing={2}>
+            <Grid Container spacing={2}>
                 {subjects.map(subject => (
                     <Grid item xs={12} sm={6} md={4} key={subject.subject_code}>
                         <Paper elevation={3}style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
