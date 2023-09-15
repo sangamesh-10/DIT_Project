@@ -12,6 +12,7 @@ export const UpdatePwdAdmin = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const oldPassword = useRef();
   const newPassword = useRef();
@@ -47,6 +48,7 @@ export const UpdatePwdAdmin = () => {
         oldPassword.current.value = '';
         newPassword.current.value = '';
         confirmPassword.current.value = '';
+        setErrors({});
         setTimeout(() => {
           setSubmitted(false);
           setSubmissionMessage('');
@@ -55,6 +57,7 @@ export const UpdatePwdAdmin = () => {
     } catch (err) {
       const response = err.response;
       if (response && response.status === 422) {
+        setErrors(response.data.error);
         console.log(response.data.errors);
         setSubmissionMessage("Error Occurred");
       }
@@ -99,6 +102,11 @@ export const UpdatePwdAdmin = () => {
               }
               required
             />
+             {errors.old_password && (
+              <Typography variant="body2" color="error">
+                {errors.old_password}
+              </Typography>
+            )}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
@@ -121,6 +129,11 @@ export const UpdatePwdAdmin = () => {
               }
               required
             />
+             {errors.new_password && (
+              <Typography variant="body2" color="error">
+                {errors.new_password}
+              </Typography>
+            )}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
@@ -143,6 +156,11 @@ export const UpdatePwdAdmin = () => {
               }
               required
             />
+            {errors.confirm_password && (
+              <Typography variant="body2" color="error">
+                {errors.confirm_password}
+              </Typography>
+            )}
           </FormControl>
 
           <Button

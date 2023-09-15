@@ -19,22 +19,19 @@ class NoticeBoardController extends Controller
     }
     public function add(Request $req)
     {
-        $validationRules=[
-            'notice_id' => 'required|size:4|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\d$/',
+        $validationRules = [
+            'notice_id' => [
+                'required',
+                'size:4',
+                'regex:/^(C000|[ETS][FD][026B][1-4])$/',
+            ],
             'description' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf|max:2048',
-         ];
+        ];
          $validator = Validator::make($req->all(), $validationRules);
 
          if ($validator->fails()) {
              return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
          }
-
-        // $req->validate([
-        //     'notice_id' => 'required',
-        //     'description' => 'required',
-        //     'file' => 'required|mimes:pdf|max:2048', // PDF file, max size 2MB
-        // ]);
         if ($req->hasFile('file')) {
             $file = $req->file('file');
             $fileName = $req->description . '.' . $file->getClientOriginalExtension();
@@ -68,43 +65,51 @@ class NoticeBoardController extends Controller
 
         return response()->json(['data' => $notices]);
     }
-    public function update(Request $req)
-    {
-        $validationRules=[
-            'notice_id' => 'required|size:10|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\$/',
-            'description' => 'required|string|max:255',
-            'date' => 'required|date_format:Y-m-d',
-         ];
-         $validator = Validator::make($req->all(), $validationRules);
+    // public function update(Request $req)
+    // {
+    //     $validationRules = [
+    //         'notice_id' => [
+    //             'required',
+    //             'size:10',
+    //             'regex:/^(C000|[ETS][F0D2DBD6D0][1-4])$/',
+    //         ],
+    //         'description' => 'required|string|max:255',
+    //         'date' => 'required|date_format:Y-m-d',
+    //     ];
+    //      $validator = Validator::make($req->all(), $validationRules);
 
-         if ($validator->fails()) {
-             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
-         }
-        $notice_id = $req->input('notice_id');
-        $description = $req->input('description');
-        $date = $req->input('date');
+    //      if ($validator->fails()) {
+    //          return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+    //      }
+    //     $notice_id = $req->input('notice_id');
+    //     $description = $req->input('description');
+    //     $date = $req->input('date');
 
-        $object = noticeboard::where('notice_id', $notice_id)->where('description', $description)->where('date', $date)->first();
-        // return response()->json($object);
+    //     $object = noticeboard::where('notice_id', $notice_id)->where('description', $description)->where('date', $date)->first();
+    //     // return response()->json($object);
 
-        if (!$object) {
-            return response()->json(['result' => 'Record not found'], 404);
-        }
+    //     if (!$object) {
+    //         return response()->json(['result' => 'Record not found'], 404);
+    //     }
 
-        $object->path = $req->input('path');
-        $result = $object->save();
+    //     $object->path = $req->input('path');
+    //     $result = $object->save();
 
-        if ($result) {
-            return response()->json($object);
-        } else {
-            return response()->json(['result' => 'Value not updated'], 500);
-        }
-    }
+    //     if ($result) {
+    //         return response()->json($object);
+    //     } else {
+    //         return response()->json(['result' => 'Value not updated'], 500);
+    //     }
+    // }
 
     public function delete(Request $req)
     {
         $validationRules=[
-            'notice_id' => 'required|size:10|regex:/^(C000|[ETS][F0D2DBD6D0][1-4])\$/',
+            'notice_id' => [
+                'required',
+                'size:4',
+                'regex:/^(C000|[ETS][FD][026B][1-4])$/',
+            ],
             'description' => 'required|string|max:255',
             'date' => 'required|date_format:Y-m-d',
          ];

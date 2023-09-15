@@ -22,6 +22,9 @@ class SubjectsController extends Controller
         $validationRules=[
             'subject_code' => ['required', 'custom_subject_code'],
             'subject_name' =>'string|max:255',
+            'L'=>'numeric|digits:1',
+            'P'=>'numeric|digits:1',
+            'C'=>'numeric|digits:1',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 
@@ -90,7 +93,6 @@ class SubjectsController extends Controller
      {
         $validationRules=[
             'subjectCode' => ['required', 'custom_subject_code'],
-            'facultyID' => 'required|regex:/^S[0-3][0-9][1-9]$/',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 
@@ -99,11 +101,10 @@ class SubjectsController extends Controller
             }
 
         $subject_code=$req->input('subjectCode');
-        $faculty_id=$req->input("facultyID");
         $object=assign_faculty::where('subject_code',$subject_code)->first();
         if(!$object)
         {
-            return response()->json(["message"=>"Record not found"]);
+            return response()->json(['errors' => ['subjectCode' => 'Subject does not exist']], 422);
         }
         if($object->delete()){
         return response()->json('true');}
@@ -112,6 +113,7 @@ class SubjectsController extends Controller
      {
         $validationRules=[
             'subjectCode' => ['required', 'custom_subject_code'],
+            'facultyID' => 'regex:/^S[0-3][0-9][1-9]$/',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 

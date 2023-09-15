@@ -79,7 +79,7 @@ Route::group([
 
     Route::post('/addSemester',[SemesterController::class,'add']);
     Route::get('/getSemester',[SemesterController::class,'get']);
-    Route::post('/updateSemester',[SemesterController::class,'update']);
+    Route::put('/updateSemester',[SemesterController::class,'update']);
     Route::delete('/removeSemester',[SemesterController::class,'delete']);
 
     Route::post("/addReRegister",[SemesterController::class,'addReRegister']);
@@ -155,6 +155,7 @@ Route::group([
     Route::post('otpVerifyStd',[StudentController::class,"otpVerification"])->withoutMiddleware('auth:student-api');
     Route::get('getInternalMarks',[StudentController::class,'checkMarks']);
     Route::get('getAttendance',[StudentController::class,'checkAttendance']);
+    Route::get('getAttendanceDayWise',[StudentController::class,'checkAttendanceDayWise']);
 
     Route::get('getForms',[StudentController::class,'getAvailableForms']);
 

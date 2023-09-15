@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// import axiosClient from '../axios-client';
-import axios from 'axios'; // Import axios
-
+import axios from 'axios';
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Link,
+  Pagination,
+  Box,
+  Divider,
+} from '@mui/material';
 import './studentHomePage.css';
 
 const NoticeBoard = () => {
@@ -20,7 +28,7 @@ const NoticeBoard = () => {
     }
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
     fetchNotices(newPage);
   };
@@ -31,29 +39,47 @@ const NoticeBoard = () => {
 
   return (
     <div className="notice-board">
-      <h2>Notice Board</h2>
-      <ul className="notice-list">
+      <Typography variant="h4">Notice Board</Typography>
+      <List>
         {notices.map((notice) => (
-          <li key={notice.description} className="notice-item">
-            <a
-              href={notice.path}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <strong>{notice.description}</strong> </a>{notice.date}
-          </li>
-        ))}
-      </ul>
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={currentPage === index + 1 ? 'active' : ''}
+          <ListItem
+            key={notice.description}
+            disablePadding
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
           >
-            {index + 1}
-          </button>
+            <ListItemText
+              primary={
+                <Link
+                  href={notice.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <strong>{notice.description}</strong>
+                </Link>
+              }
+            />
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ flex: '0 0 auto' }}
+            >
+              {notice.date}
+            </Typography>
+          </ListItem>
         ))}
+      </List>
+      <div className="pagination">
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          variant="outlined"
+          color="primary"
+        />
       </div>
     </div>
   );

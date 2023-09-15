@@ -41,7 +41,7 @@ class AuthenticationController extends Controller
     public function deleteStdLogin(Request $req)
     {
         $validationRules=[
-            'student_id'=>'required|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
+            'rollNumber'=>'regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 
@@ -80,7 +80,7 @@ class AuthenticationController extends Controller
     public function deleteFacLogin(Request $req)
     {
         $validationRules=[
-            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+            'facultyID'=>'required|regex:/^S[0-3][0-9][1-9]$/',
         ];
         $validator=Validator::make($req->all(),$validationRules);
 

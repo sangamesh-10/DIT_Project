@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, CssBaseline, Typography, Button, Select, MenuItem, TextField } from "@mui/material";
+import { Snackbar, SnackbarContent } from "@mui/material";
+
 import axiosClient from "../axios-client";
 
 export const AddMarks = () => {
@@ -10,8 +12,12 @@ export const AddMarks = () => {
     const [selectedExam, setSelectedExam] = useState("");
     const [submissionMessage, setSubmissionMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const [reviewStage, setReviewStage] = useState(false); // State for the review stage
     const [editMode, setEditMode] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+
 
     useEffect(() => {
         fetchSubjects();
@@ -32,7 +38,6 @@ export const AddMarks = () => {
             const response = await axiosClient.get(`/getEnrolledStudents?subject_code=${subject}`);
             setEnrolledStudents(response.data);
 
-            // Create studentMarks object with roll numbers as keys and 0 as values
             const initialStudentMarks = response.data.reduce((marksObj, rollNum) => {
                 marksObj[rollNum] = 0;
                 return marksObj;
@@ -51,6 +56,14 @@ export const AddMarks = () => {
         }));
     };
 
+    const clearValidationErrors = () => {
+        setValidationErrors({});
+    };
+    const openSnackbar = (message) => {
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -61,9 +74,8 @@ export const AddMarks = () => {
         console.log(payload);
 
         try {
-            setReviewStage(true); // Move to the review stage after form submission
+            setReviewStage(true);
         } catch (err) {
-            console.log(err);
             console.error("Error while submitting data", err);
             setSubmissionMessage("Error while submitting marks");
             setSubmitted(false);
@@ -85,9 +97,17 @@ export const AddMarks = () => {
             setReviewStage(false);
             setEditMode(false); // Reset edit mode
         } catch (err) {
-            console.error("Error while submitting data", err);
-            setSubmissionMessage("Error while submitting marks");
-            setSubmitted(false);
+            const response = err.response;
+            if (response && response.status === 400) {
+                setValidationErrors(response.data.error);
+                console.log(validationErrors);
+
+            }
+            else if (response && response.status === 500) {
+                openSnackbar("Already marks submitted");
+            }
+
+
         }
     };
 
@@ -138,16 +158,16 @@ export const AddMarks = () => {
                             <MenuItem value="mid2">Midterm 2</MenuItem>
                         </Select>
                         <div style={{ marginTop: '20px' }}>
-                        {Object.keys(studentMarks).map((rollNum) => (
-                            <div key={rollNum} style={{ marginBottom: '10px' }}>
-                                <label>{rollNum}:</label>
-                                <TextField
-                                    type="number"
-                                    value={studentMarks[rollNum] || ''}
-                                    onChange={(e) => handleMarksChange(rollNum, e.target.value)}
-                                />
-                            </div>
-                        ))}
+                            {Object.keys(studentMarks).map((rollNum) => (
+                                <div key={rollNum} style={{ marginBottom: '10px' }}>
+                                    <label>{rollNum}:</label>
+                                    <TextField
+                                        type="number"
+                                        value={studentMarks[rollNum] || ''}
+                                        onChange={(e) => handleMarksChange(rollNum, e.target.value)}
+                                    />
+                                </div>
+                            ))}
                         </div>
                         {editMode ? (
                             <div>
@@ -166,16 +186,23 @@ export const AddMarks = () => {
                     <div>
                         <Typography variant="h6" style={{ marginBottom: '10px' }}>Review Marks</Typography>
                         {Object.keys(studentMarks).map((rollNum) => (
-                            <div key={rollNum}  style={{ marginBottom: '10px' }}>
+                            <div key={rollNum} style={{ marginBottom: '10px' }}>
                                 <Typography style={{ display: 'inline-block', width: '100px' }}>{rollNum}:</Typography>
-                                <Typography style={{ display: 'inline-block' }}>{studentMarks[rollNum]}</Typography>
+                                {validationErrors[rollNum] ? (
+                                    <Typography style={{ display: 'inline-block', color: 'red' }}>Invalid marks</Typography>
+                                ) : (
+                                    <Typography style={{ display: 'inline-block' }}>{studentMarks[rollNum]}</Typography>
+                                )}
                             </div>
                         ))}
                         <div>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() => setReviewStage(false)}
+                                onClick={() => {
+                                    setReviewStage(false)
+                                    clearValidationErrors();
+                                }}
                                 style={{ marginRight: '10px' }}
                             >
                                 Edit Marks
@@ -190,8 +217,26 @@ export const AddMarks = () => {
                         </div>
                     </div>
                 )}
-                {submitted && <Typography variant="body1" style={{ color: "green", marginTop: "1rem" }}>{submissionMessage}</Typography>}
-            </div>
+                {submitted && (
+                    <Typography variant="body1" style={{ color: submissionMessage === "Already marks submitted" ? "red" : "green", marginTop: "1rem" }}>
+                        {submissionMessage}
+                    </Typography>
+                )}            </div>
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                open={snackbarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackbarOpen(false)}
+            >
+                <SnackbarContent
+                    message={snackbarMessage}
+                    style={{
+                        backgroundColor: "red",
+                    }}
+                />
+            </Snackbar>
+
         </Container>
+
     );
 };

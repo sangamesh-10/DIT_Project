@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
+import {
+  Container,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  Divider,
+  Paper,
+  Box,
+} from '@mui/material';
 import './StudentHomePage.css'; // Import your CSS file with the specified class names
 
 const Notifications = () => {
@@ -29,30 +39,43 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div className='notification-container'>
-      <h2 className='notification-title'>Notifications</h2>
-      <ul className='notification-list'>
-        {notifications.length === 0 ? (
-          <li className='notification-item'>
-            <span>All notifications are read.</span>
-          </li>
-        ) : (
-          notifications.map((notification) => (
-            <li key={notification.id} className='notification-item'>
-              <span>{notification.message}</span>
-              {!notification.read && (
-                <button
-                  className='mark-as-read-button'
-                  onClick={() => markNotificationAsRead(notification.id)}
-                >
-                  Mark as Read
-                </button>
-              )}
-            </li>
-          ))
-        )}
-      </ul>
-    </div>
+    <Container maxWidth="md">
+      <Paper elevation={3} className="notification-container">
+        <Typography variant="h4" className="notification-title">
+          Notifications
+        </Typography>
+        <Divider />
+        <List className="notification-list">
+          {notifications.length === 0 ? (
+            <ListItem className="notification-item">
+              <Typography variant="body1">
+                All notifications are read.
+              </Typography>
+            </ListItem>
+          ) : (
+            notifications.map((notification) => (
+              <ListItem key={notification.id} className="notification-item">
+                <Typography variant="body1" style={{ whiteSpace: 'nowrap' }}>
+                  {notification.message}
+                </Typography>
+                <Box display="flex" justifyContent="flex-end" alignItems="center" width="100%">
+                  {!notification.read && (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className="mark-as-read-button"
+                      onClick={() => markNotificationAsRead(notification.id)}
+                    >
+                      Mark as Read
+                    </Button>
+                  )}
+                </Box>
+              </ListItem>
+            ))
+          )}
+        </List>
+      </Paper>
+    </Container>
   );
 };
 

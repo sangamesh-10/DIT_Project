@@ -17,7 +17,7 @@ class AcademicCalendarController extends Controller
     {
         $validationRules=[
             'branch'=>'required|String|in:MCA,MTech',
-            'semester'=>'required|numeric|size:1|[1-4]',
+            'semester'=>'required|numeric|between:1,4',
             'description'=>'required|string|max:255',
             'from'=>'required|date-format:Y-m-d',
             'to'=>'date-format:Y-m-d|after:from',
@@ -47,8 +47,10 @@ class AcademicCalendarController extends Controller
     {
         $validationRules=[
             'branch'=>'required|String|in:MCA,MTECH-CS,MTECH-DS,MTECH-CNIS,MTECH-SE',
-            'semester'=>'required|numeric|size:1|[1-4]',
+            'semester'=>'required|numeric|between:1,4',
             'description'=>'required|string|max:255',
+            'from'=>'required|date-format:Y-m-d',
+            'to'=>'date-format:Y-m-d|after:from',
         ];
         $validator=Validator::make($req->all(),$validationRules);
         if($validator->fails()){

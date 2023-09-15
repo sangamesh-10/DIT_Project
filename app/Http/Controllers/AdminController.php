@@ -72,6 +72,44 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
+    public function updatePassword(Request $req)
+    {
+        $admin_id = auth()->user()->admin_id;
+        $old_password = $req->input('old_password');
+        $new_password = $req->input('new_password');
+        $confirm_password = $req->input('confirm_password');
+
+        $rules = [
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',        ];
+        $customMessages = [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
+        ];
+        $errors=[];
+        $validator = Validator::make($req->all(), $rules ,$customMessages);
+        if ($validator->fails() || $new_password != $confirm_password) {
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors],422);
+        }
+        else{
+        $admin = admin_login::where('admin_id', $admin_id)->first();
+
+        if (Hash::check($old_password, $admin->password)){
+        $admin->password = Hash::make($new_password);
+        $admin->save();
+        return response()->json('true');
+        }
+        else
+         {
+            $errors['old_password']="Old Password does not match";
+            return response()->json(['error' => $errors],422);
+            // return response()->json(['Not Success' => 'Old password is incorrect.']);
+        }
+    }
+}
+
     public function getComplaints()
     {
         $object = raise_complaint::all();
@@ -225,10 +263,21 @@ public function studentReg(Request $req)
     return response()->json(['error' => $e->getMessage()]);
     }
 }
-public function getStudents()
+public function getStudents(Request $req)
 {
-    $object=student::all();
-    return response()->json($object);
+    $department=$req->query('department');
+    $rollNumCodes = array(
+        'MCA' => 'F0',
+        'Mtech-CS' => 'D0',
+        'Mtech-SE' => 'D2',
+        'Mtech-CN' => 'D6',
+        'Mtech-DS' => 'DB'
+    );
+    $rollCode = $rollNumCodes[$department];
+    $sem=$req->query('semester');
+    $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+    $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->get();
+    return response()->json($students);
 }
 public function uploadAndSaveFiles(Request $req)
 {
@@ -297,6 +346,18 @@ public function uploadAndSaveFiles(Request $req)
 }
 public function addForms(Request $req)
 {
+    $validator = Validator::make($req->all(), [
+        'id' => [
+            'required',
+            'regex:/^(FF0[0-4]|FD2[0-4]|FDB[0-4]|FD6[0-4]|FD0[0-4])$/',
+        ],
+        'name' => 'required|string',
+        'formFile' => 'required|file|mimes:pdf',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 422);
+    }
     try {
         $id = $req->input('id');
         $name = $req->input('name');
@@ -340,6 +401,18 @@ public function addForms(Request $req)
     }
 
     public function updateForm(Request $req){
+        $validator = Validator::make($req->all(), [
+            'form_id' => [
+                'required',
+                'regex:/^(FF0[0-4]|FD2[0-4]|FDB[0-4]|FD6[0-4]|FD0[0-4])$/',
+            ],
+            'form_name' => 'required|string',
+            'new_form_file' => 'required|file|mimes:pdf',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
         try {
             $id = $req->input('form_id');
             $name = $req->input('form_name');
@@ -371,6 +444,17 @@ public function addForms(Request $req)
 
     public function deleteForm(Request $req)
     {
+        $validator = Validator::make($req->all(), [
+            'form_id' => [
+                'required',
+                'regex:/^(FF0[0-4]|FD2[0-4]|FDB[0-4]|FD6[0-4]|FD0[0-4])$/',
+            ],
+            'form_name' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
         try {
             $form_id = $req->input('form_id');
             $form_name = $req->input('form_name');

@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
-
 import axiosClient from '../axios-client';
 import { useNavigate } from 'react-router-dom';
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+  Box,
+  IconButton,
+} from '@mui/material';
+
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const UpdateNoticeBoard = () => {
   const [noticeId, setNoticeId] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
+  const [error, setError] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const navigate = useNavigate();
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -23,50 +38,120 @@ const UpdateNoticeBoard = () => {
     formData.append('file', file);
 
     try {
-      // Make API call using axios or your preferred HTTP library
       const response = await axiosClient.post('/addNotice', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      navigate('/admin');
+      //navigate('/admin');
       console.log('API Response:', response.data);
-      // You can perform additional actions here, such as showing success messages
+
+      // Clear form state after successful submission
+      setNoticeId('');
+      setDescription('');
+      setFile(null);
+      setError({});
+
+      // Show success message in green
+      setSnackbarMessage('Notice Updated Successfully');
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error('API Error:', error);
-      // Handle error scenarios, e.g., show error messages to the user
+      const response = error.response;
+      if (response && response.status === 422) {
+        console.error('Validation Errors:', response.data.errors);
+        setError(response.data.errors);
+      } else {
+        console.error('API Error:', error.response.data);
+        // Show error message in red
+        setSnackbarMessage('Error Updating Notice');
+        setSnackbarOpen(true);
+      }
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+    setSnackbarMessage('');
+  };
+
   return (
-    <div>
-      <h2>Update Notice Board</h2>
+    <Paper elevation={3} style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <Typography variant="h5" align="center" gutterBottom>
+        Update Notice Board
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="noticeId">Notice ID:</label>
-          <input
-            type="text"
-            id="noticeId"
-            value={noticeId}
-            onChange={(e) => setNoticeId(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <input
-            type="text"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="file">PDF File:</label>
-          <input type="file" id="file" accept=".pdf" onChange={handleFileChange} />
-        </div>
-        <button type="submit">Submit</button>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="noticeId"
+          label="Notice ID"
+          value={noticeId}
+          onChange={(e) => setNoticeId(e.target.value)}
+          helperText={error.notice_id && error.notice_id[0]}
+          error={error.notice_id !== undefined}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="description"
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          helperText={error.description && error.description[0]}
+          error={error.description !== undefined}
+        />
+        <input
+          type="file"
+          id="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          style={{ position: 'absolute', left: '-9999px' }}
+        />
+        <label htmlFor="file">
+          <IconButton component="span">
+            <AddCircleOutlineIcon />
+          </IconButton>
+        </label>
+        {!file && (
+          <Box mt={2}>
+            <Typography variant="body2" color="error" >
+              Please Attach a  File
+            </Typography>
+          </Box>
+        )}
+        {file && (
+          <Box mt={2}>
+            <Typography variant="body2">
+              Attached File: {file.name}
+            </Typography>
+          </Box>
+        )}
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mt: 3 }}
+        >
+          Submit
+        </Button>
       </form>
-    </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarMessage.includes('Success') ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </Paper>
   );
 };
 

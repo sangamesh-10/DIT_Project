@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
+import { Paper, Typography, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@mui/material';
 import './view.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,41 +31,48 @@ const InternalMarks = () => {
         setMarksData([]); // Clear marksData in case of an error
         setLoading(false);
       });
-  }, [user]);
+  }, [user, navigate]);
 
   if (loading) {
-    return <div className="loading-message">Loading...</div>;
+    return (
+      <div className="loading-message">
+        <CircularProgress />
+      </div>
+    );
   }
-
 
   if (marksData.length === 0) {
     return <div className="error-message">No marks found.</div>;
   }
 
   return (
-    <div className='container'>
-      <h2>Internal Marks</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Subject Code</th>
-            <th>Subject Name</th>
-            <th>Mid 1</th>
-            <th>Mid 2</th>
-          </tr>
-        </thead>
-        <tbody>
-          {marksData.map((mark, index) => (
-            <tr key={index}>
-              <td>{mark.subject_code}</td>
-              <td>{mark.subject_name}</td>
-              <td>{mark.mid1 !== null ? mark.mid1 : 'Marks Not Updated'}</td>
-              <td>{mark.mid2 !== null ? mark.mid2 : 'Marks Not Updated'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <Typography variant="h5" gutterBottom>
+        Internal Marks
+      </Typography>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Subject Code</TableCell>
+              <TableCell>Subject Name</TableCell>
+              <TableCell>Mid 1</TableCell>
+              <TableCell>Mid 2</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {marksData.map((mark, index) => (
+              <TableRow key={index}>
+                <TableCell>{mark.subject_code}</TableCell>
+                <TableCell>{mark.subject_name}</TableCell>
+                <TableCell>{mark.mid1 !== null ? mark.mid1 : 'Marks Not Updated'}</TableCell>
+                <TableCell>{mark.mid2 !== null ? mark.mid2 : 'Marks Not Updated'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
 

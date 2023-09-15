@@ -33,14 +33,14 @@ class FacultyController extends Controller
     }
     public function login(Request $req)
     {
-        $validationRules=[
-            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
-            'password'=>'required'
+        $validationRules = [
+            'faculty_id' => 'required|regex:/^S[0-3][0-9][1-9]$/',
+            'password' => 'required'
         ];
-        $validator=Validator::make($req->all(),$validationRules);
+        $validator = Validator::make($req->all(), $validationRules);
 
-        if($validator->fails()){
-            return response()->json(['errors'=>$validator->errors()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $credentials = $req->only('faculty_id', 'password');
@@ -94,10 +94,10 @@ class FacultyController extends Controller
         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
-         $sem = (int) substr($req->query('subject_code'), 2, 1);
-         $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
-         $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
-         $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
+        $sem = (int) substr($req->query('subject_code'), 2, 1);
+        $year = enrolled_student::where('code', $rollCode)->where('semester', $sem)->value('year');
+        $students = student::where('roll_num', 'LIKE', $year . '___' . $rollCode . '%')->pluck('roll_num');
+        $reRegistered = re_register::where('subject_code', $subject)->pluck('roll_num');
         $finalArray = collect($students)->concat($reRegistered)->toArray();
         return response()->json($finalArray);
     }
@@ -109,14 +109,6 @@ class FacultyController extends Controller
     }
     public function markAttendance(Request $req)
     {
-        $validationRules=[
-            'subjectCode' => ['custom_subject_code'],
-        ];
-        $validator=Validator::make($req->all(),$validationRules);
-
-            if($validator->fails()){
-                return response()->json(['errors'=>$validator->errors()],422);
-            }
         $subjectCode = $req->input('subject_code');
         $students = $req->get('students');
         // dd($req->all());
@@ -214,15 +206,15 @@ class FacultyController extends Controller
             return response()->json(['error' => 'An error occurred while raising the complaint.'], 500);
         }
     }
-     public function addInternalMarks(Request $req)
+    public function addInternalMarks(Request $req)
     {
-        $validationRules=[
-            'subjectCode' => ['custom_subject_code'],
-        ];
-        $validator=Validator::make($req->all(),$validationRules);
-        if($validator->fails()){
-                return response()->json(['errors'=>$validator->errors()],422);
-            }
+        // $validationRules=[
+        //     'subjectCode' => ['custom_subject_code'],
+        // ];
+        // $validator=Validator::make($req->all(),$validationRules);
+        // if($validator->fails()){
+        //         return response()->json(['errors'=>$validator->errors()],422);
+        //     }
         $user = auth()->user()->faculty_id;
         $exam_type = $req->input('exam_type');
         $subject = $req->input('subject_code');
@@ -236,18 +228,18 @@ class FacultyController extends Controller
         );
         $sem = 4;
         $students = $req->get('students');
+        $errorStudents = [];
+
         foreach ($students as $studentId => $marks) {
             if (!is_numeric($marks) || $marks < 0 || $marks > 40) {
-                return response()->json(['error' => 'Invalid marks input for student ' . $studentId], 400);
+                $errorStudents[$studentId] = "Invalid marks";
             }
         }
-        // $today = date('Y-m-d');
-        // $mid1Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'First Mid term examinations')->value('to_date');
-        // $mid2Date = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'Second Mid term examinations')->value('to_date');
-        // $semStartDate = academic_calendar::where('branch', $branchCodes[$subject_code])->where('semester', $sem)->where('description', 'End semester examinations')->value('from_date');
-        if (is_array($students)) {
 
-            // if ($today > $mid1Date && $today < $mid2Date) {
+        if (!empty($errorStudents)) {
+            return response()->json(['error' => $errorStudents], 400);
+        }
+        if (is_array($students)) {
             if ($exam_type == 'mid1') {
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = new internal_mark();
@@ -266,8 +258,6 @@ class FacultyController extends Controller
 
                 return response()->json(['message' => 'Marks Added successfully']);
             } else {
-                // if ($today < $semStartDate) {
-
                 foreach ($students as $studentId => $marks) {
                     $internalMarks = internal_mark::where('roll_num', $studentId)->where('subject_code', $subject)->first();
                     $internalMarks->mid2 = $marks;
@@ -318,13 +308,13 @@ class FacultyController extends Controller
     }
     public function updateContact(Request $request)
     {
-        $validationRules=[
-            'mobile'=>'required|numeric|digits:10',
+        $validationRules = [
+            'mobile' => 'required|numeric|digits:10',
         ];
-        $validator=Validator::make($request->all(),$validationRules);
+        $validator = Validator::make($request->all(), $validationRules);
 
-        if($validator->fails()){
-            return response()->json(['errors'=>$validator->errors()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
         $faculty_id = auth()->user()->faculty_id;
         //return $faculty_id;
@@ -347,15 +337,19 @@ class FacultyController extends Controller
 
         $rules = [
             // 'new_password' => 'required|regex:/^(?=.*[A-Z])(?=.*\d).{8,}$/'
-            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+            'new_password' => 'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
         $customMessages = [
             'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
-        $validator = Validator::make($req->all(), $rules,$customMessages);
+        $validator = Validator::make($req->all(), $rules, $customMessages);
 
         if ($validator->fails() || $new_password != $confirm_password) {
-            return response()->json(['error' => $validator->errors()],422);
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors],422);
         } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
@@ -369,25 +363,25 @@ class FacultyController extends Controller
     function updatePassword(Request $req)
     {
         $faculty_id = auth()->user()->faculty_id;
-        $old_password=$req->input("old_password");
+        $old_password = $req->input("old_password");
         $new_password = $req->input('new_password');
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+            'new_password' => 'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
         ];
         $customMessages = [
             'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
-        $validator = Validator::make($req->all(), $rules, $customMessages);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
-        }
-        else if( $new_password != $confirm_password){
-            return response()->json('Passwords doesnot match');
-        }
-        else {
+        $errors=[];
+        $validator = Validator::make($req->all(), $rules ,$customMessages);
+        if ($validator->fails() || $new_password != $confirm_password) {
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors],422);
+        } else {
             $faculty = faculty_login::where('faculty_id', $faculty_id)->first();
 
             if (Hash::check($old_password, $faculty->password)) {
@@ -395,21 +389,21 @@ class FacultyController extends Controller
                 $faculty->save();
 
                 return response()->json('true');
-            }
-            else{
-                return response()->json(['Not success'=>'Old password doesnot match']);
+            } else {
+                $errors['old_password']="Old Password does not match";
+                return response()->json(['error' => $errors],422);
             }
         }
     }
     public function sendOtp(Request $req)
     {
-        $validationRules=[
-            'faculty_id'=>'required|regex:/^S[0-3][0-9][1-9]$/',
+        $validationRules = [
+            'faculty_id' => 'required|regex:/^S[0-3][0-9][1-9]$/',
         ];
         $validator = Validator::make($req->all(), $validationRules);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],422);
+            return response()->json(['error' => $validator->errors()], 422);
         }
         $faculty_id = $req->input("faculty_id");
         $faculty_id = faculty::where("faculty_id", $faculty_id)->first();
@@ -440,24 +434,39 @@ class FacultyController extends Controller
             return response()->json("true");
 
         } else {
-            return response()->json(['error' => 'Invalid OTP entered. Please try again.']);
+            return response()->json(['error' =>['otp' => 'Invalid OTP entered. Please try again.']], 422);
         }
     }
     public function sendNotifications(Request $req)
     {
         $validationRules = [
-            'rollNumber' => 'required|size:10|regex:/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/|unique:students,r',
-            'description'=> 'required|string'];
+            'description' => 'required|string'
+        ];
         $validator = Validator::make($req->all(), $validationRules);
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
-            }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
+        }
         $user = auth()->user()->faculty_id;
         $select_type = $req->input('select_type');
         $department = $req->input('department');
         $semester = $req->input('semester');
         $roll_numbers = $req->input('roll_numbers');
-        $description=$req->input('description');
+        $description = $req->input('description');
+
+        $invalidRollNumbers = [];
+    if ($select_type === 'roll_numbers') {
+        $rollNumberArray = explode(',', $roll_numbers);
+
+        foreach ($rollNumberArray as $student_id) {
+            if (!preg_match('/^[2-9][0-9]031[FD][026B]0[0-9][0-9]$/', $student_id)) {
+                $invalidRollNumbers[] = $student_id;
+            }
+        }
+
+        if (!empty($invalidRollNumbers)) {
+            return response()->json(['errors' => ['rollNumber' => $invalidRollNumbers]], 422);
+        }
+    }
         if ($select_type == 'department') {
             switch ($department) {
                 case 'MCA':
@@ -486,11 +495,9 @@ class FacultyController extends Controller
                 ]);
             }
             return response()->json('Success');
-        }
-        else
-        {
+        } else {
             $rollNumberArray = explode(',', $roll_numbers);
-            foreach($rollNumberArray as $student_id){
+            foreach ($rollNumberArray as $student_id) {
                 notifications::create([
                     'sender_id' => $user,
                     'receiver_id' => $student_id,
@@ -502,9 +509,9 @@ class FacultyController extends Controller
     }
     function getCalendar(Request $req)
     {
-        $branch=$req->query("branch");
-        $sem=$req->query("semester");
-        $calendar= academic_calendar::where('branch',$branch)->where("semester",$sem)->get();
+        $branch = $req->query("branch");
+        $sem = $req->query("semester");
+        $calendar = academic_calendar::where('branch', $branch)->where("semester", $sem)->get();
         return response()->json($calendar);
     }
 }

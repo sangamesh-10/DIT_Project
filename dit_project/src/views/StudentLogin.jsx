@@ -21,6 +21,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export const StudentLogin = () => {
   const [open, setOpen] = React.useState(false);
+  const [errors, setErrors] = useState({ student_id: '', password: '' })
 
   const handleClick = () => {
     setOpen(true);
@@ -59,6 +60,11 @@ export const StudentLogin = () => {
       const response = err.response;
       if (response && response.status === 422) {
         console.log(response.data.errors);
+        setErrors(response.data.errors);
+      }
+      else if(response.status === 401)
+      {
+        setErrors({password:"Wrong Password"});
       }
     }
   };
@@ -90,24 +96,28 @@ export const StudentLogin = () => {
           sx={{ mt: 1 }}
         >
           <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="student_id"
-            label="Roll Number"
-            name="student_id"
-            inputRef={student_id}
-          />
+          margin="normal"
+          required
+          fullWidth
+          id="student_id"
+          label="Roll Number"
+          name="student_id"
+          inputRef={student_id}
+          error={!!errors.student_id}
+          helperText={errors.student_id}
+        />
           <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            inputRef={password}
-          />
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          inputRef={password}
+          error={!!errors.password}
+          helperText={errors.password}
+        />
           <Button
             type="submit"
             fullWidth

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axiosClient from '../axios-client';
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Link,
+  Paper,
+} from '@mui/material';
 
 const GetForms = () => {
   const [forms, setForms] = useState([]);
@@ -8,7 +16,6 @@ const GetForms = () => {
     const fetchForms = async () => {
       try {
         const response = await axiosClient.get('/getForms'); // Replace with your API endpoint
-        console.log(response.data.data); // Debugging line
         setForms(response.data.data);
       } catch (error) {
         console.error('Error fetching forms:', error);
@@ -19,22 +26,26 @@ const GetForms = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Available Forms</h1>
-      <ul>
+    <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <Typography variant="h5" gutterBottom>
+        <b>Available Forms</b>
+      </Typography>
+      <List>
         {forms.map((form, index) => (
-          <li key={index}>
-            <a
-              href={form.path}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {form.form_name}
-            </a>
-          </li>
+          <ListItem key={index}>
+            <ListItemText>
+              <Link
+                href={form.path}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {form.form_name}
+              </Link>
+            </ListItemText>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Paper>
   );
 };
 

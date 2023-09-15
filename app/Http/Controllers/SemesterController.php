@@ -28,6 +28,7 @@ class SemesterController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422); // 422 Unprocessable Entity
         }
+        try{
         $object = new enrolled_student;
         $object->year = $req->input('year');
         $object->code = $req->input('code');
@@ -35,6 +36,15 @@ class SemesterController extends Controller
         if($object->save()){
         return response()->json('true');
         }
+    }
+    catch(QueryException $e){
+        //$errorCode = $e->errorInfo[1];
+        if ($e->getCode() === '23000') {
+            return response()->json('Already Added', 423);
+        }else {
+            return response()->json('Database error', 500);
+        }
+       }
     }
     public function get()
     {
@@ -46,6 +56,7 @@ class SemesterController extends Controller
         $validationRules=[
             'year'=>'numeric|digits:2|regex:/^[2-9][1-9]$/',
             'code'=>'string|in:F0,D0,D2,D6,DB',
+            'semester'=>'numeric|in:1,2,3,4',
         ];
         $validator= Validator::make($req->all(),$validationRules);
         if ($validator->fails()) {
@@ -118,7 +129,7 @@ class SemesterController extends Controller
     catch(QueryException $e){
     //$errorCode = $e->errorInfo[1];
     if ($e->getCode() === '23000') {
-        return response()->json('Already registered', 422);
+        return response()->json('Already registered', 423);
     }else {
         return response()->json('Database error', 500);
     }

@@ -1,46 +1,54 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client";
-export const ViewAcademicCalendarStudent=()=>{
-    const [calendar,setCalendar]=useState([]);
-    useEffect(() => {
-        fetchData();
-    }, []);
-    const fetchData=async()=>{
-        try{
-            const response=await axiosClient.get("/getAcademicCalendarStudent");
-            setCalendar(response.data);
-        }
-        catch(err)
-        {
-            console.error("Error Occurred",err);
-        }
+import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
 
+export const ViewAcademicCalendarStudent = () => {
+  const [calendar, setCalendar] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosClient.get("/getAcademicCalendarStudent");
+      setCalendar(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error Occurred", err);
     }
-    return(
-        <div>
-                <div>
-                    <h2>Academic Calendar</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>From</th>
-                                <th>To</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {calendar.map((calendarItem, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{calendarItem.description}</td>
-                                        <td>{calendarItem.from_date}</td>
-                                        <td>{calendarItem.to_date ? calendarItem.to_date : "-"}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-        </div>
-    )
-}
+  };
+
+  return (
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Academic Calendar
+      </Typography>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Description</TableCell>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {calendar.map((calendarItem, index) => (
+                <TableRow key={index}>
+                  <TableCell>{calendarItem.description}</TableCell>
+                  <TableCell>{calendarItem.from_date}</TableCell>
+                  <TableCell>{calendarItem.to_date ? calendarItem.to_date : "-"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </div>
+  );
+};

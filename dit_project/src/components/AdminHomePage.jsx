@@ -42,7 +42,7 @@ const AdminHomePage = () => {
     },[]);
     return (
         <div id="defaultLayout">
-            <StickyHeader/>
+            {/* <StickyHeader/> */}
             <header>
                     <div>
                         Header
