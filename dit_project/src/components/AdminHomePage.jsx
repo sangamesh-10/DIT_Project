@@ -360,7 +360,7 @@ const AdminHomePage = () => {
                   <ListItemIcon>
                     <InboxIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Student Activities" />
+                  <ListItemText primary="Academic Calender" />
                   {openAcademicCalendar ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
                 <Collapse in={openAcademicCalendar} timeout="auto" unmountOnExit>
@@ -381,7 +381,7 @@ const AdminHomePage = () => {
                       <ListItemIcon>
                         <StarBorder />
                       </ListItemIcon>
-                      <ListItemText primary="Update Notice" />
+                      <ListItemText primary="Update Calender" />
                     </ListItemButton>
                   </List>
                 </Collapse>

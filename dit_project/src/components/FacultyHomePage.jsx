@@ -98,55 +98,55 @@ const FacultyHomePage = () => {
           >
             <div role="presentation">
               <List>
-                <ListItem button component={Link} to="/faculty/updatePwd">
+                <ListItem  component={Link} to="/faculty/updatePwd">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Update Password" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/updateContact">
+                <ListItem  component={Link} to="/faculty/updateContact">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Update Contact" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/Noticeboard">
+                <ListItem  component={Link} to="/faculty/Noticeboard">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="NoticeBoard" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/enrolledStudents">
+                <ListItem  component={Link} to="/faculty/enrolledStudents">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="View Enrolled Students" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/AddAttendance">
+                <ListItem  component={Link} to="/faculty/AddAttendance">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Mark Attendance" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/AddMarks">
+                <ListItem  component={Link} to="/faculty/AddMarks">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Add InternalMarks" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/sendNotifications">
+                <ListItem  component={Link} to="/faculty/sendNotifications">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Send Notifications" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/viewAcademicCalendar">
+                <ListItem  component={Link} to="/faculty/viewAcademicCalendar">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Academic Calendar" />
                 </ListItem>
-                <ListItem button component={Link} to="/faculty/RaiseComplaint">
+                <ListItem  component={Link} to="/faculty/RaiseComplaint">
                   <ListItemIcon>
                     <DashboardIcon />
                   </ListItemIcon>

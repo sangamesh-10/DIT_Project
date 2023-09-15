@@ -17,11 +17,10 @@ import {
   ThemeProvider,
   Box,
   Grid,
-  Paper, // Import Paper component from MUI
+  Paper,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useStateContext } from '../contexts/ContextProvider';
 import axiosClient from '../axios-client';
 import Notifications from './Notifications';
@@ -97,73 +96,73 @@ const StudentHomePage = () => {
         >
           <div role="presentation">
             <List>
-              <ListItem button component={Link} to="/student/Profile">
+              <ListItem  component={Link} to="/student/Profile">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
               </ListItem>
-              <ListItem button component={Link} to="/student/Attendance">
+              <ListItem  component={Link} to="/student/Attendance">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Check Attendance" />
               </ListItem>
-              <ListItem button component={Link} to="/student/Noticeboard">
+              <ListItem  component={Link} to="/student/Noticeboard">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="NoticeBoard" />
               </ListItem>
-              <ListItem button component={Link} to="/student/Notifications">
+              <ListItem  component={Link} to="/student/Notifications">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Notifications" />
               </ListItem>
-              <ListItem button component={Link} to="/student/updatePwd">
+              <ListItem  component={Link} to="/student/updatePwd">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Update Password" />
               </ListItem>
-              <ListItem button component={Link} to="/student/updateContact">
+              <ListItem  component={Link} to="/student/updateContact">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Update Contact" />
               </ListItem>
-              <ListItem button component={Link} to="/student/InternalMarks">
+              <ListItem  component={Link} to="/student/InternalMarks">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Check InternalMarks" />
               </ListItem>
-              <ListItem button component={Link} to="/student/viewAcadmicCalendar">
+              <ListItem  component={Link} to="/student/viewAcadmicCalendar">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Academic Calendar" />
               </ListItem>
-              <ListItem button component={Link} to="/student/enrolledSubjects">
+              <ListItem  component={Link} to="/student/enrolledSubjects">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Enrolled Subjects" />
               </ListItem>
-              <ListItem button component={Link} to="/student/raiseComplaint">
+              <ListItem  component={Link} to="/student/raiseComplaint">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Raise Complaints" />
               </ListItem>
-              <ListItem button component={Link} to="/student/getForms">
+              <ListItem  component={Link} to="/student/getForms">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Download Forms" />
               </ListItem>
-              <ListItem button component={Link} to="/student/softCopies?roll_num={user}">
+              <ListItem  component={Link} to="/student/softCopies?roll_num={user}">
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
