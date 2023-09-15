@@ -1,17 +1,30 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
-import { Container, CssBaseline, Typography, TextField, Button, Avatar, InputAdornment, IconButton, FormControl, InputLabel, OutlinedInput } from "@mui/material";
-import LockIcon from '@mui/icons-material/Password';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {
+  Container,
+  CssBaseline,
+  Typography,
+  TextField,
+  Button,
+  Avatar,
+  InputAdornment,
+  IconButton,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
+import LockIcon from "@mui/icons-material/Password";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export const UpdatePwd = () => {
-  const [submissionMessage, setSubmissionMessage] = useState('');
+  const [submissionMessage, setSubmissionMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const oldPassword = useRef();
   const newPassword = useRef();
@@ -35,58 +48,74 @@ export const UpdatePwd = () => {
     const payload = {
       old_password: oldPassword.current.value,
       new_password: newPassword.current.value,
-      confirm_password: confirmPassword.current.value
+      confirm_password: confirmPassword.current.value,
     };
-    console.log(payload);
-    try {
-      const { data } = await axiosClient.put('/updatePwdStd', payload);
 
-      if (data === 'true') {
+    try {
+      const { data } = await axiosClient.put("/updatePwdStd", payload);
+
+      if (data === "true") {
         setSubmissionMessage("Password Updated");
         setSubmitted(true);
-        oldPassword.current.value = '';
-        newPassword.current.value = '';
-        confirmPassword.current.value = '';
+        oldPassword.current.value = "";
+        newPassword.current.value = "";
+        confirmPassword.current.value = "";
+        setErrors({});
         setTimeout(() => {
           setSubmitted(false);
-          setSubmissionMessage('');
+          setSubmissionMessage("");
         }, 2000);
       }
     } catch (err) {
       const response = err.response;
       if (response && response.status === 422) {
-        console.log(response.data.errors);
+        setErrors(response.data.error);
         setSubmissionMessage("Error Occurred");
+        console.log(response.data.error);
       }
     }
-  }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginTop: '2rem',
-      }}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "2rem",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockIcon />
         </Avatar>
-        <Typography variant="h5" style={{ fontSize: '24px', marginBottom: '1rem' }}>
+        <Typography
+          variant="h5"
+          style={{ fontSize: "24px", marginBottom: "1rem" }}
+        >
           Update Password
         </Typography>
-        <form onSubmit={updatePwd} style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginTop: '1rem',
-        }}>
-          <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-old-password">Old Password</InputLabel>
+        <form
+          onSubmit={updatePwd}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: "1rem",
+          }}
+        >
+          <FormControl
+            sx={{ m: 1, width: "25ch" }}
+            variant="outlined"
+            error={errors.old_password !== undefined}
+          >
+            <InputLabel htmlFor="outlined-adornment-old-password">
+              Old Password
+            </InputLabel>
             <OutlinedInput
               inputRef={oldPassword}
-              type={showOldPassword ? 'text' : 'password'}
+              type={showOldPassword ? "text" : "password"}
               id="outlined-adornment-old-password"
               label="Old Password"
               endAdornment={
@@ -102,13 +131,24 @@ export const UpdatePwd = () => {
               }
               required
             />
+            {errors.old_password && (
+              <Typography variant="body2" color="error">
+                {errors.old_password}
+              </Typography>
+            )}
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-new-password">New Password</InputLabel>
+          <FormControl
+            sx={{ m: 1, width: "25ch" }}
+            variant="outlined"
+            error={errors.new_password !== undefined}
+          >
+            <InputLabel htmlFor="outlined-adornment-new-password">
+              New Password
+            </InputLabel>
             <OutlinedInput
               inputRef={newPassword}
-              type={showNewPassword ? 'text' : 'password'}
+              type={showNewPassword ? "text" : "password"}
               id="outlined-adornment-new-password"
               label="New Password"
               endAdornment={
@@ -124,13 +164,24 @@ export const UpdatePwd = () => {
               }
               required
             />
+            {errors.new_password && (
+              <Typography variant="body2" color="error">
+                {errors.new_password}
+              </Typography>
+            )}
           </FormControl>
 
-          <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-confirm-password">Confirm Password</InputLabel>
+          <FormControl
+            sx={{ m: 1, width: "25ch" }}
+            variant="outlined"
+            error={errors.confirm_password !== undefined}
+          >
+            <InputLabel htmlFor="outlined-adornment-confirm-password">
+              Confirm Password
+            </InputLabel>
             <OutlinedInput
               inputRef={confirmPassword}
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               id="outlined-adornment-confirm-password"
               label="Confirm Password"
               endAdornment={
@@ -146,23 +197,31 @@ export const UpdatePwd = () => {
               }
               required
             />
+            {errors.confirm_password && (
+              <Typography variant="body2" color="error">
+                {errors.confirm_password}
+              </Typography>
+            )}
           </FormControl>
 
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginTop: '1rem' }}
+            style={{ marginTop: "1rem" }}
           >
             Update
           </Button>
         </form>
         {submitted && (
-          <Typography variant="body1" style={{ color: 'green', marginTop: '1rem' }}>
+          <Typography
+            variant="body1"
+            style={{ color: "green", marginTop: "1rem" }}
+          >
             {submissionMessage}
           </Typography>
         )}
       </div>
     </Container>
   );
-}
+};

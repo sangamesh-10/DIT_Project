@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress } from '@mui/material';
 
 export const EnrolledStundents = () => {
     const [subjects, setSubjects] = useState([]);
@@ -7,6 +8,7 @@ export const EnrolledStundents = () => {
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [studentProfiles, setStudentProfiles] = useState([]);
     const [isTableVisible, setIsTableVisible] = useState(false); // New state for conditional rendering
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         fetchSubjects();
@@ -20,21 +22,29 @@ export const EnrolledStundents = () => {
 
     const fetchSubjects = async () => {
         try {
+            setIsLoading(true);
             const response = await axiosClient.get("/getFacultySubjects");
             setSubjects(response.data);
         } catch (error) {
             console.error('Error fetching subjects:', error);
+        }
+        finally{
+            setIsLoading(false);
         }
     };
 
     const handleSubjectClick = async (subject) => {
         setSelectedSubject(subject);
         try {
+            setIsLoading(true);
             const response = await axiosClient.get(`/getEnrolledStudents?subject_code=${subject}`);
             setEnrolledStudents(response.data);
             setIsTableVisible(true);
         } catch (error) {
             console.error('Error fetching students:', error);
+        }
+        finally{
+            setIsLoading(false);
         }
     };
 
@@ -55,40 +65,46 @@ export const EnrolledStundents = () => {
 
     return (
         <div>
-            <label>Subjects:</label>
-            <div>
-                {subjects.map(subject => (
-                    <button
-                        key={subject}
-                        className={selectedSubject === subject ? 'selected' : ''}
-                        onClick={() => handleSubjectClick(subject)}
-                    >
-                        {subject}
-                    </button>
-                ))}
-            </div>
-            {isTableVisible && (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Roll Number</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Mobile Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {studentProfiles.map((profile, index) => (
-                            <tr key={index}>
-                                <td>{profile.roll_num}</td>
-                                <td>{profile.name}</td>
-                                <td>{profile.email}</td>
-                                <td>{profile.phone_num}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+          <Typography variant="h5">Subjects:</Typography>
+          <div>
+            {subjects.map((subject) => (
+              <Button
+                key={subject}
+                variant={selectedSubject === subject ? 'contained' : 'outlined'}
+                color="primary"
+                onClick={() => handleSubjectClick(subject)}
+                style={{ marginRight: '10px', marginBottom: '10px' }}
+              >
+                {subject}
+              </Button>
+            ))}
+          </div>
+          {isLoading ?(
+          <CircularProgress style={{marginTop:'20px'}}/>):
+          isTableVisible ? (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Roll Number</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Mobile Number</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {studentProfiles.map((profile, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{profile.roll_num}</TableCell>
+                      <TableCell>{profile.name}</TableCell>
+                      <TableCell>{profile.email}</TableCell>
+                      <TableCell>{profile.phone_num}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ):null}
         </div>
-    )
+      );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import './view.css';
 
 const ProfileFaculty = () => {
@@ -24,17 +25,25 @@ const ProfileFaculty = () => {
       .catch((error) => {
         console.error('Error fetching profile data:', error);
       })
-    .finally(() => {
+      .finally(() => {
         setLoading(false);
       });
   }, [faculty_id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="container">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (!profileData) {
-    return <div>Error: Unable to fetch profile data</div>;
+    return (
+      <div className="container">
+        <Typography variant="h6">Error: Unable to fetch profile data</Typography>
+      </div>
+    );
   }
 
   const {
@@ -46,42 +55,44 @@ const ProfileFaculty = () => {
     experience,
   } = profileData;
 
-
   return (
     <div className="container">
-      <h2>User Profile</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Name</td>
-            <td>{name}</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td>{email}</td>
-          </tr>
-          <tr>
-            <td>Alternative_Email</td>
-            <td>{alt_email}</td>
-          </tr>
-          <tr>
-            <td>Phone Number</td>
-            <td>{phone_num}</td>
-          </tr>
-          <tr>
-            <td>Designation</td>
-            <td>{designation}</td>
-          </tr>
-          <tr>
-            <td>Experience</td>
-            <td>{experience}</td>
-          </tr>
-          {/* Add additional profile fields here */}
-        </tbody>
-      </table>
+      <Typography variant="h4" gutterBottom>
+        User Profile
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>{name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Email</TableCell>
+              <TableCell>{email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Alternative Email</TableCell>
+              <TableCell>{alt_email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>{phone_num}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Designation</TableCell>
+              <TableCell>{designation}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Experience</TableCell>
+              <TableCell>{experience}</TableCell>
+            </TableRow>
+            {/* Add additional profile fields here */}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
 
 export default ProfileFaculty;
-

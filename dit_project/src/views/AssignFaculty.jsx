@@ -1,42 +1,90 @@
-import React,{useRef} from "react";
+import React, { useRef, useState } from "react";
 import axiosClient from "../axios-client";
-export const AssignFaculty=()=>{
-    const subject_code=useRef();
-    const faculty_id=useRef();
+import {
+  Typography,
+  TextField,
+  Button,
+  Container,
+  Box,
+  Alert,
+  FormHelperText,
+  Paper,
+} from "@mui/material";
 
-    const onSubmit= async(e)=>{
-        e.preventDefault()
-        const payload={
-            subjectCode:subject_code.current.value,
-            facultyID:faculty_id.current.value
-        }
-        console.log(payload);
-        try{
-            const {data}=await axiosClient.post("/assignFaculty",payload)
-            if(data)
-            {
-                window.alert("Faculty Assigned")
-                window.location.reload()
-            }
-        }
-        catch(err)
-        {
-            const response =err.response;
-            if(response && response.status===422)
-            {
-                console.log(response.data.errors);
-            }
-        }
+export const AssignFaculty = () => {
+  const subjectCodeRef = useRef("");
+  const facultyIdRef = useRef("");
+  const [errors, setErrors] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setErrors([]);
+    setSuccessMessage("");
+
+    const payload = {
+      subjectCode: subjectCodeRef.current.value,
+      facultyID: facultyIdRef.current.value,
+    };
+
+    try {
+      const { data, response } = await axiosClient.post("/assignFaculty", payload);
+      if (data) {
+        setSuccessMessage("Faculty Assigned");
+        subjectCodeRef.current.value = "";
+        facultyIdRef.current.value = "";
+      }
+    } catch (err) {
+      const response = err.response;
+      if (response && response.status === 422) {
+        setErrors(response.data.errors);
+      }
     }
+  };
 
-    return(
-        <div>
-            <h2>Assign Faculty</h2>
-            <form onSubmit={onSubmit}>
-                <input type="text" placeholder="Subject_code" ref={subject_code}/><br /><br />
-                <input type="text" placeholder="faculty_id" ref={faculty_id}/><br /><br />
-                <input type="submit" value="ADD"/>
-            </form>
-        </div>
-    )
-}
+  return (
+    <Container maxWidth="sm">
+      <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Assign Faculty
+        </Typography>
+        <form onSubmit={onSubmit}>
+          <Box m={2}>
+            <TextField
+              fullWidth
+              label="Subject Code"
+              variant="outlined"
+              inputRef={subjectCodeRef}
+              error={!!errors.subjectCode}
+            />
+            {errors.subjectCode && (
+              <FormHelperText error>{errors.subjectCode}</FormHelperText>
+            )}
+          </Box>
+          <Box m={2}>
+            <TextField
+              fullWidth
+              label="Faculty ID"
+              variant="outlined"
+              inputRef={facultyIdRef}
+              error={!!errors.facultyID}
+            />
+            {errors.facultyID && (
+              <FormHelperText error>{errors.facultyID[0]}</FormHelperText>
+            )}
+          </Box>
+          <Box m={2} textAlign="center">
+            <Button type="submit" variant="contained" color="primary">
+              Add
+            </Button>
+          </Box>
+          {successMessage && (
+            <Box m={2} textAlign="center">
+              <Alert severity="success">{successMessage}</Alert>
+            </Box>
+          )}
+        </form>
+      </Paper>
+    </Container>
+  );
+};

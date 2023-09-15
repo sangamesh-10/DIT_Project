@@ -1,78 +1,115 @@
 import React, { useState } from "react";
 import axiosClient from "../axios-client";
+import {
+  Paper,
+  Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  Button,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+
 export const ViewAcademicCalendar = () => {
-    const departments = ["MCA", "Mtech"]; // List of departments
-    const semesters = [1, 2, 3, 4];
-    const [selectedDepartment, setSelectedDepartment] = useState("");
-    const [selectedSemester, setSelectedSemester] = useState("");
-    const [calendar, setCalendar] = useState([]);
+  const departments = ["MCA", "Mtech"];
+  const semesters = [1, 2, 3, 4];
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("");
+  const [calendar, setCalendar] = useState([]);
 
-    const handleDepartmentChange = (event) => {
-        setSelectedDepartment(event.target.value);
-    };
+  const handleDepartmentChange = (event) => {
+    setSelectedDepartment(event.target.value);
+  };
 
-    const handleSemesterChange = (event) => {
-        setSelectedSemester(event.target.value);
-    };
-    const onSubmit=async(e)=>{
-        e.preventDefault()
-        try{
-            const response=await axiosClient.get(`/getCalendar?branch=${selectedDepartment}&semester=${selectedSemester}`)
-            //console.log(response.data);
-            setCalendar(response.data);
-        }
-        catch(err)
-        {
-            console.error("Error occurred",err);
-        }
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosClient.get(
+        `/getCalendar?branch=${selectedDepartment}&semester=${selectedSemester}`
+      );
+      setCalendar(response.data);
+    } catch (err) {
+      console.error("Error occurred", err);
     }
-    return (
-        <div>
-            <form onSubmit={onSubmit}>
-            <label>Select Branch:</label>
-            <select value={selectedDepartment} onChange={handleDepartmentChange}>
-                <option value="">Select Department</option>
-                {departments.map((department, index) => (
-                    <option key={index} value={department}>
-                        {department}
-                    </option>
-                ))}
-            </select> <br /><br />
-            <label>Select Semester:</label>
-            <select value={selectedSemester} onChange={handleSemesterChange}>
-                <option value="">Select Semester</option>
-                {semesters.map((semester, index) => (
-                    <option key={index} value={semester}>
-                        {semester}
-                    </option>
-                ))}
-            </select><br /><br />
-            <button type="submit">Submit</button>
-            </form>
-            {calendar.length=== 0 ? (
-                <p>No data found</p>):(
-        <div>
-          <h2>Academic Calendar</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>From</th>
-                <th>To</th>
-              </tr>
-            </thead>
-            <tbody>
-              {calendar.map((calendar, index) => (
-                <tr key={index}>
-                  <td>{calendar.description}</td>
-                  <td>{calendar.from_date}</td>
-                  <td>{calendar.to_date ? calendar.to_date : "-"}</td>
-                </tr>
+  };
+
+  return (
+    <Paper elevation={3} style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+      <Typography variant="h5" align="center" gutterBottom>
+        Academic Calendar
+      </Typography>
+      <form onSubmit={onSubmit}>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <Select
+            value={selectedDepartment}
+            onChange={handleDepartmentChange}
+            displayEmpty
+            inputProps={{ "aria-label": "Select Department" }}
+          >
+            <MenuItem value="" disabled>
+              Select Department
+            </MenuItem>
+            {departments.map((department, index) => (
+              <MenuItem key={index} value={department}>
+                {department}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <Select
+            value={selectedSemester}
+            onChange={handleSemesterChange}
+            displayEmpty
+            inputProps={{ "aria-label": "Select Semester" }}
+          >
+            <MenuItem value="" disabled>
+              Select Semester
+            </MenuItem>
+            {semesters.map((semester, index) => (
+              <MenuItem key={index} value={semester}>
+                {semester}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button type="submit" variant="contained" color="primary" sx={{ m: 2 }}>
+          Submit
+        </Button>
+      </form>
+      {calendar.length === 0 ? (
+        <Typography variant="body1">No data found</Typography>
+      ) : (
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Description</TableCell>
+                <TableCell>From</TableCell>
+                <TableCell>To</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {calendar.map((calendarItem, index) => (
+                <TableRow key={index}>
+                  <TableCell>{calendarItem.description}</TableCell>
+                  <TableCell>{calendarItem.from_date}</TableCell>
+                  <TableCell>{calendarItem.to_date || "-"}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-        </div>
-    )
-}
+    </Paper>
+  );
+};

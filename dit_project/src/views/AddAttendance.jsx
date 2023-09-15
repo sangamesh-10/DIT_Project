@@ -11,7 +11,6 @@ export const AddAttendance = () => {
     const [submitted, setSubmitted] = useState(false);
     const [reviewStage, setReviewStage] = useState(false); // State for the review stage
     const [editMode, setEditMode] = useState(false);
-    const [editCount, setEditCount] = useState(0);
 
     useEffect(() => {
         fetchSubjects();
@@ -50,7 +49,6 @@ export const AddAttendance = () => {
             ...prevAttendance,
             [rollNum]: !prevAttendance[rollNum], // Toggle attendance using boolean
         }));
-        setEditCount((prevCount) => prevCount + 1);
     };
 
     const onSubmit = async (e) => {

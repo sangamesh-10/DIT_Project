@@ -1,47 +1,60 @@
-import React,{useEffect,useState} from "react"
-import axiosClient from "../axios-client"
+import React, { useEffect, useState } from "react";
+import axiosClient from "../axios-client";
+import {
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+  Container,
+} from "@mui/material";
 
-export const ViewSemester=()=>
-{
-    const [semester,setsemesters]=useState([]);
-    useEffect(() => {
-        fetchData();
-    }, []);
-    const fetchData=async()=>{
-        try{
-            const response=await axiosClient.get(`/getSemester`)
-            // console.log(response.data);
-            setsemesters(response.data);
-        }
-        catch(err)
-        {
-            console.error("Error occurred",err);
-        }
+export const ViewSemester = () => {
+  const [semesters, setSemesters] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosClient.get(`/getSemester`);
+      setSemesters(response.data);
+    } catch (err) {
+      console.error("Error occurred", err);
     }
-    return(
-        <div>
-            <h2>Semester Enrollement</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Year</th>
-                <th>Code</th>
-                <th>Semester</th>
-                {/* Add more table headings as needed */}
-              </tr>
-            </thead>
-            <tbody>
-              {semester.map((sem, index) => (
-                <tr key={index}>
-                  <td>{sem.year}</td>
-                  <td>{sem.code}</td>
-                  <td>{sem.semester}</td>
-                  {/* Add more table data as needed */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-    )
+  };
 
-}
+  return (
+    <Container maxWidth="md">
+      <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Semester Enrollment
+        </Typography>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Year</TableCell>
+                <TableCell>Code</TableCell>
+                <TableCell>Semester</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {semesters.map((sem, index) => (
+                <TableRow key={index}>
+                  <TableCell>{sem.year}</TableCell>
+                  <TableCell>{sem.code}</TableCell>
+                  <TableCell>{sem.semester}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Container>
+  );
+};

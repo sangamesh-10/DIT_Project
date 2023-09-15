@@ -11,6 +11,8 @@ export const UpdatePwdFaculty = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+
 
   const oldPassword = useRef();
   const newPassword = useRef();
@@ -40,12 +42,13 @@ export const UpdatePwdFaculty = () => {
       const { data } = await axiosClient.put('/updatePwdFaculty', payload);
 
       if (data === 'true') {
-        console.log("Password Updated");
+        //console.log("Password Updated");
         setSubmissionMessage("Password updated");
         setSubmitted(true);
         oldPassword.current.value = '';
         newPassword.current.value = '';
         confirmPassword.current.value = '';
+        setErrors({});
         setTimeout(() => {
           setSubmitted(false);
           setSubmissionMessage('');
@@ -54,7 +57,8 @@ export const UpdatePwdFaculty = () => {
     } catch (err) {
       const response = err.response;
       if (response && response.status === 422) {
-        console.log(response.data.errors);
+        setErrors(response.data.error);
+        console.log(response.data.error);
         setSubmissionMessage("Error Occurred");
       }
     }
@@ -98,6 +102,11 @@ export const UpdatePwdFaculty = () => {
               }
               required
             />
+            {errors.old_password && (
+              <Typography variant="body2" color="error">
+                {errors.old_password}
+              </Typography>
+            )}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
@@ -120,6 +129,11 @@ export const UpdatePwdFaculty = () => {
               }
               required
             />
+             {errors.new_password && (
+              <Typography variant="body2" color="error">
+                {errors.new_password}
+              </Typography>
+            )}
           </FormControl>
 
           <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
@@ -142,6 +156,11 @@ export const UpdatePwdFaculty = () => {
               }
               required
             />
+            {errors.confirm_password && (
+              <Typography variant="body2" color="error">
+                {errors.confirm_password}
+              </Typography>
+            )}
           </FormControl>
 
           <Button

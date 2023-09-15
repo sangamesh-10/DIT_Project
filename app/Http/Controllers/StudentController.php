@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\daily_attendance;
 use Illuminate\Validation\Rule;
 use App\Models\notifications;
 use App\Models\raise_complaint;
@@ -250,7 +251,7 @@ public function enrolledStds()
             if ($new_password != $confirm_password) {
                 $errors->add('confirm_password', 'Password and confirmation do not match.');
             }
-        return response()->json(['error'=> $errors]);
+        return response()->json(['error'=> $errors],422);
         } else {
             $student = students_login::where('student_id', $student_id)->first();
 
@@ -273,13 +274,14 @@ public function enrolledStds()
         $customMessages = [
             'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
+        $errors=[];
         $validator = Validator::make($req->all(), $rules ,$customMessages);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],422);
-        }
-        else if ($new_password != $confirm_password) {
-            return response()->json(['error' => 'New password and confirm password do not match.']);
+        if ($validator->fails() || $new_password != $confirm_password) {
+            $errors = $validator->errors();
+            if ($new_password != $confirm_password) {
+                $errors->add('confirm_password', 'Password and confirmation do not match.');
+            }
+        return response()->json(['error'=> $errors],422);
         }
         else{
         $student = students_login::where('student_id', $student_id)->first();
@@ -291,16 +293,19 @@ public function enrolledStds()
         }
         else
          {
-            return response()->json(['Not Success' => 'Old password is incorrect.']);
+            $errors['old_password']="Old Password does not match";
+            return response()->json(['error' => $errors],422);
+            // return response()->json(['Not Success' => 'Old password is incorrect.']);
         }
     }
 }
  public function updateContact(Request $request)
     {
-     $request->validate([
-            'mobile' => 'required|numeric|digits:10',
-        ]);
-
+        $rules=[ 'mobile' => 'numeric|digits:10'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->errors()],422);
+        }
         $student_id = auth()->user()->student_id;
         $newPhoneNumber = $request->input('mobile');
 
@@ -321,7 +326,7 @@ public function enrolledStds()
     $validator = Validator::make($req->all(), $validationRules);
 
     if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()]);
+        return response()->json(['error' => $validator->errors()],422);
     }
         $student_id = $req->input("student_id");
         $student = Student::where("roll_num", $student_id)->first();
@@ -351,7 +356,7 @@ public function enrolledStds()
 
             return response()->json("true");
         } else {
-            return response()->json(['error'=> 'Invalid OTP entered. Please try again.']);
+            return response()->json(['error' => ['otp' => 'Invalid OTP entered. Please try again.']], 422);
         }
     }
     public function checkMarks(Request $req) {
@@ -426,6 +431,17 @@ public function enrolledStds()
         } else {
             return response()->json(['error' => 'No attendace record found for the provided roll number'], 404);
         }
+    }
+    public function checkAttendanceDayWise(Request $req)
+    {
+        $subject_code=$req->query('subject_code');
+        $roll_num=auth()->user()->student_id;
+        $present=daily_attendance::where('roll_num',$roll_num)->where('subject_code',$subject_code)->where('status',1)->pluck('date');
+        $absent=daily_attendance::where('roll_num',$roll_num)->where('subject_code',$subject_code)->where('status',0)->pluck('date');
+        return response()->json([
+            'present' => $present,
+            'absent' => $absent,
+        ]);
     }
     public function getCalendar()
     {

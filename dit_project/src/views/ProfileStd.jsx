@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
+import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 import './view.css';
 
 const ProfileStd = () => {
@@ -28,7 +29,7 @@ const ProfileStd = () => {
 
     // Make the API request to fetch enrolled student data
     axiosClient.get(`/studentsEnrolled?roll_num=${roll_num}`)
-    .then((response) => {
+      .then((response) => {
         setEnrolledData(response.data);
       })
       .catch((error) => {
@@ -40,7 +41,7 @@ const ProfileStd = () => {
   }, [roll_num]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress />;
   }
 
   if (!profileData) {
@@ -54,55 +55,58 @@ const ProfileStd = () => {
     father_name,
     mother_name,
   } = profileData;
-  const { batch, branch,specialization, semester } = enrolledData;
+  const { batch, branch, specialization, semester } = enrolledData;
 
   return (
     <div className="container">
-      <h2>User Profile</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Name</td>
-            <td>{name}</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td>{email}</td>
-          </tr>
-          <tr>
-            <td>Phone Number</td>
-            <td>{phone_num}</td>
-          </tr>
-          <tr>
-            <td>Father's Name</td>
-            <td>{father_name}</td>
-          </tr>
-          <tr>
-            <td>Mother's Name</td>
-            <td>{mother_name}</td>
-          </tr>
-          <tr>
-            <td>Batch</td>
-            <td>{batch}</td>
-          </tr>
-          <tr>
-            <td>Branch</td>
-            <td>{branch}</td>
-          </tr>
-          <tr>
-            <td>Specialization</td>
-            <td>{specialization}</td>
-          </tr>
-          <tr>
-            <td>Semester</td>
-            <td>{semester}</td>
-          </tr>
-          {/* Add additional profile fields here */}
-        </tbody>
-      </table>
+      <Typography variant="h4" gutterBottom>
+        User Profile
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>{name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Email</TableCell>
+              <TableCell>{email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>{phone_num}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Father's Name</TableCell>
+              <TableCell>{father_name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Mother's Name</TableCell>
+              <TableCell>{mother_name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Batch</TableCell>
+              <TableCell>{batch}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Branch</TableCell>
+              <TableCell>{branch}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Specialization</TableCell>
+              <TableCell>{specialization}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Semester</TableCell>
+              <TableCell>{semester}</TableCell>
+            </TableRow>
+            {/* Add additional profile fields here */}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
 
 export default ProfileStd;
-

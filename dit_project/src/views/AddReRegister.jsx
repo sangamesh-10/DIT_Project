@@ -1,52 +1,128 @@
 import React, { useRef, useState } from "react";
 import axiosClient from "../axios-client";
-//import './form.css';
+import {
+  Button,
+  Container,
+  CssBaseline,
+  TextField,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+  Paper,
+} from "@mui/material";
 
 export const AddReRegister = () => {
-    const rollNo = useRef();
-    const subCode = useRef();
-    const [errors, setErrors] = useState({});
-    const onSubmit = async (e) => {
-        e.preventDefault()
-        setErrors({}); // Clear previous errors
-        const payload = {
-            rollNumber: rollNo.current.value,
-            subjectCode: subCode.current.value
-        };
-        //        console.log(payload);
-        try {
-            const { response } = await axiosClient.post("/addReRegister", payload);
-            if (response.data=='true') {
-                window.alert("Registered Successfully");
-                window.location.reload();
-            }
-        }
-        catch (err) {
-            const response = err.response;
-            if (response && response.status === 422) {
-                console.log(response.data);
-                setErrors(response.data);
-            }
-        }
-    }
+  const rollNo = useRef("");
+  const subCode = useRef("");
+  const [errors, setErrors] = useState({});
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-        return (
-            <div className="form-container">
-            <h2 className="form-title">ADD RE-REGISTER</h2>
-                <form onSubmit={onSubmit}>
-                <div className="form-group">
-                    <label htmlFor="rollNo">RollNumber :</label>
-                    <input type="text" name="rollNo"  required ref={rollNo} />
-                    {errors.rollNumber && <span className="error">{errors.rollNumber.map((error, index) => (<p key={index}>{error}</p>))}</span>}
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    setAlreadyRegistered(false);
+    const payload = {
+      rollNumber: rollNo.current.value,
+      subjectCode: subCode.current.value,
+    };
 
-                </div>
-                <div className="form-group">
-                    <label htmlFor="subCode">Subject Code :</label>
-                    <input type="text" name="subCode" required ref={subCode} />
-                    {errors.subjectCode && <span className="error">{errors.subjectCode[0]}</span>}
-                </div>
-                    <input type="submit" name="Register" />
-                </form>
-            </div>
-        )
+    try {
+      const { data, response } = await axiosClient.post("/addReRegister", payload);
+      if (data === "true") {
+        setSnackbarMessage("Registered Successfully");
+        setSnackbarOpen(true);
+        // Clear form inputs
+        rollNo.current.value = "";
+        subCode.current.value = "";
+      }
+    } catch (err) {
+      const response = err.response;
+      if (response && response.status === 422) {
+        setErrors(response.data.errors);
+      } else if (response && response.status === 423) {
+        setAlreadyRegistered(true);
+      }
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+    setSnackbarMessage("");
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <Box
+          sx={{
+            marginTop: 3,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: 2,
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            ADD RE-REGISTER
+          </Typography>
+          <form onSubmit={onSubmit} noValidate sx={{ mt: 3 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="rollNo"
+              label="Roll Number"
+              name="rollNo"
+              inputRef={rollNo}
+              error={!!errors.rollNumber}
+              helperText={errors.rollNumber && errors.rollNumber.join(", ")}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="subCode"
+              label="Subject Code"
+              type="text"
+              id="subCode"
+              inputRef={subCode}
+              error={!!errors.subjectCode}
+              helperText={errors.subjectCode && errors.subjectCode[0]}
+            />
+            {alreadyRegistered && (
+              <Typography variant="body2" color="error">
+                Already registered for this subject.
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Register
+            </Button>
+          </form>
+        </Box>
+      </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </Container>
+  );
+};
