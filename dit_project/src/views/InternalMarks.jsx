@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 import { Paper, Typography, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@mui/material';
-import './view.css';
 import { useNavigate } from 'react-router-dom';
 
 const InternalMarks = () => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
-import './view.css';
+
 
 const ProfileFaculty = () => {
   const [profileData, setProfileData] = useState({});

@@ -17,7 +17,7 @@ import {
     Typography,
   } from '@mui/material';
 export const ViewAcademicCalendarFaculty = () => {
-    const departments = ["MCA", "Mtech"]; // List of departments
+    const departments = ["MCA", "Mtech"];
     const semesters = [1, 2, 3, 4];
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
@@ -34,7 +34,7 @@ export const ViewAcademicCalendarFaculty = () => {
 
     const onSubmit = async (e) => {
       e.preventDefault();
-      setIsLoading(true); // Show loading indicator while fetching data
+      setIsLoading(true);
 
       try {
         const response = await axiosClient.get(
@@ -61,9 +61,6 @@ export const ViewAcademicCalendarFaculty = () => {
               onChange={handleDepartmentChange}
               label="Select Branch"
             >
-              {/* <MenuItem value="">
-                <em>Select Department</em>
-              </MenuItem> */}
               {departments.map((department, index) => (
                 <MenuItem key={index} value={department}>
                   {department}
@@ -79,9 +76,6 @@ export const ViewAcademicCalendarFaculty = () => {
               onChange={handleSemesterChange}
               label="Select Semester"
             >
-              {/* <MenuItem value="">
-                <em>Select Semester</em>
-              </MenuItem> */}
               {semesters.map((semester, index) => (
                 <MenuItem key={index} value={semester}>
                   {semester}
