@@ -16,6 +16,7 @@ import MuiAlert from '@mui/material/Alert';
 import StickyFooter from '../components/StickyFooter';
 import StickyHeader from '../components/StickyHeader';
 
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
