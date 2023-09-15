@@ -35,7 +35,7 @@ export const ViewFaculty = () => {
     <div>
       <Typography variant="h4" marginBottom={2}>Faculty Profiles</Typography>
       {loading ? (
-        <CircularProgress /> // Display a loading indicator while data is loading
+        <CircularProgress />
       ) : (
         <TableContainer component={Paper}>
           <Table>

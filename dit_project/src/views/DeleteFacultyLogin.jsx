@@ -30,7 +30,6 @@ export const DeleteFacultyLogin = () => {
       if (response.data === "true") {
         setSnackbarMessage("Login Deleted Successfully");
         setSnackbarOpen(true);
-        // Clear input field
         facultyIDRef.current.value = "";
         setNotFound(false);
       }

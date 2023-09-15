@@ -40,7 +40,6 @@ export const AddSubjects = () => {
       if (data) {
         setSnackbarMessage("Subject Added");
         setSnackbarOpen(true);
-        // Clear form inputs
         subjectCodeRef.current.value = "";
         subjectNameRef.current.value = "";
         lectureRef.current.value = "";

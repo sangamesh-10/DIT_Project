@@ -9,7 +9,7 @@ import {
   Box,
   Snackbar,
   Alert,
-  Paper, // Added Paper component
+  Paper,
 } from "@mui/material";
 
 export const AddSemester = () => {
@@ -58,7 +58,7 @@ export const AddSemester = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Paper elevation={3} style={{ padding: "20px" }}> {/* Added Paper component */}
+      <Paper elevation={3} style={{ padding: "20px" }}>
         <Box
           sx={{
             display: "flex",

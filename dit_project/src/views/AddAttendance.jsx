@@ -9,7 +9,7 @@ export const AddAttendance = () => {
     const [studentAttd, setStudentAttd] = useState({});
     const [submissionMessage, setSubmissionMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
-    const [reviewStage, setReviewStage] = useState(false); // State for the review stage
+    const [reviewStage, setReviewStage] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
@@ -32,9 +32,8 @@ export const AddAttendance = () => {
             const response = await axiosClient.get(`/getEnrolledStudents?subject_code=${subject}`);
             setEnrolledStudents(response.data);
 
-            // Create studentMarks object with roll numbers as keys and 0 as values
             const initialStudentAttd = response.data.reduce((attdObj, rollNum) => {
-                attdObj[rollNum] = false; // Use boolean to represent attendance
+                attdObj[rollNum] = false;
                 return attdObj;
             }, {});
 
@@ -47,7 +46,7 @@ export const AddAttendance = () => {
     const handleAttendanceChange = (rollNum) => {
         setStudentAttd(prevAttendance => ({
             ...prevAttendance,
-            [rollNum]: !prevAttendance[rollNum], // Toggle attendance using boolean
+            [rollNum]: !prevAttendance[rollNum],
         }));
     };
 
@@ -60,7 +59,7 @@ export const AddAttendance = () => {
         console.log(payload);
 
         try {
-            setReviewStage(true); // Move to the review stage after form submission
+            setReviewStage(true);
         } catch (err) {
             console.error("Error while submitting data", err);
             setSubmissionMessage('Error while submitting Attendance');
@@ -80,7 +79,7 @@ export const AddAttendance = () => {
             setStudentAttd({});
             setReviewStage(false);
             setSubmitted(true);
-            setEditMode(false); // Reset edit mode
+            setEditMode(false);
             showAlertWithTotalPresent();
         } catch (err) {
             console.error("Error while submitting data", err);

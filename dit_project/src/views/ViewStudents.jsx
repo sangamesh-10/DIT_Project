@@ -56,9 +56,6 @@ export const ViewStudents = () => {
               fullWidth
               label="Select Department"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
               {departments.map((department, index) => (
                 <MenuItem key={index} value={department}>
                   {department}
@@ -75,9 +72,6 @@ export const ViewStudents = () => {
               fullWidth
               label="Select Semester"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
               {semesters.map((semester, index) => (
                 <MenuItem key={index} value={semester}>
                   {semester}

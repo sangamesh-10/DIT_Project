@@ -16,6 +16,7 @@ const FeedbackForm = ({ subject, onClose }) => {
   const [feedback, setFeedback] = useState({});
   const [questions, setQuestions] = useState([]);
   const { user } = useStateContext();
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   useEffect(() => {
     // Make an API request to fetch questions and options
@@ -29,6 +30,12 @@ const FeedbackForm = ({ subject, onClose }) => {
       });
   }, []);
 
+  useEffect(() => {
+    // Check if all questions have been answered
+    const answeredQuestions = Object.keys(feedback);
+    setIsFormComplete(answeredQuestions.length === questions.length);
+  }, [feedback, questions]);
+
   const handleRadioChange = (questionNumber) => (e) => {
     setFeedback({
       ...feedback,
@@ -38,24 +45,31 @@ const FeedbackForm = ({ subject, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Prepare the form data
-    const formData = {
-      roll_num: user.roll_num,
-      subject_code: subject.subject_code,
-      responses: feedback,
-    };
 
-    // Make an API request to submit the form data
-    axiosClient
-      .post('/submitFeedback', formData)
-      .then((response) => {
-        console.log('Feedback submitted successfully:', response.data);
-        // Close the feedback form
-        onClose();
-      })
-      .catch((error) => {
-        console.error('Error submitting feedback:', error);
-      });
+    // Check if all questions have been answered
+    if (isFormComplete) {
+      // Prepare the form data
+      const formData = {
+        roll_num: user.roll_num,
+        subject_code: subject.subject_code,
+        responses: feedback,
+      };
+
+      // Make an API request to submit the form data
+      axiosClient
+        .post('/submitFeedback', formData)
+        .then((response) => {
+          console.log('Feedback submitted successfully:', response.data);
+          // Close the feedback form
+          onClose();
+        })
+        .catch((error) => {
+          console.error('Error submitting feedback:', error);
+        });
+    } else {
+      // Show an error message to the user
+      alert('Please answer all the questions before submitting.');
+    }
   };
 
   const getOptionLabel = (value) => {

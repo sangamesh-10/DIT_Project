@@ -33,7 +33,6 @@ export const DeleteSemester = () => {
       if (data === "true") {
         setSnackbarMessage("Deleted Successfully");
         setSnackbarOpen(true);
-        // Clear form inputs
         yearRef.current.value = "";
         codeRef.current.value = "";
         setNotFound(false);

@@ -7,7 +7,7 @@ export default function UpdateContactStd() {
   const mobile = useRef();
   const [submissionMessage, setSubmissionMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState({}); // State for API errors
+  const [errors, setErrors] = useState({});
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function UpdateContactStd() {
       console.log(data);
       setSubmitted(true);
       setSubmissionMessage('Updated Successfully');
-      setErrors({}); // Clear any previous errors
+      setErrors({});
       mobile.current.value = '';
       setTimeout(() => {
         setSubmitted(false);
@@ -28,8 +28,7 @@ export default function UpdateContactStd() {
     } catch (err) {
       const response = err.response;
       if (response && response.status === 422) {
-        //console.log(response.data.errors);
-        setErrors(response.data.errors); // Set the errors received from the backend
+        setErrors(response.data.errors);
         setSubmissionMessage('Error Occurred!');
       }
     }
@@ -59,8 +58,8 @@ export default function UpdateContactStd() {
             label="New Mobile Number"
             variant="outlined"
             style={{ marginBottom: '16px' }}
-            error={errors && errors.mobile ? true : false} // Add error class if there's a mobile error
-            helperText={errors && errors.mobile ? errors.mobile[0] : null} // Display the mobile error message
+            error={errors && errors.mobile ? true : false}
+            helperText={errors && errors.mobile ? errors.mobile[0] : null}
           />
           <Button
             type="submit"

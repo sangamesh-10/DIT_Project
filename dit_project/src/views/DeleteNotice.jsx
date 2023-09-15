@@ -36,15 +36,12 @@ export const DeleteNotice = () => {
         setSnackbarMessage('Deleted Successfully');
         setSnackbarOpen(true);
 
-        // Clear input fields and reset error state
         noticeIdRef.current.value = '';
         descriptionRef.current.value = '';
         dateRef.current.value = '';
         setError({});
         setNotFound(false);
 
-        // Refresh the page
-        //window.location.reload();
       }
     } catch (err) {
       if (err.response && err.response.status === 422) {

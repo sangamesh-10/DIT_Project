@@ -98,6 +98,12 @@ const FacultyHomePage = () => {
           >
             <div role="presentation">
               <List>
+              <ListItem  component={Link} to="/faculty/Profile">
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItem>
                 <ListItem  component={Link} to="/faculty/updatePwd">
                   <ListItemIcon>
                     <DashboardIcon />
@@ -152,7 +158,6 @@ const FacultyHomePage = () => {
                   </ListItemIcon>
                   <ListItemText primary="Raise Complaints" />
                 </ListItem>
-                {/* Add more links as needed */}
               </List>
             </div>
           </Drawer>

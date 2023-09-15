@@ -30,7 +30,6 @@ const UpdateNoticeBoard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create a FormData object to append form data
     const formData = new FormData();
     formData.append('notice_id', noticeId);
     formData.append('description', description);
@@ -43,16 +42,13 @@ const UpdateNoticeBoard = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      //navigate('/admin');
       console.log('API Response:', response.data);
 
-      // Clear form state after successful submission
       setNoticeId('');
       setDescription('');
       setFile(null);
       setError({});
 
-      // Show success message in green
       setSnackbarMessage('Notice Updated Successfully');
       setSnackbarOpen(true);
     } catch (error) {
@@ -62,7 +58,6 @@ const UpdateNoticeBoard = () => {
         setError(response.data.errors);
       } else {
         console.error('API Error:', error.response.data);
-        // Show error message in red
         setSnackbarMessage('Error Updating Notice');
         setSnackbarOpen(true);
       }

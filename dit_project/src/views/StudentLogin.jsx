@@ -54,7 +54,7 @@ export const StudentLogin = () => {
       setUser(data.user);
       setToken(data.access_token);
       console.log(data);
-      handleClick(); // Show Snackbar on successful login
+      handleClick();
       setTimeout(() => {
         setLoggedIn(true);
       }, 2000);
@@ -136,7 +136,6 @@ export const StudentLogin = () => {
         </Typography>
       </Box>
 
-      {/* Snackbar */}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Login successful!

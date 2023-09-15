@@ -13,11 +13,10 @@ const ProfileStd = () => {
 
   useEffect(() => {
     if (!roll_num) {
-      setLoading(false); // No need to make the API request if roll_num is empty
+      setLoading(false);
       return;
     }
 
-    // Make the API request to fetch profile data
     axiosClient
       .get(`/studentMe?roll_num=${roll_num}`)
       .then((response) => {
@@ -27,7 +26,6 @@ const ProfileStd = () => {
         console.error('Error fetching profile data:', error);
       });
 
-    // Make the API request to fetch enrolled student data
     axiosClient.get(`/studentsEnrolled?roll_num=${roll_num}`)
       .then((response) => {
         setEnrolledData(response.data);
@@ -101,7 +99,6 @@ const ProfileStd = () => {
               <TableCell>Semester</TableCell>
               <TableCell>{semester}</TableCell>
             </TableRow>
-            {/* Add additional profile fields here */}
           </TableBody>
         </Table>
       </TableContainer>

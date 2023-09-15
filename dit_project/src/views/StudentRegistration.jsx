@@ -54,7 +54,6 @@ export const StudentReg=()=>{
         try{
         const {data}=await axiosClient.post('/studentRegistration',payload)
         if(data){
-            //setValidationErrors({}); // Clear validation errors
             setSnackbarSeverity("success");
             setSnackbarMessage("Registered successfully");
             setSnackbarOpen(true);
@@ -72,13 +71,6 @@ export const StudentReg=()=>{
             }
         }
     }
-    // const handleInputChange = (event) => {
-    //     const fieldName = event.target.name; // Assuming you set 'name' attribute on your fields
-    //     setValidationErrors((prevErrors) => ({
-    //       ...prevErrors,
-    //       [fieldName]: "", // Clear the error message for the current field
-    //     }));
-    //   };
 
 
     return(
@@ -176,8 +168,6 @@ export const StudentReg=()=>{
               error={!!validationErrors["religion"]} helperText={validationErrors["religion"]}
               sx={{ width: '50%', fontSize: '14px' }}/>
               </Grid>
-            {/* Add similar TextField components for other form fields */}
-
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap:'20px' }}>
                 <Button type="submit" variant="contained" color="primary">Submit</Button>
@@ -186,7 +176,7 @@ export const StudentReg=()=>{
                 </form>
                 <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={6000} // Adjust the duration as needed
+                autoHideDuration={6000}
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >

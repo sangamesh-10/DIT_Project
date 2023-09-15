@@ -15,7 +15,7 @@ const GetForms = () => {
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const response = await axiosClient.get('/getForms'); // Replace with your API endpoint
+        const response = await axiosClient.get('/getForms');
         setForms(response.data.data);
       } catch (error) {
         console.error('Error fetching forms:', error);

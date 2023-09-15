@@ -12,11 +12,10 @@ const ProfileFaculty = () => {
 
   useEffect(() => {
     if (!faculty_id) {
-      setLoading(false); // No need to make the API request if roll_num is empty
+      setLoading(false);
       return;
     }
 
-    // Make the API request to fetch profile data
     axiosClient
       .get(`/me?faculty_id=${faculty_id}`)
       .then((response) => {
@@ -87,7 +86,6 @@ const ProfileFaculty = () => {
               <TableCell>Experience</TableCell>
               <TableCell>{experience}</TableCell>
             </TableRow>
-            {/* Add additional profile fields here */}
           </TableBody>
         </Table>
       </TableContainer>
