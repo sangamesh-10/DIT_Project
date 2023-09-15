@@ -61,9 +61,9 @@ export const ViewAcademicCalendarFaculty = () => {
               onChange={handleDepartmentChange}
               label="Select Branch"
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>Select Department</em>
-              </MenuItem>
+              </MenuItem> */}
               {departments.map((department, index) => (
                 <MenuItem key={index} value={department}>
                   {department}
@@ -79,9 +79,9 @@ export const ViewAcademicCalendarFaculty = () => {
               onChange={handleSemesterChange}
               label="Select Semester"
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>Select Semester</em>
-              </MenuItem>
+              </MenuItem> */}
               {semesters.map((semester, index) => (
                 <MenuItem key={index} value={semester}>
                   {semester}

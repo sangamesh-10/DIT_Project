@@ -92,7 +92,7 @@ const SendNotifications = () => {
                         value={selectionType}
                         onChange={handleSelectionTypeChange}
                     >
-                        <MenuItem value="">Select an Option</MenuItem>
+                        {/* <MenuItem value="">Select an Option</MenuItem> */}
                         <MenuItem value="department">Select Department and Semester</MenuItem>
                         <MenuItem value="roll_numbers">Enter Roll Numbers</MenuItem>
                     </Select>

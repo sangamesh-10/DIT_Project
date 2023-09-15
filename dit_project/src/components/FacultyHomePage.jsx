@@ -98,6 +98,12 @@ const FacultyHomePage = () => {
           >
             <div role="presentation">
               <List>
+              <ListItem button component={Link} to="/faculty/Profile">
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItem>
                 <ListItem button component={Link} to="/faculty/updatePwd">
                   <ListItemIcon>
                     <DashboardIcon />

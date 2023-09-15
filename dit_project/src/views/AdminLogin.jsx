@@ -13,6 +13,8 @@ import Box from '@mui/material/Box';
 import { CssBaseline } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import StickyFooter from '../components/StickyFooter';
+import StickyHeader from '../components/StickyHeader';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -71,6 +73,8 @@ export const AdminLogin = () => {
         return <Navigate to="/admin" replace={true} />;
       }
       return (
+        <>
+    <StickyHeader/>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -133,5 +137,7 @@ export const AdminLogin = () => {
         </Alert>
       </Snackbar>
     </Container>
+    <StickyFooter/>
+    </>
     );
 };

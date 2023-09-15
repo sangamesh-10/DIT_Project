@@ -39,7 +39,6 @@ export const AddCalendar = () => {
       if (data === "true") {
         setSnackbarMessage("Added successfully");
         setSnackbarOpen(true);
-        // Clear form inputs
         branchRef.current.value = "";
         semesterRef.current.value = "";
         descriptionRef.current.value = "";

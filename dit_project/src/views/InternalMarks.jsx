@@ -8,18 +8,17 @@ import { useNavigate } from 'react-router-dom';
 const InternalMarks = () => {
   const [marksData, setMarksData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // New state for error handling
-  const { user } = useStateContext(); // Assuming user object contains roll_num
+  const [error, setError] = useState(null);
+  const { user } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const roll_num = user.roll_num;
 
-    // Make the API request here
     axiosClient.get(`/getInternalMarks?roll_num=${roll_num}`)
       .then(response => {
         if (response.data.error) {
-            navigate('/student/feedback'); // Clear marksData in case of an error
+            navigate('/student/feedback');
         } else {
           setMarksData(response.data);
         }
@@ -27,8 +26,8 @@ const InternalMarks = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
-        setError('Error fetching data. Please try again.'); // Set a generic error message
-        setMarksData([]); // Clear marksData in case of an error
+        setError('Error fetching data. Please try again.');
+        setMarksData([]);
         setLoading(false);
       });
   }, [user, navigate]);

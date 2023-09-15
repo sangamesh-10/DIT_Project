@@ -153,7 +153,7 @@ export const AddMarks = () => {
                                 height: '40px',
                             }}
                         >
-                            <MenuItem value="">Select Exam</MenuItem>
+                            {/* <MenuItem value="">Select Exam</MenuItem> */}
                             <MenuItem value="mid1">Midterm 1</MenuItem>
                             <MenuItem value="mid2">Midterm 2</MenuItem>
                         </Select>

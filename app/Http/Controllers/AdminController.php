@@ -80,7 +80,7 @@ class AdminController extends Controller
         $confirm_password = $req->input('confirm_password');
 
         $rules = [
-            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',        ];
+            'new_password'=>'required|min:8|max:16|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', ];
         $customMessages = [
             'new_password.regex' => 'The password must contain at least one uppercase letter, one digit, and one special character.',
         ];
@@ -105,7 +105,6 @@ class AdminController extends Controller
          {
             $errors['old_password']="Old Password does not match";
             return response()->json(['error' => $errors],422);
-            // return response()->json(['Not Success' => 'Old password is incorrect.']);
         }
     }
 }

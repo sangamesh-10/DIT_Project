@@ -7,7 +7,7 @@ export const EnrolledStundents = () => {
     const [selectedSubject, setSelectedSubject] = useState('');
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [studentProfiles, setStudentProfiles] = useState([]);
-    const [isTableVisible, setIsTableVisible] = useState(false); // New state for conditional rendering
+    const [isTableVisible, setIsTableVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {

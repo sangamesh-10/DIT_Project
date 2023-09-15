@@ -76,7 +76,6 @@ const Feedback = () => {
             </Grid>
             {isFeedbackFormOpen && (
                 <div className="custom-modal">
-                    {/* <div className="custom-modal-content"> */}
                     <Box
                         position="absolute"
                         transform="translate(-50%, -50%)"
@@ -86,8 +85,8 @@ const Feedback = () => {
                         maxWidth="80%"
                         display="flex"
                         flexDirection="column"
-                        alignItems="center" // Center content horizontally
-                        justifyContent="center" // Center content vertically
+                        alignItems="center"
+                        justifyContent="center"
                     >
                         <Button
                             variant="contained"

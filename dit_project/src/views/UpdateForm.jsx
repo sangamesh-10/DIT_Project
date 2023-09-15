@@ -33,8 +33,7 @@ const UpdateForm = () => {
       });
 
       setMessage(response.data.message);
-      setErrors({}); // Clear all errors on success
-      // Clear form fields after success
+      setErrors({});
       setFormId('');
       setFormName('');
       setNewFormFile(null);

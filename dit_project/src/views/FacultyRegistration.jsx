@@ -28,7 +28,7 @@ export const FacultyReg = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        setValidationErrors({}); // Clear previous errors
+        setValidationErrors({});
         const payload = {
             faculty_id: fid.current.value,
             name: name.current.value,

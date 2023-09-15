@@ -42,7 +42,6 @@ export const UpdatePwdFaculty = () => {
       const { data } = await axiosClient.put('/updatePwdFaculty', payload);
 
       if (data === 'true') {
-        //console.log("Password Updated");
         setSubmissionMessage("Password updated");
         setSubmitted(true);
         oldPassword.current.value = '';

@@ -34,7 +34,6 @@ export const AddReRegister = () => {
       if (data === "true") {
         setSnackbarMessage("Registered Successfully");
         setSnackbarOpen(true);
-        // Clear form inputs
         rollNo.current.value = "";
         subCode.current.value = "";
       }

@@ -34,8 +34,7 @@ const AddForm = () => {
       console.log(response.data);
 
       setMessage(response.data.message);
-      setErrors({}); // Clear all errors on success
-      // Clear form fields after success
+      setErrors({});
       setId('');
       setName('');
       setFormFile(null);
