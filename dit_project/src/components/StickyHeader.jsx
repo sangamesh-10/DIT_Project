@@ -10,7 +10,8 @@ const stickyHeaderStyle = {
   backgroundRepeat: 'no-repeat',
   color: 'black',
   borderBottom: '3px solid #f95005',
-  marginTop : 0, // Adjust the background repeat as needed
+  marginTop : 0,
+  zIndex:1500,
 };
 
 const headerText = {

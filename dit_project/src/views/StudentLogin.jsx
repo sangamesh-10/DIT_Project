@@ -13,6 +13,8 @@ import axiosClient from '../axios-client';
 import { CssBaseline } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import StickyFooter from '../components/StickyFooter';
+import StickyHeader from '../components/StickyHeader';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -73,6 +75,8 @@ export const StudentLogin = () => {
   }
 
   return (
+    <>
+      <StickyHeader/>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -139,5 +143,7 @@ export const StudentLogin = () => {
         </Alert>
       </Snackbar>
     </Container>
+    <StickyFooter/>
+    </>
   );
 };

@@ -10,10 +10,10 @@ function Footer() {
           theme.palette.mode === 'dark'
             ? theme.palette.grey[200]
             : theme.palette.grey[800],
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        // position: 'fixed',
+        // bottom: 0,
+        // left: 0,
+        // right: 0,
         height: '50px',
         display: 'flex',
         alignItems: 'center',
